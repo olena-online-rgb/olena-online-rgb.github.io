@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Income Statement with Discontinued Operations - Sammy Enterprises</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #faf9f6; color: #1a1a1a; margin: 0; padding: 0; }
+  .topbar { background: #C8102E; color: #fff; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .topbar .brand { font-size: 13px; font-weight: bold; letter-spacing: 0.5px; white-space: nowrap; }
+  .topbar .course { font-size: 12.5px; opacity: 0.9; text-align: right; }
+  .main { padding: 16px; }
+  h1 { font-size: 20px; text-align: center; margin: 8px 0 2px; color: #C8102E; }
+  .subtitle { text-align: center; font-size: 14px; color: #524727; margin-bottom: 12px; }
+
+  .scenario { max-width: 960px; margin: 0 auto 12px; background: #fdf3d8; border: 2px solid #b8860b; border-radius: 8px; padding: 10px 14px; font-size: 13.5px; line-height: 1.5; }
+  .scenario .sc-title { font-weight: bold; color: #8a6400; font-size: 14.5px; margin-bottom: 3px; }
+  .scenario ol { margin: 4px 0 4px 20px; padding: 0; }
+  .scenario li { margin: 2px 0; }
+  .scenario .facts { margin-top: 4px; font-weight: bold; color: #524727; }
+
+  .instructions { max-width: 960px; margin: 0 auto 14px; font-size: 13.5px; background: #fff; border: 1px solid #CAC7A7; border-left: 4px solid #F1BE48; border-radius: 0 8px 8px 0; padding: 10px 14px; line-height: 1.45; }
+  .controls { text-align: center; margin-bottom: 8px; }
+  button { font-family: inherit; font-size: 14px; padding: 8px 18px; margin: 3px 6px; border-radius: 6px; border: 1px solid #C8102E; background: #C8102E; color: #fff; cursor: pointer; }
+  button.secondary { background: #fff; color: #C8102E; }
+  button:hover { opacity: 0.88; }
+  #feedback { max-width: 960px; margin: 0 auto 14px; font-size: 13.5px; color: #524727; text-align: center; min-height: 18px; line-height: 1.45; }
+  #feedback .bad { color: #C8102E; font-weight: bold; }
+  .layout { display: flex; gap: 16px; max-width: 1180px; margin: 0 auto; align-items: flex-start; }
+  .bank-pane { flex: 0 0 320px; position: sticky; top: 10px; }
+  .sheet-pane { flex: 1; min-width: 0; }
+  .pane-title { font-weight: bold; font-size: 15px; margin: 0 0 6px 2px; color: #C8102E; }
+  #bank { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 10px; min-height: 120px; max-height: 86vh; overflow-y: auto; }
+
+  .tile { display: block; width: 100%; text-align: left; margin: 4px 0; padding: 6px 9px; font-size: 12.5px; line-height: 1.25; border-radius: 6px; cursor: grab; user-select: none; background: #fff; border: 1.5px solid #9a9a9a; color: #1a1a1a; }
+  .tile.k-head, .tile.k-sub, .tile.k-title, .tile.k-x { font-weight: bold; }
+  .tile .amt { float: right; color: #333; font-weight: normal; font-variant-numeric: tabular-nums; padding-left: 8px; white-space: nowrap; }
+  .tile.k-sub .amt { font-weight: bold; color: #1a1a1a; }
+  .tile .amt.pending { color: #b5b09a; font-weight: normal; }
+  .tile .mark { display: inline-block; width: 16px; font-weight: bold; flex: 0 0 16px; }
+  .tile .mark.bad { color: #C8102E; }
+  .tile.selected { outline: 3px solid #006BA6; }
+  .tile.dragging { opacity: 0.5; }
+
+  .tile.k-in { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 0; }
+  .tile.k-in .lbl { flex: 1 1 190px; line-height: 1.9; margin-right: 8px; }
+  .tile.k-in.done .lbl { line-height: 1.25; }
+  .tile.k-in input { font-family: inherit; font-size: 13px; width: 112px; padding: 4px 7px; text-align: right; border: 1.5px solid #9a9a9a; border-radius: 5px; font-variant-numeric: tabular-nums; cursor: text; user-select: text; background: #fff; }
+  .tile.k-in input.small { width: 88px; margin: 0 2px; }
+  .inmsg { flex-basis: 100%; font-size: 12.5px; font-weight: normal; }
+  .inmsg:empty { display: none; }
+  .inmsg.ok { color: #1a1a1a; font-weight: bold; }
+  .inmsg.no { color: #C8102E; }
+  input.locked { display: none; }
+  .fmt { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .fmt.big { display: inline-block; min-width: 112px; text-align: right; font-size: 13.5px; }
+  .eps-row .fmt.big { min-width: 120px; }
+  .fmt.bold { font-weight: bold; }
+  input.ok { border-color: #1a1a1a !important; background: #f1f1f1 !important; }
+  input.no { border-color: #C8102E !important; }
+
+  .tile.c-title { background: #f1f1f1; border-color: #1a1a1a; }
+  .tile.c-sales { background: #e3f2e3; border-color: #2c7a2f; }
+  .tile.c-op    { background: #e2eef9; border-color: #006BA6; }
+  .tile.c-oth   { background: #fdeaea; border-color: #c0392b; }
+  .tile.c-tax   { background: #efe6f7; border-color: #6a3d9a; }
+  .tile.c-disc  { background: #fdf3d8; border-color: #b8860b; }
+  .tile.c-eps   { background: #f1f1f1; border-color: #1a1a1a; }
+  .tile.c-notis { background: #ecebe6; border-color: #7a7457; }
+
+  .sheet { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 14px 16px 18px; }
+  .zone { min-height: 44px; border: 2px dashed #CAC7A7; border-radius: 6px; padding: 5px; background: #fefdfb; }
+  .zone.over { background: #f0f0ec; border-color: #888; }
+  .zone-title { font-size: 12.5px; color: #666; margin: 6px 0 3px; font-style: italic; }
+  #hdrzone { min-height: 110px; }
+  #hdrzone .tile { text-align: center; }
+  #bodyzone { min-height: 640px; }
+  #bodyzone .tile.k-item, #bodyzone .tile.k-in { margin-left: 22px; width: calc(100% - 22px); }
+  #bodyzone .tile.k-sub { border-top-width: 2.5px; }
+
+  .eps-box { margin: 14px 0 6px; padding: 10px 12px; border: 2px solid #1a1a1a; border-radius: 6px; background: #fafafa; }
+  .eps-title { font-weight: bold; font-size: 14.5px; margin-bottom: 4px; }
+  .eps-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px 10px; font-size: 13.5px; padding: 4px 0; }
+  .eps-row .lbl { flex: 1 1 200px; }
+  .eps-row input { font-family: inherit; font-size: 13.5px; width: 120px; padding: 5px 8px; text-align: right; border: 1.5px solid #9a9a9a; border-radius: 5px; font-variant-numeric: tabular-nums; }
+  .eps-note { font-size: 12.5px; color: #524727; margin-top: 6px; line-height: 1.4; }
+
+  .notis-wrap { margin-top: 18px; padding-top: 10px; border-top: 1px dashed #CAC7A7; }
+  .notis-wrap .zone-label { font-weight: bold; font-size: 14px; margin: 0 0 3px; color: #5f5a43; }
+
+  .celebration { display: none; text-align: center; padding: 20px; margin: 16px auto; max-width: 560px; background: linear-gradient(135deg, #fdf6e3 0%, #fff 100%); border: 2px solid #F1BE48; border-radius: 12px; }
+  .celebration.show { display: block; }
+  .celebration h2 { margin: 0 0 6px; font-size: 22px; color: #C8102E; }
+  .celebration p { margin: 4px 0; font-size: 14px; color: #524727; }
+  .celebration .eq { margin-top: 10px; font-weight: bold; color: #C8102E; font-size: 15px; }
+  .celebration .closer { font-size: 12.5px; color: #9B945F; margin-top: 8px; }
+  .footer { max-width: 960px; margin: 14px auto 0; font-size: 12px; color: #9B945F; text-align: center; padding-bottom: 12px; }
+  .footer .copy { color: #C8102E; font-weight: bold; }
+  @media (max-width: 900px) { .layout { flex-direction: column; } .bank-pane { position: static; flex: 1 1 auto; width: 100%; } #bank { max-height: 300px; } .topbar { padding: 10px 14px; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Acct 3860 - Watanabe</div>
+  <div class="course">Chapter 4: Income Statement, Comprehensive Income, and the Statement of Cash Flows</div>
+</div>
+
+<div class="main">
+
+<h1>Build the Income Statement: Discontinued Operations</h1>
+<div class="subtitle">Sammy Enterprises &middot; Multiple-step format &middot; Exam practice</div>
+
+<div class="scenario">
+  <div class="sc-title">Scenario: the Morningstar Division</div>
+  During 20XX, Sammy Enterprises decided to discontinue its Morningstar Division, a component of the company whose disposal represents a strategic shift in Sammy's operations. Before year-end, Sammy sold the division's assets. The division's results are reported separately, below income from continuing operations, as <b>discontinued operations, net of tax</b>. You have two pieces of information:
+  <ol>
+    <li>The Morningstar Division's operations produced a <b>loss of $150,000 before tax</b>.</li>
+    <li>Selling the division's assets produced a <b>gain of $60,000 before tax</b>.</li>
+  </ol>
+  <div class="facts">Tax rate: 27% on all items. Weighted-average common shares outstanding: 70,000.</div>
+</div>
+
+<div class="instructions">
+Everything is in one bank: the heading lines, section headings, accounts, and subtotal lines, all mixed together. Drag the three heading lines into the heading area in order. Then build the body from top to bottom, putting each section heading, account, and subtotal line where it belongs. Accounts indent once they are placed. Type the income tax expense on continuing operations. Use the scenario to report each discontinued item net of tax: the tax effect goes in the small box and the net amount in the right-hand box. Subtotals fill in as soon as everything above them is right. Finish with earnings per share. A correct amount locks in the moment you enter it (press Enter or move to the next box) and is formatted the way it would appear on the statement. One heading line and one account do not belong on an income statement: they go in the box at the bottom (the heading line can also stay in the bank).<br>
+No mouse? Click a tile to select it, then click a zone to add it at the end, or click a placed tile to put the selected one just above it. Press <b>Check my statement</b> whenever you like: <b style="color:#C8102E">&#10007;</b> means it does not belong there, <b style="color:#C8102E">&#8597;</b> means right place but out of order, and tiles change color when they are right.
+</div>
+
+<div class="controls">
+  <button id="checkbtn" onclick="checkWork()">Check my statement</button>
+  <button class="secondary" onclick="resetAll()">Start over</button>
+</div>
+<div id="feedback"></div>
+
+<div class="layout">
+  <div class="bank-pane">
+    <div class="pane-title">Bank</div>
+    <div id="bank" class="zone dropzone" data-sec="bank"></div>
+  </div>
+
+  <div class="sheet-pane">
+    <div class="sheet" id="sheet">
+      <div class="zone-title">Heading (three lines, in order)</div>
+      <div id="hdrzone" class="zone dropzone" data-sec="hdr"></div>
+      <div class="zone-title">Body (section headings, accounts, and subtotal lines, in order from top to bottom)</div>
+      <div id="bodyzone" class="zone dropzone" data-sec="body"></div>
+
+      <div class="eps-box" id="epsbox">
+        <div class="eps-title">Earnings per share</div>
+        <div class="eps-row"><span class="lbl">Income from continuing operations</span><span id="slot-epsCont"></span></div>
+        <div class="eps-row"><span class="lbl">Discontinued operations</span><span id="slot-epsDisc"></span></div>
+        <div class="eps-row"><span class="lbl"><b>Net income</b></span><span id="slot-epsNi"></span></div>
+        <div class="eps-note">Weighted-average common shares outstanding: 70,000. Round each EPS figure to the cent (exactly two decimal places), with or without the $ sign. Show a negative amount in parentheses.</div>
+      </div>
+
+      <div class="notis-wrap">
+        <div class="zone-label">Not on the income statement</div>
+        <div id="notiszone" class="zone dropzone" data-sec="notis"></div>
+      </div>
+    </div>
+    <div class="celebration" id="celeb">
+      <h2>Income statement complete!</h2>
+      <p>Every line in its place, tax computed, both discontinued items</p>
+      <p>reported net of tax, and EPS for every line that needs it.</p>
+      <p class="eq">Income from continuing operations $245,280<br>Discontinued operations, net of tax ($65,700)<br>Net income $179,580</p>
+      <p class="eq">EPS: $3.50 &middot; ($0.94) &middot; $2.57</p>
+      <p class="closer">Well done. Keep practicing until there are no mistakes and you can build it in your sleep.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer"><span class="copy">© 2026 O. Watanabe</span>. All rights reserved. &middot; Acct 3860 &middot; Chapter 4: Income Statement, Comprehensive Income, and the Statement of Cash Flows</div>
+
+</div>
+
+<script>
+/* k: title | x (distractor heading) | head | item | sub | in (input line) | notis
+   g: order group in the body (equal g = order does not matter between them) */
+var TILES = [
+  { k:"title", t:"SAMMY ENTERPRISES", hi:0 },
+  { k:"title", t:"Income Statement", hi:1 },
+  { k:"title", t:"For the Year Ended December 31, 20XX", hi:2 },
+  { k:"x",     t:"At December 31, 20XX" },
+  { k:"head",  t:"Sales", g:0, a:"sales" },
+  { k:"item",  t:"Sales revenue", amt:"2,150,000", g:1, a:"sales" },
+  { k:"item",  t:"Sales discounts", amt:"(32,000)", g:2, a:"sales" },
+  { k:"item",  t:"Sales returns and allowances", amt:"(48,000)", g:2, a:"sales" },
+  { k:"sub",   t:"Net sales", val:"$2,070,000", g:3, a:"sales" },
+  { k:"item",  t:"Cost of goods sold", amt:"1,190,000", g:4, a:"sales" },
+  { k:"sub",   t:"Gross profit", val:"$880,000", g:5, a:"sales" },
+  { k:"head",  t:"Operating expenses", g:6, a:"op" },
+  { k:"item",  t:"Selling expenses", amt:"298,000", g:7, a:"op" },
+  { k:"item",  t:"General and administrative expenses", amt:"214,000", g:7, a:"op" },
+  { k:"sub",   t:"Total operating expenses", val:"$512,000", g:8, a:"op" },
+  { k:"sub",   t:"Income from operations", val:"$368,000", g:9, a:"op" },
+  { k:"head",  t:"Other items", g:10, a:"oth" },
+  { k:"item",  t:"Interest expense", amt:"(41,000)", g:11, a:"oth" },
+  { k:"item",  t:"Gain on sale of equipment", amt:"9,000", g:11, a:"oth" },
+  { k:"sub",   t:"Total other items", val:"(32,000)", g:12, a:"oth" },
+  { k:"sub",   t:"Income from continuing operations before income taxes", val:"$336,000", g:13, a:"tax" },
+  { k:"in",    id:"tax",  g:14, a:"tax" },
+  { k:"sub",   t:"Income from continuing operations", val:"$245,280", g:15, a:"tax", needs:["tax"] },
+  { k:"head",  t:"Discontinued operations", g:16, a:"disc" },
+  { k:"in",    id:"loss", g:17, a:"disc" },
+  { k:"in",    id:"gain", g:17, a:"disc" },
+  { k:"sub",   t:"Total discontinued operations, net of tax", val:"(65,700)", g:18, a:"disc", needs:["loss","gain"] },
+  { k:"sub",   t:"Net income", val:"$179,580", g:19, a:"eps", needs:["tax","loss","gain"] },
+  { k:"notis", t:"Dividends declared on common stock", amt:"50,000" }
+];
+var BODY_KINDS = { head:1, item:1, sub:1, "in":1 };
+var BODY_TOTAL = TILES.filter(function(d){ return BODY_KINDS[d.k]; }).length;
+var REQ = {};
+TILES.forEach(function(d){ if(d.k==="sub") REQ[d.g] = TILES.filter(function(e){ return BODY_KINDS[e.k] && e.g < d.g; }).length; });
+
+var SHARES = 70000;
+var ANS = { inTax: 90720, inLossBen: 40500, inLossNet: -109500, inGainTax: 16200, inGainNet: 43800 };
+var EPS = { cont: 245280/SHARES, disc: -65700/SHARES, ni: 179580/SHARES };
+
+var selected = null;
+
+function $(id){ return document.getElementById(id); }
+function defOf(t){ return TILES[Number(t.dataset.k)]; }
+function kidsOf(z){ return Array.prototype.slice.call(z.querySelectorAll(":scope > .tile")); }
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function el(tag, cls, text){ var d=document.createElement(tag); if(cls) d.className=cls; if(text!==undefined) d.textContent=text; return d; }
+
+function clearMarks(t){
+  t.classList.remove("c-title","c-sales","c-op","c-oth","c-tax","c-disc","c-eps","c-notis");
+  var m=t.querySelector(".mark"); if(m){ m.textContent=""; m.classList.remove("bad"); }
+}
+function markRight(t, area){ clearMarks(t); t.classList.add("c-"+area); var m=t.querySelector(".mark"); if(m) m.textContent="✓"; }
+function markWrong(t, sym){ clearMarks(t); var m=t.querySelector(".mark"); if(m){ m.textContent=sym||"✗"; m.classList.add("bad"); } }
+function setFeedback(html){ $("feedback").innerHTML=html; }
+function hideCeleb(){ $("celeb").classList.remove("show"); }
+
+/* ---------- inputs ---------- */
+function mkInput(id, cls, ph, label, tile){
+  var i=document.createElement("input"); i.type="text"; i.id=id; if(cls) i.className=cls; i.placeholder=ph; i.setAttribute("aria-label",label); i.autocomplete="off";
+  i.addEventListener("input",function(){ i.classList.remove("ok","no"); var m=$(id+"Msg"); if(m){ m.textContent=""; m.className="inmsg"; } liveSubtotals(); hideCeleb(); });
+  ["click","mousedown","touchstart"].forEach(function(ev){ i.addEventListener(ev,function(e){ e.stopPropagation(); if(tile) tile.draggable=false; }); });
+  i.addEventListener("focus",function(){ if(tile) tile.draggable=false; });
+  i.addEventListener("blur",function(){ if(tile) tile.draggable=true; });
+  i.addEventListener("drop",function(e){ e.preventDefault(); });
+  /* entered = the student leaves the box (Tab, click away) or presses Enter */
+  i.addEventListener("change",function(){ tryLock(id); });
+  i.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); tryLock(id); } });
+  return i;
+}
+var TARGET = { inTax:[ANS.inTax,"w"], inLossBen:[ANS.inLossBen,"w"], inLossNet:[ANS.inLossNet,"w"], inGainTax:[ANS.inGainTax,"w"], inGainNet:[ANS.inGainNet,"w"],
+               epsCont:[EPS.cont,"e"], epsDisc:[EPS.disc,"e"], epsNi:[EPS.ni,"e"] };
+function tryLock(id){
+  var t=TARGET[id], inp=$(id); if(!t || inp.readOnly) return;
+  if(t[1]==="w"){ if(isAmt(id,t[0])) lockIn(id,fmtWhole(t[0])); return; }
+  var p=valOf(id), c=Math.round(t[0]*100)/100;
+  if(p && !p.bad && p.dec===2 && Math.abs(p.n-c)<1e-9) lockIn(id,fmtEPS(c));
+}
+function msgDiv(id){ var m=el("div","inmsg"); m.id=id+"Msg"; return m; }
+
+/* ---------- tiles ---------- */
+function makeTile(idx){
+  var d=TILES[idx], t=el("div","tile k-"+d.k); t.id="t"+idx; t.dataset.k=idx; t.draggable=true;
+  t.addEventListener("dragstart",function(e){ if(e.target!==t){ return; } e.dataTransfer.setData("text/plain",t.id); t.classList.add("dragging"); });
+  t.addEventListener("dragend",function(){ t.classList.remove("dragging"); });
+  t.addEventListener("click",function(e){
+    e.stopPropagation();
+    if(selected===t){ t.classList.remove("selected"); selected=null; return; }
+    if(selected && t.parentElement.id!=="bank"){
+      var s=selected; s.classList.remove("selected"); selected=null;
+      placeTile(t.parentElement, s, undefined, t); return;
+    }
+    if(selected) selected.classList.remove("selected");
+    selected=t; t.classList.add("selected");
+  });
+  if(d.k==="in"){
+    t.appendChild(el("span","mark"));
+    if(d.id==="tax"){
+      t.appendChild(el("span","lbl","Income tax expense"));
+      t.appendChild(mkInput("inTax","","0","Income tax expense",t));
+      t.appendChild(msgDiv("inTax"));
+    } else if(d.id==="loss"){
+      var l1=el("span","lbl"); l1.appendChild(document.createTextNode("Loss from discontinued operations, net of tax benefit of $"));
+      l1.appendChild(mkInput("inLossBen","small","0","Tax benefit on the loss from discontinued operations",t));
+      t.appendChild(l1); t.appendChild(mkInput("inLossNet","","(0)","Loss from discontinued operations, net of tax",t));
+      t.appendChild(msgDiv("inLossBen")); t.appendChild(msgDiv("inLossNet"));
+    } else {
+      var l2=el("span","lbl"); l2.appendChild(document.createTextNode("Gain on sale of assets of discontinued division, net of tax of $"));
+      l2.appendChild(mkInput("inGainTax","small","0","Tax on the gain on sale of assets of discontinued division",t));
+      t.appendChild(l2); t.appendChild(mkInput("inGainNet","","0","Gain on sale of assets of discontinued division, net of tax",t));
+      t.appendChild(msgDiv("inGainTax")); t.appendChild(msgDiv("inGainNet"));
+    }
+    return t;
+  }
+  if(d.amt) t.appendChild(el("span","amt",d.amt));
+  if(d.k==="sub"){ var v=el("span","amt pending","—"); v.dataset.val=d.val; t.appendChild(v); }
+  t.appendChild(el("span","mark"));
+  t.appendChild(document.createTextNode(d.t));
+  return t;
+}
+
+/* ---------- placing ---------- */
+function insertAt(zone, tile, y){
+  var kids=kidsOf(zone).filter(function(k){ return k!==tile; }), before=null;
+  for(var i=0;i<kids.length;i++){ var r=kids[i].getBoundingClientRect(); if(y<r.top+r.height/2){ before=kids[i]; break; } }
+  if(before) zone.insertBefore(tile,before); else zone.appendChild(tile);
+}
+function placeTile(zone, tile, y, beforeEl){
+  if(beforeEl && beforeEl!==tile) zone.insertBefore(tile,beforeEl);
+  else if(y===undefined) zone.appendChild(tile);
+  else insertAt(zone,tile,y);
+  clearMarks(tile);
+  liveSubtotals(); setFeedback(""); hideCeleb();
+}
+function bindZone(z){
+  z.addEventListener("dragover",function(e){ e.preventDefault(); z.classList.add("over"); });
+  z.addEventListener("dragleave",function(){ z.classList.remove("over"); });
+  z.addEventListener("drop",function(e){
+    e.preventDefault(); z.classList.remove("over");
+    var t=$(e.dataTransfer.getData("text/plain"));
+    if(t && t.classList.contains("tile")) placeTile(z,t,e.clientY);
+  });
+  z.addEventListener("click",function(){ if(selected){ var t=selected; t.classList.remove("selected"); selected=null; placeTile(z,t); } });
+}
+
+/* ---------- parsing ---------- */
+function parseAmt(str){
+  var s=(str||"").trim(); if(s==="") return null;
+  var neg=false;
+  if(/^\(.*\)$/.test(s.replace(/\$/g,"").trim()) || /^\$?\s*\(/.test(s)) neg=true;
+  s=s.replace(/[()\$,\s]/g,"");
+  if(/^[-−]/.test(s)){ neg=true; s=s.replace(/^[-−]/,""); }
+  if(!/^\d*\.?\d*$/.test(s) || s==="" || s===".") return { bad:true };
+  var dec=(s.indexOf(".")>=0)?s.split(".")[1].length:0;
+  var n=Number(s); if(neg) n=-n;
+  return { n:n, neg:neg, dec:dec };
+}
+function valOf(id){ var e=$(id); return e?parseAmt(e.value):null; }
+function isAmt(id, target){
+  var p=valOf(id); if(!p||p.bad) return false;
+  var raw=$(id).value, decStr=raw.indexOf(".")>=0 ? raw.split(".").pop().replace(/[^0-9]/g,"") : "";
+  if(decStr && !/^0+$/.test(decStr)) return false;
+  return Math.abs(p.n-target)<0.005;
+}
+function needOK(n){
+  if(n==="tax") return isAmt("inTax",ANS.inTax);
+  if(n==="loss") return isAmt("inLossBen",ANS.inLossBen) && isAmt("inLossNet",ANS.inLossNet);
+  if(n==="gain") return isAmt("inGainTax",ANS.inGainTax) && isAmt("inGainNet",ANS.inGainNet);
+  return true;
+}
+
+/* ---------- live subtotals: a subtotal shows once every line above it is right ---------- */
+function liveSubtotals(){
+  document.querySelectorAll(".tile.k-sub .amt").forEach(function(v){ v.textContent="—"; v.classList.add("pending"); });
+  var kids=kidsOf($("bodyzone")), prevG=-1, okSoFar=true;
+  kids.forEach(function(t,i){
+    var d=defOf(t);
+    if(!BODY_KINDS[d.k]){ okSoFar=false; return; }
+    if(d.g<prevG) okSoFar=false;
+    if(okSoFar && d.k==="sub" && prevG<d.g && i===REQ[d.g] && (d.needs||[]).every(needOK)){
+      var v=t.querySelector(".amt"); v.textContent=v.dataset.val; v.classList.remove("pending");
+    }
+    if(okSoFar) prevG=d.g;
+  });
+}
+
+/* longest non-decreasing run of g values: tiles outside it are out of order */
+function inOrderSet(gs){
+  var n=gs.length, len=[], prev=[], best=-1, s={};
+  for(var i=0;i<n;i++){
+    len[i]=1; prev[i]=-1;
+    for(var j=0;j<i;j++){ if(gs[j]<=gs[i] && len[j]+1>len[i]){ len[i]=len[j]+1; prev[i]=j; } }
+    if(best<0 || len[i]>len[best]) best=i;
+  }
+  while(best>=0){ s[best]=true; best=prev[best]; }
+  return s;
+}
+
+/* ---------- input feedback ---------- */
+function say(id, ok, text){
+  var inp=$(id), m=$(id+"Msg");
+  inp.classList.remove("ok","no"); m.className="inmsg";
+  if(ok===null){ m.textContent=""; return; }
+  inp.classList.add(ok?"ok":"no"); m.classList.add(ok?"ok":"no"); m.textContent=text;
+}
+function near(a,b,tol){ return Math.abs(a-b)<(tol||0.5); }
+/* a correct answer locks in and shows like the key: commas, parentheses, no box */
+function fmtWhole(n){ var s=Math.round(Math.abs(n)).toLocaleString("en-US"); return n<0 ? "("+s+")" : s; }
+function fmtEPS(n){ var s=Math.abs(n).toFixed(2); return n<0 ? "("+s+")" : "$"+s; }
+function lockIn(id, text){
+  var inp=$(id), f=$(id+"Fmt");
+  say(id,null);
+  if(!f){
+    f=el("span","fmt"+(inp.classList.contains("small")?"":" big")+(id==="epsNi"?" bold":""));
+    f.id=id+"Fmt"; inp.parentNode.insertBefore(f,inp.nextSibling);
+  }
+  f.textContent=text; inp.value=text; inp.readOnly=true; inp.classList.add("locked");
+  var t=inp.closest(".tile");
+  if(t && !t.querySelector("input:not(.locked)")) t.classList.add("done");
+}
+function checkAmount(id, target, traps, label){
+  var p=valOf(id);
+  if(p===null){ say(id,null); return false; }
+  if(p.bad){ say(id,false,"✗ "+label+": type a number, like 12,345."); return false; }
+  if(isAmt(id,target)){ lockIn(id,fmtWhole(target)); return true; }
+  if(target<0 && near(p.n,-target)){ say(id,false,"✗ "+label+": the amount is right, but a loss is a subtraction. Show it in parentheses."); return false; }
+  if(target>0 && near(p.n,-target)){ say(id,false,"✗ "+label+": the amount is right, but this one is not a subtraction. Drop the parentheses or minus sign."); return false; }
+  for(var i=0;i<traps.length;i++){ if(near(Math.abs(p.n),Math.abs(traps[i][0]))){ say(id,false,"✗ "+label+": "+traps[i][1]); return false; } }
+  if(p.dec>0 && near(p.n,target,1)){ say(id,false,"✗ "+label+": round to whole dollars."); return false; }
+  say(id,false,"✗ "+label+": not quite. Recheck the base and the 27% rate."); return false;
+}
+function checkEPS(id, target, traps, label){
+  var p=valOf(id);
+  if(p===null){ say(id,null); return false; }
+  if(p.bad){ say(id,false,"✗ "+label+": type a number, like 1.23 or (1.23)."); return false; }
+  var cents=Math.round(target*100)/100;
+  if(p.dec===2 && near(p.n,cents,1e-9)){ lockIn(id,fmtEPS(cents)); return true; }
+  if(target<0 && Math.abs(Math.abs(p.n)-Math.abs(target))<0.05 && !p.neg){ say(id,false,"✗ "+label+": discontinued operations reduced income here. Show it in parentheses."); return false; }
+  if(id==="epsNi" && p.dec===2 && near(p.n,2.56,1e-9)){ say(id,false,"✗ "+label+": close. Compute it directly from net income, not by combining the two rounded lines above. Rounding makes them differ by a cent."); return false; }
+  if(Math.abs(p.n-target)<0.015 || (p.dec!==2 && Math.abs(p.n-target)<0.05)){ say(id,false,"✗ "+label+": close. Round to the nearest cent, exactly two decimal places."); return false; }
+  for(var i=0;i<traps.length;i++){ if(Math.abs(Math.abs(p.n)-Math.abs(traps[i][0]))<0.006){ say(id,false,"✗ "+label+": "+traps[i][1]); return false; } }
+  say(id,false,"✗ "+label+": not quite. Recheck the numerator and the denominator."); return false;
+}
+
+/* ---------- check ---------- */
+function checkWork(){
+  var anyWrong=false, anyOrder=false, notes=[];
+  var hdr=kidsOf($("hdrzone")), hdrOK=hdr.length===3;
+  hdr.forEach(function(t,k){
+    var d=defOf(t);
+    if(d.k==="title" && d.hi===k) markRight(t,"title");
+    else if(d.k==="title"){ markWrong(t,"↕"); anyOrder=true; hdrOK=false; }
+    else { markWrong(t); anyWrong=true; hdrOK=false; if(d.k==="x") notes.push("“At December 31, 20XX” is a balance sheet date. An income statement covers a period."); }
+  });
+
+  var body=kidsOf($("bodyzone")), bIdx=[], gs=[];
+  body.forEach(function(t,i){
+    var d=defOf(t);
+    if(BODY_KINDS[d.k]){ bIdx.push(i); gs.push(d.g); }
+    else {
+      markWrong(t); anyWrong=true;
+      if(d.k==="notis") notes.push("Dividends are a distribution of earnings, not an expense. They do not go on the income statement.");
+      if(d.k==="x") notes.push("“At December 31, 20XX” is a balance sheet date. An income statement covers a period.");
+    }
+  });
+  var keep=inOrderSet(gs);
+  bIdx.forEach(function(i,p){ var t=body[i]; if(keep[p]) markRight(t,defOf(t).a); else { markWrong(t,"↕"); anyOrder=true; } });
+
+  var notisPlaced=false;
+  kidsOf($("notiszone")).forEach(function(t){
+    var d=defOf(t);
+    if(d.k==="notis"){ markRight(t,"notis"); notisPlaced=true; }
+    else if(d.k==="x") markRight(t,"notis");
+    else { markWrong(t); anyWrong=true; }
+  });
+  kidsOf($("bank")).forEach(clearMarks);
+  liveSubtotals();
+
+  var okTax=checkAmount("inTax",ANS.inTax,[[99360,"that is 27% of income from operations. Other items come first: tax is on income from continuing operations before income taxes."],[66420,"continuing operations only. The discontinued items carry their own tax."]],"Income tax expense");
+  var okLB=checkAmount("inLossBen",ANS.inLossBen,[[150000,"that is the pretax loss. The tax benefit is 27% of it."],[109500,"that is the net loss. The tax benefit is 27% of the pretax loss."]],"Tax benefit");
+  var okLN=checkAmount("inLossNet",ANS.inLossNet,[[190500,"a tax benefit makes the loss smaller, not bigger."],[40500,"that is the tax benefit, not the net loss."]],"Loss, net of tax");
+  var okGT=checkAmount("inGainTax",ANS.inGainTax,[[60000,"that is the pretax gain. The tax is 27% of it."],[43800,"that is the net gain. The tax is 27% of the pretax gain."]],"Tax on gain");
+  var okGN=checkAmount("inGainNet",ANS.inGainNet,[[76200,"tax on a gain makes it smaller, not bigger."],[16200,"that is the tax, not the net gain."]],"Gain, net of tax");
+  var okE1=checkEPS("epsCont",EPS.cont,[[195280/SHARES,"common dividends never come out of EPS."]],"Continuing operations");
+  var okE2=checkEPS("epsDisc",EPS.disc,[[-115700/SHARES,"common dividends never come out of EPS."],[-109500/SHARES,"include both discontinued items, the loss and the gain."]],"Discontinued operations");
+  var okE3=checkEPS("epsNi",EPS.ni,[[129580/SHARES,"common dividends never come out of EPS."]],"Net income");
+
+  var inBank=kidsOf($("bank")).filter(function(t){ return defOf(t).k!=="x"; }).length;
+  var blanks=["inTax","inLossBen","inLossNet","inGainTax","inGainNet","epsCont","epsDisc","epsNi"].filter(function(id){ return valOf(id)===null; }).length;
+  var msgs=[];
+  if(anyWrong) msgs.push("<span class='bad'>&#10007;</span> = does not belong there.");
+  if(anyOrder) msgs.push("<span class='bad'>&#8597;</span> = right place, wrong order.");
+  if(inBank>0) msgs.push("Some tiles are still in the bank.");
+  if(blanks>0) msgs.push("Some boxes are still blank.");
+  notes.filter(function(n,i){ return notes.indexOf(n)===i; }).forEach(function(n){ msgs.push(n); });
+
+  var perfect = inBank===0 && hdrOK && !anyWrong && !anyOrder && body.length===BODY_TOTAL && notisPlaced &&
+                okTax && okLB && okLN && okGT && okGN && okE1 && okE2 && okE3;
+  if(perfect){
+    setFeedback("Everything is in the right place.");
+    $("celeb").classList.add("show");
+    $("celeb").scrollIntoView({behavior:"smooth",block:"center"});
+  } else {
+    hideCeleb();
+    setFeedback(msgs.join(" ") || "Keep going. Read the red notes under the boxes.");
+  }
+}
+function resetAll(){ location.reload(); }
+
+/* ---------- start ---------- */
+[["epsCont","Income from continuing operations"],["epsDisc","Discontinued operations"],["epsNi","Net income"]].forEach(function(p){
+  var slot=$("slot-"+p[0]);
+  slot.appendChild(mkInput(p[0],"","$0.00","Earnings per share: "+p[1],null));
+  slot.parentElement.appendChild(msgDiv(p[0]));
+});
+document.querySelectorAll(".dropzone").forEach(bindZone);
+shuffle(TILES.map(function(_,i){ return i; })).forEach(function(i){ $("bank").appendChild(makeTile(i)); });
+liveSubtotals();
+</script>
+
+</body>
+</html>

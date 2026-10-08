@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>To Date vs. Current</title>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<style>
+/* Layout: a projector board. Three bars share one dollar axis; each year's new piece takes that year's color and drops onto that year's income statement. */
+:root{
+  --bg:#f3f5f8; --panel:#ffffff; --ink:#1b1f24; --muted:#5a6470; --line:#d6dce3; --track:#e8ecf1;
+  --finish:#1b1f24; --ghost:#8e98a4; --focus:#1d64c8;
+  --y19:#C98A0E; --y20:#B3264A; --y21:#1F8A70;
+  --on19:#1b1f24; --on20:#ffffff; --on21:#ffffff;
+  --gp:#2F7FC8; --ongp:#ffffff;
+  --btn:#1b1f24; --btn-ink:#ffffff; --shadow:0 1px 2px rgba(20,30,40,.08),0 6px 18px rgba(20,30,40,.06);
+  --f-ui:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-pen:"Kalam","Segoe Print","Bradley Hand",cursive;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg:#111419;--panel:#191d23;--ink:#e8ebef;--muted:#a3adb8;--line:#2d333b;--track:#242930;--finish:#e8ebef;--ghost:#6f7984;--focus:#7fb2ff;--y19:#B88010;--y20:#BE2A50;--y21:#28977C;--on19:#111419;--on21:#ffffff;--gp:#3F8BD6;--btn:#e8ebef;--btn-ink:#111419;--shadow:0 1px 2px rgba(0,0,0,.4);color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#111419;--panel:#191d23;--ink:#e8ebef;--muted:#a3adb8;--line:#2d333b;--track:#242930;--finish:#e8ebef;--ghost:#6f7984;--focus:#7fb2ff;--y19:#B88010;--y20:#BE2A50;--y21:#28977C;--on19:#111419;--on21:#ffffff;--gp:#3F8BD6;--btn:#e8ebef;--btn-ink:#111419;--shadow:0 1px 2px rgba(0,0,0,.4);color-scheme:dark}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-ui);font-size:16px;font-variant-numeric:tabular-nums}
+.wrap{max-width:1360px;margin:0 auto;padding-inline:16px;padding-block:16px 32px;display:grid;gap:14px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* header */
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px}
+.pagehead{display:grid;gap:6px;padding-top:12px}
+.eyebrow{font:700 13px/1.3 "Atkinson Hyperlegible Next","Atkinson Hyperlegible",var(--f-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ptitle{margin:0;font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-weight:600;font-size:clamp(26px,3.4vw,36px);line-height:1.15;letter-spacing:0;text-wrap:balance}
+.ttl{margin:0;font-size:clamp(20px,2.2vw,26px);font-weight:800;letter-spacing:-.01em;text-wrap:balance}
+.sub{margin:2px 0 0;color:var(--muted);font-size:16px}
+.key{margin:0;font:400 20px/1.3 var(--f-pen);color:var(--ink)}
+.key b{font-weight:700}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow)}
+.btn{font:700 16px/1 var(--f-ui);padding:11px 16px;border-radius:9px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--btn);border-color:var(--btn);color:var(--btn-ink);min-width:120px}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sm{padding:8px 11px;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:700 14px/1 var(--f-ui);padding:8px 11px;border-radius:999px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.chip.on{border-color:var(--ink)}
+.chip .dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.where{margin-left:auto;display:grid;gap:5px;justify-items:end}
+.where-t{font-weight:700;font-size:15px}
+.dots{display:flex;gap:10px}
+.dgrp{display:flex;gap:3px}
+.dd{width:12px;height:6px;border-radius:3px;background:var(--line)}
+.dd.done{background:var(--c)}
+.dd.now{outline:2px solid var(--ink);outline-offset:1px}
+.extra{display:flex;gap:6px}
+
+/* caption */
+.cap{margin:0;background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--capc,var(--ink));border-radius:10px;padding:12px 16px;font-size:clamp(17px,1.6vw,21px);line-height:1.4;min-height:3.2em;box-shadow:var(--shadow)}
+.cap .ph{display:block;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+
+/* board */
+.boardwrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+.board{min-width:820px;padding:18px 22px 10px;display:grid;gap:4px}
+.row{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px;align-items:center;padding:6px 8px;border-radius:10px;transition:background .3s,opacity .3s}
+.row.focus{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.lbl{display:grid;gap:2px}
+.lbl-n{font-weight:800;font-size:18px}
+.lbl-v{font-size:24px;font-weight:800;line-height:1.1}
+.lbl-v small{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-right:6px}
+.lbl-s{font-size:14px;color:var(--muted)}
+.lane{position:relative;height:118px}
+.track{position:absolute;left:0;right:0;top:30px;height:46px;border-radius:7px;background:var(--track);overflow:hidden}
+.grid-l{position:absolute;top:0;bottom:0;width:1px;background:color-mix(in srgb,var(--ink) 10%,transparent)}
+.chunk{position:absolute;top:0;bottom:0;width:0;border-right:2px solid var(--panel);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:width .9s cubic-bezier(.3,.7,.2,1)}
+.chunk.c19{background:var(--y19);color:var(--on19)} .chunk.c20{background:var(--y20);color:var(--on20)} .chunk.c21{background:var(--y21);color:var(--on21)} .chunk.cgp{background:var(--gp);color:var(--ongp)}
+.chunk .cy{font-size:11px;font-weight:800;letter-spacing:.06em;opacity:.9}
+.chunk .cv{font-size:16px;font-weight:800;white-space:nowrap}
+.chunk .cy,.chunk .cv{opacity:0;transition:opacity .3s .7s}
+.chunk.show .cy,.chunk.show .cv{opacity:1}
+.chunk.tight .cy,.chunk.tight .cv{display:none}
+.chunk.fresh{animation:pulse 1.4s ease-out 1}
+@keyframes pulse{0%{filter:brightness(1.25)}100%{filter:none}}
+.finish{z-index:3;position:absolute;top:22px;height:62px;width:0;border-left:4px solid var(--finish);transition:left .9s cubic-bezier(.3,.7,.2,1),opacity .4s}
+.finish .fl{position:absolute;bottom:100%;left:-2px;white-space:nowrap;font-size:13px;font-weight:800;padding-bottom:2px}
+.finish.r .fl{left:auto;right:2px}
+.ghost{z-index:2;position:absolute;top:26px;height:54px;width:0;border-left:3px dashed var(--ghost);opacity:0;transition:opacity .6s .5s}
+.ghost.show{opacity:1}
+.ghost .gl{position:absolute;top:100%;left:-1px;white-space:nowrap;font:400 15px/1.1 var(--f-pen);color:var(--ghost);padding-top:3px}
+.ghost.r .gl{left:auto;right:2px}
+.ghost.lv2 .gl{padding-top:20px}
+.pmark{z-index:3;position:absolute;top:22px;height:62px;width:0;border-left:4px solid var(--finish);opacity:0;transition:opacity .4s}
+.pmark.show{opacity:1}
+.pmark .pl{position:absolute;top:100%;right:2px;white-space:nowrap;font-size:13px;font-weight:800;padding-top:3px}
+.pct{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px;align-items:center;padding:4px 8px;border-radius:10px;transition:background .3s}
+.pct.focus{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.pct-l{font-weight:800;font-size:16px;color:var(--muted)}
+.pct-f{font:400 clamp(18px,1.7vw,22px)/1.3 var(--f-pen)}
+.pct-f b{font-family:var(--f-ui);font-weight:800}
+.ytag{display:inline-block;font:800 12px/1 var(--f-ui);padding:4px 7px;border-radius:5px;margin-right:8px;vertical-align:3px}
+.ytag.c19{background:var(--y19);color:var(--on19)}.ytag.c20{background:var(--y20);color:var(--on20)}.ytag.c21{background:var(--y21);color:var(--on21)}
+.axis{position:relative;height:22px;margin-left:calc(220px + 18px + 8px);margin-right:8px;color:var(--muted);font-size:13px}
+.axis span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.axis span:first-child{transform:none}.axis span:last-child{transform:translateX(-100%)}
+
+/* income statements */
+.isrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);transition:background .3s}
+.card.focus{background:color-mix(in srgb,var(--c) 10%,var(--panel))}
+.card h2{margin:0 0 8px;font-size:17px;font-weight:800}
+.card h2 span{color:var(--muted);font-weight:600}
+.ln{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid var(--line);font-size:17px}
+.ln:first-of-type{border-top:0}
+.ln.gp{font-weight:800;border-top:2px solid var(--ink)}
+.ln .v{font-weight:700}
+.ln .v.empty{color:var(--muted);font-weight:400}
+.check{margin:0;font:400 20px/1.35 var(--f-pen);text-align:right;min-height:1.4em}
+
+/* table */
+.tblwrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:16px}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+tbody th{font-weight:700}
+td.empty{color:var(--muted)}
+
+/* tooltip, flying pieces */
+.tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--bg);font-size:14px;line-height:1.35;padding:8px 10px;border-radius:7px;max-width:280px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.fly{position:fixed;z-index:50;pointer-events:none;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.fly.c19{background:var(--y19);color:var(--on19)}.fly.c20{background:var(--y20);color:var(--on20)}.fly.c21{background:var(--y21);color:var(--on21)}.fly.cgp{background:var(--gp);color:var(--ongp)}
+.instant *, .instant *::before, .instant *::after{transition:none!important;animation:none!important}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+.hint{margin:0;color:var(--muted);font-size:14px}
+/* pages */
+.tabs{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tab{font:700 15px/1 var(--f-ui);padding:10px 14px;border-radius:9px;border:2px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.tab.on{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.tabs #fsbtn{margin-left:auto}
+.page{display:grid;gap:14px}
+.copyright{margin:6px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center}
+/* page 2: journal entries and T-accounts */
+.p2grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:stretch}
+@media (max-width:1180px){.p2grid{grid-template-columns:1fr}}
+.jewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+table.je{min-width:600px;font-size:16px}
+table.je th,table.je td{padding:4px 6px;border-bottom:0;text-align:right;vertical-align:middle}
+table.je thead th{font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:800}
+table.je thead tr:first-child th.yh{border-bottom:4px solid var(--c)}
+table.je thead tr:last-child th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1px solid var(--line)}
+table.je th.unit{text-align:left;color:var(--muted);font-weight:700;font-size:13px}
+.je tr.sec th{text-align:left;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:800;padding-top:12px}
+.je th.acct{text-align:left;font-weight:600;white-space:nowrap}
+.je th.acct.ind{padding-left:34px}
+.je tr.focus th,.je tr.focus td{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.amt{display:inline-block;min-width:3.1em;padding:3px 7px;border-radius:5px;font-weight:800;text-align:right;visibility:hidden;box-sizing:border-box}
+.amt.c19{background:var(--y19);color:var(--on19)}.amt.c20{background:var(--y20);color:var(--on20)}.amt.c21{background:var(--y21);color:var(--on21)}.amt.cgp{background:var(--gp);color:var(--ongp)}
+.amt.on{visibility:visible}
+.amt.cur{outline:3px solid var(--ink);outline-offset:2px}
+.pop{animation:pop .5s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:none;opacity:1}}
+.calc{display:block;font:400 14px/1.15 var(--f-pen);color:var(--muted);visibility:hidden;white-space:nowrap;margin-top:8px}
+.calc.on{visibility:visible}
+.taccts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-content:start;align-items:start;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
+@media (max-width:640px){.taccts{grid-template-columns:1fr}}
+.ta h3{margin:0 0 6px;text-align:center;font-size:16px;line-height:1.25;font-weight:800;text-wrap:balance;min-height:2.5em;display:flex;align-items:flex-end;justify-content:center}
+.tb{display:grid;grid-template-columns:1fr 1fr;border-top:3px solid var(--ink);position:relative}
+.tb::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:3px solid var(--ink);transform:translateX(-1.5px)}
+.tside{min-height:31px;display:flex;align-items:center;justify-content:center;padding:3px 4px;white-space:nowrap}
+.tb .tside:not(.tdc){height:38px;box-sizing:border-box}
+.tb .tside.tall{height:76px}
+.tdc{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-height:0;padding:2px 8px}
+.tl{visibility:hidden}
+.tl.on{visibility:visible}
+.tl.bal{white-space:nowrap;font-weight:800;border-top:2px solid var(--ink);padding:2px 4px 0}
+.tl.bal::before{content:"bal ";font:400 13px var(--f-pen);color:var(--muted)}
+.tfin .tside{border-top:4px double var(--ink);margin-top:4px}
+.tl.fin{font-weight:800;font-size:18px}
+
+/* page 3: statements */
+.p3src{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:stretch}
+@media (max-width:1180px){.p3src{grid-template-columns:1fr}}
+.srcbox{display:grid;grid-template-rows:auto 1fr;gap:5px;min-width:0}
+.srctag{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.srctag b{color:var(--ink);font-weight:800}
+.srcbox > .jewrap,.srcbox > .taccts,.fsbox{transition:box-shadow .3s}
+.srcbox.live > .jewrap,.srcbox.live > .taccts,.fsbox.live{box-shadow:0 0 0 4px var(--ring),var(--shadow)}
+#page3 table.je{font-size:13px;min-width:0;line-height:1.25}
+#page3 table.je th,#page3 table.je td{padding:1px 4px}
+#page3 table.je thead th{font-size:13px}
+#page3 table.je thead tr:last-child th{font-size:10px}
+#page3 .je tr.sec th{font-size:10px;padding-top:3px}
+#page3 .je th.acct.ind{padding-left:20px}
+#page3 .amt{padding:1px 5px;font-size:13px}
+#page3 .calc{display:none}
+#page3 .taccts{padding:10px;gap:8px;line-height:1.25}
+#page3 .ta h3{font-size:13px;margin-bottom:4px}
+#page3 .tb{border-top-width:2px}
+#page3 .tb::before{border-left-width:2px;transform:translateX(-1px)}
+#page3 .tb .tside:not(.tdc){height:22px;padding-block:1px}
+#page3 .tb .tside.tall{height:44px}
+#page3 .tdc{font-size:9px}
+#page3 .tl.bal{font-size:13px}
+#page3 .tl.bal::before{font-size:11px}
+#page3 .tl.fin{font-size:14px}
+#page3 .cur{outline:3px solid var(--ink);outline-offset:2px;border-radius:4px}
+.p3fs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;align-items:start}
+@media (max-width:1000px){.p3fs{grid-template-columns:1fr}}
+.fsbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);min-width:0;overflow-x:auto}
+.fsh{margin:0 0 4px;font-size:18px;font-weight:800;text-align:center}
+table.fs{min-width:0;font-size:16px;line-height:1.3}
+table.fs th,table.fs td{padding:2px 6px;border-bottom:0;vertical-align:middle}
+table.fs thead th{font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:800;text-align:right}
+table.fs thead th.yh{border-bottom:4px solid var(--c);width:84px}
+table.fs thead th.unit{text-align:left;color:var(--muted);font-weight:700;font-size:13px;border-bottom:0}
+table.fs tbody th{text-align:left;font-weight:600}
+table.fs tbody th.l1{padding-left:18px}
+table.fs tbody th.l2{padding-left:36px}
+table.fs tbody th.l3{padding-left:54px}
+table.fs tbody th.grp{color:var(--ink);font-weight:800}
+table.fs tbody th.vd{color:var(--muted);font-weight:800;line-height:1}
+table.fs td.rule{border-top:2px solid var(--ink)}
+table.fs tr.tot th{font-weight:800}
+table.fs .amt{font-size:16px}
+.fsd{display:inline-block;visibility:hidden;font-weight:800;color:var(--muted);padding:3px 7px}
+.fsd.on{visibility:visible}
+.fsnote{margin:8px 0 0;font:400 16px/1.3 var(--f-pen);color:var(--ink);visibility:hidden}
+.fsnote.on{visibility:visible}
+.fsnote b{font-weight:700}
+.star{color:var(--muted)}
+
+@media (max-width:760px){.isrow{grid-template-columns:1fr}.where{margin-left:0;justify-items:start}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Public+Sans:wght@400;600;700;800&family=Atkinson+Hyperlegible+Next:wght@700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+
+<main class="wrap" id="app">
+  <header class="pagehead">
+    <div class="eyebrow">Revenue recognition · Long-term contracts</div>
+    <h1 class="ptitle">Long-Term Contract, Start to Finish</h1>
+  </header>
+  <nav class="tabs" aria-label="Pages">
+    <button class="tab on" id="tab1" type="button">1 · To date vs. current</button>
+    <button class="tab" id="tab2" type="button">2 · Journal entries and T-accounts</button>
+    <button class="tab" id="tab3" type="button">3 · Financial statements</button>
+    <button class="btn sm" id="fsbtn" type="button">Full screen</button>
+  </nav>
+  <section id="page1" class="page">
+  <header class="head">
+    <div>
+      <h2 class="ttl">To date vs. current</h2>
+      <p class="sub">Milestone Construction · contract price $1,600,000 · 20X1 to 20X3 · percentage of completion</p>
+    </div>
+    <p class="key"><b>To date</b> = the whole filled bar. <b>Current</b> = this year's piece = to date now − to date last year.</p>
+  </header>
+
+  <div class="controls" role="group" aria-label="Demonstration controls">
+    <button class="btn" id="back" type="button">◀ Back</button>
+    <button class="btn primary" id="next" type="button">Next ▶</button>
+    <div class="chips" id="chips"></div>
+    <div class="where">
+      <div class="where-t" id="where"></div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+    </div>
+    <div class="extra">
+      <button class="btn sm" id="tblbtn" type="button" aria-expanded="false">Show table</button>
+    </div>
+  </div>
+
+  <p class="cap" id="cap" aria-live="polite"></p>
+
+  <div class="boardwrap">
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="isrow" id="isrow"></div>
+  <p class="check" id="check"></p>
+
+  <div class="tblwrap" id="tblwrap" hidden></div>
+
+  <p class="hint">Keys: → or Space or Page Down for the next step, ← or Page Up to go back, Home for the start. A presentation clicker works too.</p>
+  </section>
+
+  <section id="page2" class="page" hidden>
+    <header class="head">
+      <div>
+        <h2 class="ttl">Journal entries and T-accounts</h2>
+        <p class="sub">Milestone Construction · in $000s · 20X1 to 20X3 · percentage of completion</p>
+      </div>
+      <p class="key">Do not forget to transform any <b>to date</b> values into <b>current</b> values.</p>
+    </header>
+    <div class="controls" role="group" aria-label="Journal entry controls">
+      <button class="btn" id="back2" type="button">◀ Back</button>
+      <button class="btn primary" id="next2" type="button">Next ▶</button>
+      <div class="chips" id="chips2"></div>
+      <div class="where">
+        <div class="where-t" id="where2"></div>
+        <div class="dots" id="dots2" aria-hidden="true"></div>
+      </div>
+    </div>
+    <p class="cap" id="cap2" aria-live="polite"></p>
+    <div class="p2grid">
+      <div class="jewrap"><table class="je" id="je"></table></div>
+      <div class="taccts" id="taccts"></div>
+    </div>
+    <p class="hint">Same keys as page 1. ← at the start goes back to page 1.</p>
+  </section>
+  <section id="page3" class="page" hidden>
+    <header class="head">
+      <div>
+        <h2 class="ttl">Financial statements (partial)</h2>
+        <p class="sub">Milestone Construction · in $000s · 20X1 to 20X3 · percentage of completion</p>
+      </div>
+      <p class="key">Income statement: <b>current</b> amounts. Balance sheet: <b>to date</b> balances.</p>
+    </header>
+    <div class="controls" role="group" aria-label="Financial statement controls">
+      <button class="btn" id="back3" type="button">◀ Back</button>
+      <button class="btn primary" id="next3" type="button">Next ▶</button>
+      <div class="chips" id="chips3"></div>
+      <div class="where">
+        <div class="where-t" id="where3"></div>
+        <div class="dots" id="dots3" aria-hidden="true"></div>
+      </div>
+    </div>
+    <p class="cap" id="cap3" aria-live="polite"></p>
+    <div class="p3src">
+      <div class="srcbox" id="jebox3"><div class="srctag">Journal entries · <b>current</b> amounts → income statement</div><div class="jewrap" id="jehost3"></div></div>
+      <div class="srcbox" id="tbox3"><div class="srctag">T-account balances · <b>to date</b> → balance sheet</div></div>
+    </div>
+    <div class="p3fs">
+      <div class="fsbox" id="isbox3"><h2 class="fsh">Income statement (partial)</h2><table class="fs" id="is3"></table></div>
+      <div class="fsbox" id="bsbox3"><h2 class="fsh">Balance sheet (partial) <span class="star">*</span></h2><table class="fs" id="bs3"></table>
+        <p class="fsnote" id="note3">* If Billings on CIP is greater than CIP, report the difference as a <b>current liability</b>: "Billings in excess of costs and recognized profits."</p></div>
+    </div>
+    <p class="hint">Same keys. ← at the start goes back to page 2.</p>
+  </section>
+  <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+</main>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(() => {
+  'use strict';
+  const MAX = 1600000, PRICE = 1600000;
+  const Y = [
+    { y: '20X1', c: 'c19', cost: 400000, toComplete: 600000, est: 1000000, pct: 0.40, rev: 640000, gp: 240000, estGP: 600000 },
+    { y: '20X2', c: 'c20', cost: 825000, toComplete: 275000, est: 1100000, pct: 0.75, rev: 1200000, gp: 375000, estGP: 500000 },
+    { y: '20X3', c: 'c21', cost: 1070000, toComplete: 0, est: 1070000, pct: 1.00, rev: 1600000, gp: 530000, estGP: 530000 },
+  ];
+  const COLORVAR = { c19: 'var(--y19)', c20: 'var(--y20)', c21: 'var(--y21)', cgp: 'var(--gp)' };
+  const PH = ['Estimate', 'Costs', '% complete', 'Revenue', 'Gross profit', 'Income statement'];
+  const LAST = Y.length * PH.length;
+  const FINAL = LAST + 1;
+  const TOTCOST = Y[Y.length - 1].cost, TOTGP = Y[Y.length - 1].gp;
+  const f = (n) => n.toLocaleString('en-US');
+  const prev = (i, k) => (i > 0 ? Y[i - 1][k] : 0);
+  const pctTxt = (p) => Math.round(p * 100) + '%';
+
+  // ---------- captions ----------
+  function caption(s) {
+    if (s > LAST) return ['Wrap-up · contract price', 'Take all three years of gross profit, 240,000 + 135,000 + 155,000 = 530,000, and slot it into the gray space left in the cost bar. It fits exactly: total costs 1,070,000 + total gross profit 530,000 = contract price 1,600,000.', 'cgp'];
+    if (s === 0) return ['Start', 'Milestone Construction signs a $1,600,000 contract in 20X1. Nothing is built yet, so every bar is empty. The revenue bar ends at the contract price, and that finish line never moves.', null];
+    const i = Math.floor((s - 1) / 6), p = (s - 1) % 6 + 1, d = Y[i];
+    const cc = d.cost - prev(i, 'cost'), cr = d.rev - prev(i, 'rev'), cg = d.gp - prev(i, 'gp');
+    let t = '';
+    if (p === 1) {
+      if (i === 0) t = 'Estimated total costs = costs to date + costs to complete = 400,000 + 600,000 = 1,000,000. That is the cost bar\'s finish line. Estimated total gross profit = 1,600,000 − 1,000,000 = 600,000.';
+      else if (i === 1) t = 'New estimate: 825,000 + 275,000 = 1,100,000. The finish line moves out, and 20X1\'s estimate stays behind as a gray ghost. Estimated total gross profit falls to 1,600,000 − 1,100,000 = 500,000.';
+      else t = 'The job is done, so costs to complete = 0 and the estimate is just costs to date: 1,070,000. The finish line moves back in. Estimated total gross profit = 1,600,000 − 1,070,000 = 530,000.';
+    } else if (p === 2) {
+      t = i === 0 ? 'Costs to date: 400,000. All of it is 20X1\'s piece, because nothing came before it. Current = 400,000.'
+        : 'Costs to date: ' + f(d.cost) + '. The bar keeps the earlier pieces. The new piece is ' + f(d.cost) + ' − ' + f(prev(i, 'cost')) + ' = ' + f(cc) + '. That is current.' + (i === 2 ? ' The bar reaches the finish line.' : '');
+    } else if (p === 3) {
+      t = '% complete = costs TO DATE ÷ estimated total costs = ' + f(d.cost) + ' ÷ ' + f(d.est) + ' = ' + pctTxt(d.pct) + '. It is a to-date percentage, not this year\'s share.';
+    } else if (p === 4) {
+      t = 'Revenue to date = 1,600,000 × ' + pctTxt(d.pct) + ' = ' + f(d.rev) + '.' + (i === 0 ? ' Current = 640,000 − 0 = 640,000.' : ' ' + f(prev(i, 'rev')) + ' of it was recognized before. Current = ' + f(d.rev) + ' − ' + f(prev(i, 'rev')) + ' = ' + f(cr) + '.');
+    } else if (p === 5) {
+      t = 'Gross profit to date = ' + f(d.rev) + ' − ' + f(d.cost) + ' = ' + f(d.gp) + '.' + (i === 0 ? ' Current = 240,000.' : ' Current = ' + f(d.gp) + ' − ' + f(prev(i, 'gp')) + ' = ' + f(cg) + '. Same as ' + f(cr) + ' − ' + f(cc) + '.');
+    } else {
+      t = 'Only the ' + d.y + ' pieces go on the ' + d.y + ' income statement: revenue ' + f(cr) + ', costs ' + f(cc) + ', gross profit ' + f(cg) + '.' + (i === 2 ? ' Check: 240,000 + 135,000 + 155,000 = 530,000 = 1,600,000 − 1,070,000.' : '');
+    }
+    return [d.y + ' · ' + PH[p - 1], t, d.c];
+  }
+
+  // ---------- build the board ----------
+  const board = document.getElementById('board');
+  const ROWS = [
+    { k: 'cost', name: 'Construction costs', finish: 'est', fLabel: 'estimated total' },
+    { k: 'pct' },
+    { k: 'rev', name: 'Revenue', finish: 'price', fLabel: 'contract price' },
+    { k: 'gp', name: 'Gross profit', finish: 'estGP', fLabel: 'estimated total GP' },
+  ];
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const R = {};
+  ROWS.forEach((row) => {
+    if (row.k === 'pct') {
+      const p = el('div', 'pct'); p.id = 'row-pct';
+      p.append(el('div', 'pct-l', '% complete'));
+      const fml = el('div', 'pct-f'); fml.id = 'pctf'; p.append(fml);
+      board.append(p); R.pct = { row: p, fml };
+      return;
+    }
+    const r = el('div', 'row'); r.id = 'row-' + row.k;
+    const lbl = el('div', 'lbl');
+    const n = el('div', 'lbl-n', row.name);
+    const v = el('div', 'lbl-v'); const s = el('div', 'lbl-s');
+    lbl.append(n, v, s);
+    const lane = el('div', 'lane');
+    const track = el('div', 'track');
+    [0.25, 0.5, 0.75].forEach((g) => { const gl = el('div', 'grid-l'); gl.style.left = (g * 100) + '%'; track.append(gl); });
+    const chunks = Y.map((d) => {
+      const c = el('div', 'chunk ' + d.c);
+      c.dataset.year = d.y; c.dataset.row = row.k;
+      c.append(el('span', 'cy', String(d.y)), el('span', 'cv', ''));
+      track.append(c);
+      return c;
+    });
+    const ghosts = Y.map((d, gi) => { const g = el('div', 'ghost' + (gi === 1 ? ' lv2' : '')); g.append(el('span', 'gl', '')); lane.append(g); return g; });
+    const fin = el('div', 'finish'); fin.append(el('span', 'fl', ''));
+    lane.append(track, fin);
+    r.append(lbl, lane);
+    board.append(r);
+    R[row.k] = { row: r, v, s, chunks, ghosts, fin, def: row };
+  });
+  {
+    const gpc = el('div', 'chunk cgp'); gpc.dataset.row = 'cost';
+    gpc.append(el('span', 'cy', 'GROSS PROFIT'), el('span', 'cv', f(TOTGP)));
+    gpc.style.left = (TOTCOST / MAX * 100) + '%';
+    gpc.dataset.tip = 'Total gross profit: 240,000 + 135,000 + 155,000 = 530,000\nCosts 1,070,000 + gross profit 530,000 = contract price 1,600,000';
+    R.cost.row.querySelector('.track').append(gpc); R.cost.gpc = gpc;
+    const pm = el('div', 'pmark'); pm.style.left = '100%'; pm.append(el('span', 'pl', 'contract price ' + f(PRICE)));
+    R.cost.row.querySelector('.lane').append(pm); R.cost.pm = pm;
+  }
+  const axis = el('div', 'axis'); axis.setAttribute('aria-hidden', 'true');
+  [0, 400000, 800000, 1200000, 1600000].forEach((t) => { const sp = el('span', '', t === 0 ? '0' : f(t)); sp.style.left = (t / MAX * 100) + '%'; axis.append(sp); });
+  board.append(axis);
+
+  // income statement cards
+  const isrow = document.getElementById('isrow');
+  const CARDS = Y.map((d) => {
+    const c = el('section', 'card'); c.style.setProperty('--c', COLORVAR[d.c]);
+    const h = el('h2'); h.append(document.createTextNode(d.y + ' '), el('span', '', 'income statement'));
+    const mk = (label, cls) => { const ln = el('div', 'ln' + (cls ? ' ' + cls : '')); const v = el('span', 'v', '–'); ln.append(el('span', '', label), v); c.append(ln); return v; };
+    c.append(h);
+    const rev = mk('Construction revenue'), cost = mk('Construction costs'), gp = mk('Gross profit', 'gp');
+    isrow.append(c);
+    return { card: c, rev, cost, gp };
+  });
+  const checkEl = document.getElementById('check');
+
+  // chips and dots
+  const chips = document.getElementById('chips');
+  const CHIPS = [{ label: 'Start', s: 0 }].concat(Y.map((d, i) => ({ label: 'End of ' + d.y, s: (i + 1) * 6, c: d.c })), [{ label: 'Contract price', s: FINAL, c: 'cgp' }]);
+  const chipEls = CHIPS.map((ch) => {
+    const b = el('button', 'chip'); b.type = 'button';
+    if (ch.c) { const dot = el('span', 'dot'); dot.style.background = COLORVAR[ch.c]; b.append(dot); }
+    b.append(document.createTextNode(ch.label));
+    b.addEventListener('click', () => go(ch.s, false));
+    chips.append(b); return b;
+  });
+  const dots = document.getElementById('dots');
+  const dotEls = [];
+  Y.forEach((d) => { const g = el('div', 'dgrp'); for (let p = 0; p < 6; p++) { const dd = el('div', 'dd'); dd.style.setProperty('--c', COLORVAR[d.c]); g.append(dd); dotEls.push(dd); } dots.append(g); });
+  { const g = el('div', 'dgrp'); const dd = el('div', 'dd'); dd.style.setProperty('--c', 'var(--gp)'); g.append(dd); dotEls.push(dd); dots.append(g); }
+
+  // ---------- render ----------
+  let step = 0, renderToken = 0;
+  const reached = (s, i, p) => s >= i * 6 + p;
+  function latest(s, p) { let k = -1; Y.forEach((d, i) => { if (reached(s, i, p)) k = i; }); return k; }
+
+  function render(s, animate) {
+    renderToken++;
+    const root = document.documentElement;
+    if (!animate) root.classList.add('instant');
+    const cur = s === 0 ? null : s > LAST ? { i: Y.length - 1, p: 7 } : { i: Math.floor((s - 1) / 6), p: (s - 1) % 6 + 1 };
+    const est = latest(s, 1);
+
+    // cost and gross profit rows: chunks, finish, ghosts
+    [['cost', 2, 'est'], ['rev', 4, null], ['gp', 5, 'estGP']].forEach(([k, phase, estKey]) => {
+      const row = R[k];
+      let todate = 0;
+      Y.forEach((d, i) => {
+        const c = row.chunks[i];
+        const on = reached(s, i, phase);
+        const from = prev(i, k), amt = d[k] - from;
+        c.style.left = (from / MAX * 100) + '%';
+        c.style.width = on ? (amt / MAX * 100) + '%' : '0%';
+        c.classList.toggle('show', on);
+        c.querySelector('.cv').textContent = f(amt);
+        c.dataset.tip = d.y + ' current ' + (k === 'cost' ? 'costs' : k === 'rev' ? 'revenue' : 'gross profit') + ': ' + f(amt) + (i > 0 ? '\n= to date ' + f(d[k]) + ' − to date last year ' + f(from) : '');
+        const isFresh = animate && cur && cur.i === i && cur.p === phase;
+        c.classList.toggle('fresh', !!isFresh);
+        if (on) todate = d[k];
+      });
+      // finish line
+      let finVal = null;
+      if (k === 'rev') finVal = PRICE; else if (est >= 0) finVal = Y[est][estKey];
+      row.fin.hidden = finVal == null;
+      if (finVal != null) {
+        const pos = finVal / MAX;
+        row.fin.style.left = (pos * 100) + '%';
+        row.fin.classList.toggle('r', pos > 0.8);
+        row.fin.querySelector('.fl').textContent = row.def.fLabel + ' ' + f(finVal);
+      }
+      // ghosts: earlier estimates replaced by a later one
+      row.ghosts.forEach((g, gi) => {
+        const show = estKey && est > gi && Y[gi][estKey] !== Y[est][estKey] && !(k === 'cost' && s > LAST);
+        g.classList.toggle('show', !!show);
+        if (estKey) {
+          const pos = Y[gi][estKey] / MAX;
+          g.style.left = (pos * 100) + '%';
+          g.classList.toggle('r', pos > 0.8);
+          g.querySelector('.gl').textContent = Y[gi].y + ' estimate ' + f(Y[gi][estKey]);
+        }
+      });
+      // labels
+      row.v.textContent = '';
+      const sm = el('small', '', 'to date'); row.v.append(sm, document.createTextNode(f(todate)));
+      row.s.textContent = k === 'rev' ? 'contract price ' + f(PRICE) : (est >= 0 ? 'estimated total ' + f(Y[est][estKey]) : 'no estimate yet');
+    });
+
+    // wrap-up: total gross profit fills the rest of the cost bar
+    {
+      const fin = s > LAST, g = R.cost.gpc;
+      g.classList.toggle('show', fin);
+      g.classList.remove('fresh');
+      if (fin && animate) g.style.width = '0%';
+      else g.style.width = fin ? (TOTGP / MAX * 100) + '%' : '0%';
+      R.cost.pm.classList.toggle('show', fin);
+      if (fin) R.cost.s.textContent = 'costs ' + f(TOTCOST) + ' + gross profit ' + f(TOTGP) + ' = ' + f(PRICE);
+    }
+
+    // % complete strip
+    const pi = latest(s, 3);
+    R.pct.fml.textContent = '';
+    if (pi < 0) R.pct.fml.append(document.createTextNode('appears once costs are in'));
+    else {
+      const d = Y[pi];
+      const tag = el('span', 'ytag ' + d.c, String(d.y));
+      R.pct.fml.append(tag, document.createTextNode(f(d.cost) + ' to date ÷ ' + f(d.est) + ' estimated total = '), el('b', '', pctTxt(d.pct)));
+    }
+
+    // income statements
+    Y.forEach((d, i) => {
+      const on = reached(s, i, 6);
+      const C = CARDS[i];
+      const vals = [d.rev - prev(i, 'rev'), d.cost - prev(i, 'cost'), d.gp - prev(i, 'gp')];
+      [C.rev, C.cost, C.gp].forEach((v, j) => {
+        const txt = j === 1 ? '(' + f(vals[j]) + ')' : f(vals[j]);
+        if (!on) { v.textContent = '–'; v.classList.add('empty'); }
+        else if (!(animate && cur && cur.i === i && cur.p === 6)) { v.textContent = txt; v.classList.remove('empty'); }
+      });
+    });
+    checkEl.textContent = s >= LAST ? 'Σ 240,000 + 135,000 + 155,000 = 530,000 = 1,600,000 − 1,070,000 ✓' : '';
+
+    // focus
+    const focusRow = (id, on) => { const n = document.getElementById(id); if (n) n.classList.toggle('focus', on); };
+    focusRow('row-cost', !!cur && (cur.p === 1 || cur.p === 2 || cur.p === 7));
+    focusRow('row-pct', !!cur && cur.p === 3);
+    focusRow('row-rev', !!cur && cur.p === 4);
+    focusRow('row-gp', !!cur && (cur.p === 1 || cur.p === 5 || cur.p === 7));
+    CARDS.forEach((C, i) => C.card.classList.toggle('focus', !!cur && cur.p === 6 && cur.i === i));
+
+    // caption, position, controls
+    const [ph, txt, cc] = caption(s);
+    const cap = document.getElementById('cap');
+    cap.textContent = '';
+    cap.append(el('span', 'ph', ph), document.createTextNode(txt));
+    cap.style.setProperty('--capc', cc ? COLORVAR[cc] : 'var(--ink)');
+    document.getElementById('where').textContent = s === 0 ? 'Start' : s > LAST ? 'Wrap-up' : Y[cur.i].y + ' · step ' + cur.p + ' of 6';
+    dotEls.forEach((dd, k) => { dd.classList.toggle('done', k < s); dd.classList.toggle('now', k === s - 1); });
+    chipEls.forEach((b, k) => b.classList.toggle('on', CHIPS[k].s === s));
+    document.getElementById('back').disabled = s === 0;
+    { const nx = document.getElementById('next'); nx.disabled = false; nx.textContent = s >= FINAL ? 'Page 2 ▶' : 'Next ▶'; }
+    renderTable(s);
+
+    if (!animate) { void root.offsetWidth; requestAnimationFrame(() => root.classList.remove('instant')); }
+    requestAnimationFrame(fitLabels);
+    if (animate) setTimeout(fitLabels, 950);
+    if (animate && cur && cur.p === 6) flyToStatement(cur.i);
+    if (animate && s === FINAL) flyGpToCosts();
+  }
+
+  function fitLabels() {
+    document.querySelectorAll('.chunk').forEach((c) => {
+      const cv = c.querySelector('.cv');
+      c.classList.remove('tight');
+      if (c.classList.contains('show') && c.offsetWidth > 0 && cv.scrollWidth + 10 > c.offsetWidth) c.classList.add('tight');
+    });
+  }
+
+  // ---------- pieces fly to the income statement ----------
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function countUp(node, to, paren, delay) {
+    node.classList.remove('empty');
+    const fmt = (n) => (paren ? '(' + f(n) + ')' : f(n));
+    if (reduce) { node.textContent = fmt(to); return; }
+    node.textContent = fmt(0);
+    const t0 = performance.now() + delay, dur = 700, mine = renderToken;
+    const tick = (now) => {
+      if (mine !== renderToken) return;
+      const k = Math.min(1, Math.max(0, (now - t0) / dur));
+      const e = 1 - Math.pow(1 - k, 3);
+      node.textContent = fmt(Math.round(to * e / 1000) * 1000);
+      if (k < 1) requestAnimationFrame(tick); else node.textContent = fmt(to);
+    };
+    requestAnimationFrame(tick);
+  }
+  function flyToStatement(i) {
+    const d = Y[i], C = CARDS[i];
+    const pairs = [['rev', C.rev, false], ['cost', C.cost, true], ['gp', C.gp, false]];
+    pairs.forEach(([k, target, paren], j) => {
+      const amt = d[k] - prev(i, k);
+      const src = R[k].chunks[i];
+      const delay = j * 220;
+      if (!reduce && src.offsetWidth > 0 && typeof src.animate === 'function') {
+        const a = src.getBoundingClientRect(), b = target.getBoundingClientRect();
+        const fl = el('div', 'fly ' + d.c, f(amt));
+        fl.style.left = a.left + 'px'; fl.style.top = a.top + 'px'; fl.style.width = a.width + 'px'; fl.style.height = a.height + 'px';
+        document.body.append(fl);
+        const dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+        const sx = Math.max(0.35, Math.min(1, 110 / a.width)), sy = 30 / a.height;
+        const anim = fl.animate([
+          { transform: 'translate(0,0) scale(1,1)', opacity: 1 },
+          { transform: 'translate(' + dx * 0.5 + 'px,' + (dy * 0.5 - 40) + 'px) scale(' + sx + ',' + sy + ')', opacity: 1, offset: 0.55 },
+          { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx + ',' + sy + ')', opacity: 0.15 },
+        ], { duration: 900, delay, easing: 'cubic-bezier(.4,.1,.2,1)', fill: 'both' });
+        anim.onfinish = () => fl.remove();
+        countUp(target, amt, paren, delay + 650);
+      } else countUp(target, amt, paren, 0);
+    });
+  }
+
+  function landGp() {
+    if (step <= LAST) return;
+    const g = R.cost.gpc;
+    g.style.transition = 'none'; g.style.width = (TOTGP / MAX * 100) + '%'; void g.offsetWidth; g.style.transition = '';
+    g.classList.add('fresh'); fitLabels();
+  }
+  function flyGpToCosts() {
+    const a0 = R.gp.chunks[0].getBoundingClientRect(), a2 = R.gp.chunks[Y.length - 1].getBoundingClientRect();
+    const tr = R.cost.row.querySelector('.track').getBoundingClientRect();
+    const w = a2.right - a0.left;
+    if (reduce || w <= 0 || typeof document.body.animate !== 'function') { landGp(); return; }
+    const fl = el('div', 'fly cgp', 'gross profit ' + f(TOTGP));
+    fl.style.left = a0.left + 'px'; fl.style.top = a0.top + 'px'; fl.style.width = w + 'px'; fl.style.height = a0.height + 'px';
+    document.body.append(fl);
+    const dx = (tr.left + tr.width * TOTCOST / MAX) - a0.left, dy = tr.top - a0.top;
+    const an = fl.animate([
+      { transform: 'translate(0,0)', opacity: 0.9 },
+      { transform: 'translate(' + dx * 0.5 + 'px,' + (dy * 0.5 - 40) + 'px)', opacity: 1, offset: 0.5 },
+      { transform: 'translate(' + dx + 'px,' + dy + 'px)', opacity: 1 },
+    ], { duration: 1200, easing: 'cubic-bezier(.4,.1,.2,1)', fill: 'both' });
+    an.onfinish = () => { landGp(); fl.remove(); };
+  }
+
+  // ---------- table ----------
+  const tblwrap = document.getElementById('tblwrap');
+  function renderTable(s) {
+    if (tblwrap.hidden) return;
+    const rows = [
+      ['① Percent complete', 3, (d) => f(d.cost) + ' / ' + f(d.est) + ' = ' + d.pct.toFixed(2)],
+      ['② Revenue to date', 4, (d) => f(d.rev)],
+      ['③ Current period revenue', 4, (d, i) => f(d.rev - prev(i, 'rev'))],
+      ['④ Current costs', 2, (d, i) => '(' + f(d.cost - prev(i, 'cost')) + ')'],
+      ['⑤ Gross profit', 5, (d, i) => f(d.gp - prev(i, 'gp'))],
+    ];
+    const t = el('table');
+    const cap = el('caption', '', 'Milestone Construction, percentage of completion'); cap.style.cssText = 'text-align:left;padding:10px 12px;font-weight:800';
+    t.append(cap);
+    const th = el('thead'); const hr = el('tr'); hr.append(el('th', '', ''));
+    Y.forEach((d) => hr.append(el('th', '', String(d.y)))); th.append(hr); t.append(th);
+    const tb = el('tbody');
+    rows.forEach(([name, p, fn]) => {
+      const tr = el('tr'); tr.append(el('th', '', name));
+      Y.forEach((d, i) => { const on = reached(s, i, p); tr.append(el('td', on ? '' : 'empty', on ? fn(d, i) : '–')); });
+      tb.append(tr);
+    });
+    t.append(tb);
+    tblwrap.textContent = ''; tblwrap.append(t);
+  }
+  const tblbtn = document.getElementById('tblbtn');
+  tblbtn.addEventListener('click', () => {
+    tblwrap.hidden = !tblwrap.hidden;
+    tblbtn.textContent = tblwrap.hidden ? 'Show table' : 'Hide table';
+    tblbtn.setAttribute('aria-expanded', String(!tblwrap.hidden));
+    renderTable(step);
+  });
+
+  // ---------- tooltip ----------
+  const tip = document.getElementById('tip');
+  board.addEventListener('pointermove', (e) => {
+    const c = e.target.closest ? e.target.closest('.chunk.show') : null;
+    if (!c) { tip.hidden = true; return; }
+    tip.textContent = c.dataset.tip; tip.style.whiteSpace = 'pre-line'; tip.hidden = false;
+    const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+    tip.style.left = x + 'px'; tip.style.top = (e.clientY + 16) + 'px';
+  });
+  board.addEventListener('pointerleave', () => { tip.hidden = true; });
+
+  // ---------- navigation ----------
+  function go(s, animate) { step = Math.max(0, Math.min(FINAL, s)); render(step, animate); }
+  document.getElementById('next').addEventListener('click', () => { if (step < FINAL) go(step + 1, true); else if (window.TDPages) window.TDPages.show(2); });
+  document.getElementById('back').addEventListener('click', () => { if (step > 0) go(step - 1, false); });
+  document.addEventListener('keydown', (e) => {
+    if (e.defaultPrevented || document.getElementById('page1').hidden) return;
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); if (step < FINAL) go(step + 1, true); else if (window.TDPages) window.TDPages.show(2); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (step > 0) go(step - 1, false); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0, false); }
+    else if (e.key === 'End') { e.preventDefault(); go(FINAL, false); }
+  });
+  const fsbtn = document.getElementById('fsbtn');
+  fsbtn.addEventListener('click', () => {
+    const d = document;
+    try {
+      if (d.fullscreenElement) d.exitFullscreen().catch(() => {});
+      else if (d.documentElement.requestFullscreen) d.documentElement.requestFullscreen().catch(() => { fsbtn.textContent = 'Full screen unavailable'; fsbtn.disabled = true; });
+      else { fsbtn.textContent = 'Full screen unavailable'; fsbtn.disabled = true; }
+    } catch (err) { fsbtn.textContent = 'Full screen unavailable'; fsbtn.disabled = true; }
+  });
+  document.addEventListener('fullscreenchange', () => { fsbtn.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen'; });
+  window.addEventListener('resize', fitLabels);
+
+  render(0, false);
+})();
+</script>
+<script>
+(() => {
+  'use strict';
+  const LAST2 = 13;
+  const YC = ['c19', 'c20', 'c21'];
+  const YEARS = ['20X1', '20X2', '20X3'];
+  const ENTRY = ['record the costs', 'record billings', 'record collections', 'recognize revenue'];
+  const f = (n) => n.toLocaleString('en-US');
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const sOf = (y, e) => y * 4 + e;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const JE = [
+    { h: '1. Record the costs' },
+    { acct: 'Construction in progress (CIP)', side: 0, e: 1, key: 'cip-cost', vals: [400, 425, 245] },
+    { acct: 'Materials / Cash / Payables', side: 1, e: 1, vals: [400, 425, 245] },
+    { h: '2. Record billings' },
+    { acct: 'Accounts receivable', side: 0, e: 2, key: 'ar-dr', vals: [300, 600, 700], calc: [null, '900 − 300', '1,600 − 900'] },
+    { acct: 'Billings on CIP', side: 1, e: 2, key: 'bill-cr', vals: [300, 600, 700] },
+    { h: '3. Record collections' },
+    { acct: 'Cash', side: 0, e: 3, vals: [270, 540, 615], calc: [null, '810 − 270', '1,425 − 810'] },
+    { acct: 'Accounts receivable', side: 1, e: 3, key: 'ar-cr', vals: [270, 540, 615] },
+    { h: '4. Recognize revenue' },
+    { acct: 'CIP (gross profit)', side: 0, e: 4, key: 'cip-gp', vals: [240, 135, 155] },
+    { acct: 'Construction expense', side: 0, e: 4, key: 'exp', vals: [400, 425, 245] },
+    { acct: 'Construction revenue', side: 1, e: 4, key: 'rev', vals: [640, 560, 400] },
+    { h: '5. At completion' },
+    { acct: 'Billings on CIP', side: 0, done: true, key: 'bill-close', vals: [null, null, 1600] },
+    { acct: 'CIP', side: 1, done: true, key: 'cip-close', vals: [null, null, 1600] },
+  ];
+  const atOf = (row, y) => (row.done ? LAST2 : sOf(y, row.e));
+
+  // T-accounts: each row is [debit item, credit item]; a TALL row spans two CIP rows so the year blocks line up
+  const TALL = (dr, cr) => { const r = [dr, cr]; r.tall = true; return r; };
+  const TA = [
+    { name: 'Construction in progress (CIP)', k: 'cip', rows: [
+      [{ v: 400, y: 0, at: 1, src: 'cip-cost' }, null],
+      [{ v: 240, y: 0, at: 4, src: 'cip-gp' }, null],
+      [{ v: 640, at: 4, bal: true }, null],
+      [{ v: 425, y: 1, at: 5, src: 'cip-cost' }, null],
+      [{ v: 135, y: 1, at: 8, src: 'cip-gp' }, null],
+      [{ v: 1200, at: 8, bal: true }, null],
+      [{ v: 245, y: 2, at: 9, src: 'cip-cost' }, null],
+      [{ v: 155, y: 2, at: 12, src: 'cip-gp' }, null],
+      [{ v: 1600, at: 12, bal: true }, { v: 1600, y: 'gp', at: 13, src: 'cip-close' }],
+    ], fin: [{ v: 0, at: 13 }, null] },
+    { name: 'Billings on CIP', k: 'bill', rows: [
+      TALL(null, { v: 300, y: 0, at: 2, src: 'bill-cr' }),
+      [null, { v: 300, at: 2, bal: true }],
+      TALL(null, { v: 600, y: 1, at: 6, src: 'bill-cr' }),
+      [null, { v: 900, at: 6, bal: true }],
+      TALL(null, { v: 700, y: 2, at: 10, src: 'bill-cr' }),
+      [{ v: 1600, y: 'gp', at: 13, src: 'bill-close' }, { v: 1600, at: 10, bal: true }],
+    ], fin: [null, { v: 0, at: 13 }] },
+    { name: 'Accounts receivable', k: 'ar', rows: [
+      TALL({ v: 300, y: 0, at: 2, src: 'ar-dr' }, { v: 270, y: 0, at: 3, src: 'ar-cr' }),
+      [{ v: 30, at: 3, bal: true }, null],
+      TALL({ v: 600, y: 1, at: 6, src: 'ar-dr' }, { v: 540, y: 1, at: 7, src: 'ar-cr' }),
+      [{ v: 90, at: 7, bal: true }, null],
+      TALL({ v: 700, y: 2, at: 10, src: 'ar-dr' }, { v: 615, y: 2, at: 11, src: 'ar-cr' }),
+      [{ v: 175, at: 11, bal: true }, null],
+    ], fin: [{ v: 175, at: 13 }, null] },
+  ];
+
+  const CAP = [
+    ['Start', 'Same contract, now in journal entries. All amounts are in thousands. Three accounts to watch: Construction in progress (CIP), Billings on CIP, and Accounts receivable.'],
+    ['20X1 · Record the costs', 'Costs go into Construction in progress, an inventory account. Current costs = 400. Dr CIP 400, Cr Materials / Cash / Payables 400.'],
+    ['20X1 · Record billings', 'Billings to date = 300, and nothing was billed before, so current billings = 300. Dr Accounts receivable 300, Cr Billings on CIP 300. Billings on CIP is a contra account to CIP.'],
+    ['20X1 · Record collections', 'Collections to date = 270, all of it this year. Dr Cash 270, Cr Accounts receivable 270. AR balance = 300 − 270 = 30.'],
+    ['20X1 · Recognize revenue', 'The current amounts from page 1: revenue 640, expense 400, gross profit 240. Gross profit goes into CIP too, so CIP = 400 + 240 = 640, which equals revenue to date.'],
+    ['20X2 · Record the costs', 'Costs to date are 825. Current costs = 825 − 400 = 425. Dr CIP 425.'],
+    ['20X2 · Record billings', 'The problem gives billings TO DATE: 900. Current billings = 900 − 300 = 600. Dr Accounts receivable 600, Cr Billings on CIP 600. Billings on CIP balance = 900.'],
+    ['20X2 · Record collections', 'Collections to date are 810. Current collections = 810 − 270 = 540. AR balance = 30 + 600 − 540 = 90.'],
+    ['20X2 · Recognize revenue', 'Current amounts from page 1: revenue 560, expense 425, gross profit 135. CIP = 640 + 425 + 135 = 1,200, again equal to revenue to date.'],
+    ['20X3 · Record the costs', 'Costs to date are 1,070. Current costs = 1,070 − 825 = 245. Dr CIP 245.'],
+    ['20X3 · Record billings', 'Billings to date are 1,600. Current billings = 1,600 − 900 = 700. Billings on CIP = 1,600, the full contract price.'],
+    ['20X3 · Record collections', 'Collections to date are 1,425. Current collections = 1,425 − 810 = 615. AR balance = 90 + 700 − 615 = 175. The customer still owes 175.'],
+    ['20X3 · Recognize revenue', 'Current amounts from page 1: revenue 400, expense 245, gross profit 155. CIP = 1,600 = contract price. CIP and Billings on CIP are now equal.'],
+    ['20X3 · At completion', 'The job is done and fully billed, so the two accounts offset: Dr Billings on CIP 1,600, Cr CIP 1,600. Both close to zero. Accounts receivable stays at 175 until the customer pays.'],
+  ];
+  const CAPC = (s) => (s === 0 ? 'var(--ink)' : s === LAST2 ? 'var(--gp)' : 'var(--y' + (19 + Math.floor((s - 1) / 4)) + ')');
+
+  // ---------- build journal entry table ----------
+  const je = document.getElementById('je');
+  const thead = el('thead');
+  const h1 = el('tr'); h1.append(el('th', 'unit', 'in $000s'));
+  YEARS.forEach((yr, y) => { const th = el('th', 'yh', String(yr)); th.colSpan = 2; th.style.setProperty('--c', 'var(--y' + (19 + y) + ')'); th.style.textAlign = 'center'; h1.append(th); });
+  const h2 = el('tr'); h2.append(el('th', '', ''));
+  YEARS.forEach(() => { h2.append(el('th', '', 'Dr'), el('th', '', 'Cr')); });
+  thead.append(h1, h2); je.append(thead);
+  const tbody = el('tbody');
+  const AMT = []; // {node, at, calcNode}
+  const SRC = {}; // key-y -> node
+  const ROWEL = [];
+  JE.forEach((row) => {
+    const tr = el('tr', row.h ? 'sec' : '');
+    if (row.h) { const th = el('th', '', row.h); th.colSpan = 7; tr.append(th); tbody.append(tr); return; }
+    tr.append(el('th', 'acct' + (row.side ? ' ind' : ''), row.acct));
+    YEARS.forEach((yr, y) => {
+      const v = row.vals[y];
+      [0, 1].forEach((side) => {
+        const td = el('td');
+        if (v != null && side === row.side) {
+          const a = el('span', 'amt ' + (row.done ? 'cgp' : YC[y]), f(v));
+          td.append(a);
+          let calc = null;
+          if (row.calc && row.calc[y]) { calc = el('span', 'calc', '(' + row.calc[y] + ')'); td.append(calc); }
+          AMT.push({ node: a, calc, at: atOf(row, y) });
+          if (row.key) { SRC[row.key + '-' + y] = a; a.dataset.k = row.key + '-' + y; }
+        }
+        tr.append(td);
+      });
+    });
+    ROWEL.push({ tr, row });
+    tbody.append(tr);
+  });
+  je.append(tbody);
+
+  // ---------- build T-accounts ----------
+  const tacc = document.getElementById('taccts');
+  const TL = []; // {node, it}
+  TA.forEach((acc) => {
+    const box = el('div', 'ta');
+    box.append(el('h3', '', acc.name));
+    const tb = el('div', 'tb');
+    tb.append(el('div', 'tside tdc', 'Dr'), el('div', 'tside tdc', 'Cr'));
+    const addRow = (pair, fin) => {
+      pair.forEach((it) => {
+        const cell = el('div', pair.tall ? 'tside tall' : 'tside');
+        if (it) {
+          const cls = fin ? 'tl fin' : it.bal ? 'tl bal' : 'tl amt ' + (it.y === 'gp' ? 'cgp' : YC[it.y]);
+          const n = el('span', cls, f(it.v));
+          if (fin) n.dataset.k = acc.k + '-fin';
+          else if (it.bal) n.dataset.k = acc.k + '-bal-' + Math.floor((it.at - 1) / 4);
+          cell.append(n);
+          TL.push({ node: n, it });
+        }
+        tb.append(cell);
+      });
+    };
+    acc.rows.forEach((pair) => addRow(pair, false));
+    const finStart = tb.children.length;
+    addRow(acc.fin, true);
+    // mark the final row cells for the double rule
+    for (let k = finStart; k < tb.children.length; k++) tb.children[k].classList.add('tfinc');
+    box.append(tb);
+    tacc.append(box);
+    acc.finCells = Array.prototype.slice.call(tb.children, finStart);
+  });
+
+  // chips and dots
+  const chips = document.getElementById('chips2');
+  const CH = [{ l: 'Start', s: 0 }, { l: 'End of 20X1', s: 4, c: 'var(--y19)' }, { l: 'End of 20X2', s: 8, c: 'var(--y20)' }, { l: 'End of 20X3', s: 12, c: 'var(--y21)' }, { l: 'Completion', s: 13, c: 'var(--gp)' }];
+  const chipEls = CH.map((ch) => {
+    const b = el('button', 'chip'); b.type = 'button';
+    if (ch.c) { const d = el('span', 'dot'); d.style.background = ch.c; b.append(d); }
+    b.append(document.createTextNode(ch.l));
+    b.addEventListener('click', () => go(ch.s, false));
+    chips.append(b); return b;
+  });
+  const dots = document.getElementById('dots2');
+  const dotEls = [];
+  [[4, 'var(--y19)'], [4, 'var(--y20)'], [4, 'var(--y21)'], [1, 'var(--gp)']].forEach(([n, c]) => {
+    const g = el('div', 'dgrp');
+    for (let k = 0; k < n; k++) { const d = el('div', 'dd'); d.style.setProperty('--c', c); g.append(d); dotEls.push(d); }
+    dots.append(g);
+  });
+
+  // ---------- render ----------
+  let step = 0, token = 0;
+  const restart = (n, cls) => { n.classList.remove(cls); void n.offsetWidth; n.classList.add(cls); };
+  function fly(src, dst, color, text, delay, done) {
+    if (reduce || !src || typeof document.body.animate !== 'function') { done(); return; }
+    const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+    if (!a.width || !b.width) { done(); return; }
+    const fl = el('div', 'fly ' + color, text);
+    fl.style.left = a.left + 'px'; fl.style.top = a.top + 'px'; fl.style.width = a.width + 'px'; fl.style.height = a.height + 'px';
+    fl.style.fontSize = '15px';
+    document.body.append(fl);
+    const dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+    const an = fl.animate([
+      { transform: 'translate(0,0)', opacity: 0 },
+      { transform: 'translate(0,0)', opacity: 1, offset: 0.1 },
+      { transform: 'translate(' + dx * 0.5 + 'px,' + (dy * 0.5 - 50) + 'px)', opacity: 1, offset: 0.55 },
+      { transform: 'translate(' + dx + 'px,' + dy + 'px)', opacity: 1 },
+    ], { duration: 850, delay, easing: 'cubic-bezier(.4,.1,.2,1)', fill: 'both' });
+    an.onfinish = () => { fl.remove(); done(); };
+  }
+
+  function render(s, animate) {
+    token++;
+    const my = token;
+    const root = document.documentElement;
+    if (!animate) root.classList.add('instant');
+    // journal entries
+    AMT.forEach(({ node, calc, at }) => {
+      const on = s >= at;
+      node.classList.toggle('on', on);
+      node.classList.toggle('cur', on && at === s);
+      node.classList.remove('pop');
+      if (calc) { calc.classList.toggle('on', on); calc.classList.remove('pop'); }
+      if (animate && at === s) { restart(node, 'pop'); if (calc) restart(calc, 'pop'); }
+    });
+    ROWEL.forEach(({ tr, row }) => {
+      const cur = s > 0 && (row.done ? s === LAST2 : s !== LAST2 && ((s - 1) % 4) + 1 === row.e);
+      tr.classList.toggle('focus', cur);
+    });
+    // T-accounts
+    let k = 0;
+    TL.forEach(({ node, it }) => {
+      const on = s >= it.at;
+      node.classList.remove('pop');
+      if (!on) { node.classList.remove('on'); return; }
+      if (animate && it.at === s) {
+        node.classList.remove('on');
+        const reveal = () => { if (my === token) { node.classList.add('on'); restart(node, 'pop'); } };
+        if (it.src && !it.bal) {
+          const y = it.y === 'gp' ? 2 : it.y;
+          const color = it.y === 'gp' ? 'cgp' : YC[it.y];
+          fly(SRC[it.src + '-' + y], node, color, f(it.v), 350 + (k++) * 150, reveal);
+        } else setTimeout(reveal, 1350);
+      } else node.classList.add('on');
+    });
+    TA.forEach((acc) => acc.finCells.forEach((c) => c.classList.toggle('tfin', s >= LAST2)));
+    // caption and controls
+    const cap = document.getElementById('cap2');
+    cap.textContent = '';
+    cap.append(el('span', 'ph', CAP[s][0]), document.createTextNode(CAP[s][1]));
+    cap.style.setProperty('--capc', CAPC(s));
+    document.getElementById('where2').textContent = s === 0 ? 'Start' : s === LAST2 ? '20X3 · at completion' : YEARS[Math.floor((s - 1) / 4)] + ' · ' + ENTRY[(s - 1) % 4] + ' (' + (((s - 1) % 4) + 1) + ' of 4)';
+    dotEls.forEach((d, i) => { d.classList.toggle('done', i < s); d.classList.toggle('now', i === s - 1); });
+    chipEls.forEach((b, i) => b.classList.toggle('on', CH[i].s === s));
+    const bk = document.getElementById('back2'), nx = document.getElementById('next2');
+    bk.textContent = s === 0 ? '◀ Page 1' : '◀ Back';
+    nx.disabled = false;
+    nx.textContent = s >= LAST2 ? 'Page 3 ▶' : 'Next ▶';
+    if (!animate) { void root.offsetWidth; requestAnimationFrame(() => root.classList.remove('instant')); }
+  }
+  function go(s, animate) { step = Math.max(0, Math.min(LAST2, s)); render(step, animate); }
+  document.getElementById('next2').addEventListener('click', () => { if (step < LAST2) go(step + 1, true); else if (window.TDPages) window.TDPages.show(3); });
+  document.getElementById('back2').addEventListener('click', () => { if (step > 0) go(step - 1, false); else if (window.TDPages) window.TDPages.show(1); });
+  document.addEventListener('keydown', (e) => {
+    if (e.defaultPrevented || document.getElementById('page2').hidden) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); if (step < LAST2) go(step + 1, true); else if (window.TDPages) window.TDPages.show(3); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (step > 0) go(step - 1, false); else if (window.TDPages) window.TDPages.show(1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0, false); }
+    else if (e.key === 'End') { e.preventDefault(); go(LAST2, false); }
+  });
+  window.TDPage2 = { refresh: () => render(step, false) };
+  render(0, false);
+})();
+</script>
+<script>
+(() => {
+  'use strict';
+  const LAST3 = 6;
+  const YC = ['c19', 'c20', 'c21'];
+  const YEARS = ['20X1', '20X2', '20X3'];
+  const f = (n) => n.toLocaleString('en-US');
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const page3 = document.getElementById('page3');
+
+  // compact copies of page 2, fully posted
+  const je3 = document.getElementById('je').cloneNode(true); je3.id = 'je3';
+  const ta3 = document.getElementById('taccts').cloneNode(true); ta3.id = 'taccts3';
+  [je3, ta3].forEach((root) => {
+    root.querySelectorAll('.amt,.calc,.tl').forEach((n) => { n.classList.add('on'); n.classList.remove('cur', 'pop'); });
+    root.querySelectorAll('.focus').forEach((n) => n.classList.remove('focus'));
+    root.querySelectorAll('.tfinc').forEach((n) => n.classList.add('tfin'));
+  });
+  document.getElementById('jehost3').append(je3);
+  document.getElementById('tbox3').append(ta3);
+  const J = (k) => je3.querySelector('[data-k="' + k + '"]');
+  const T = (k) => ta3.querySelector('[data-k="' + k + '"]');
+
+  // statements: each value cell knows its step, its source, and its delay
+  const CELLS = [];
+  function buildTable(id, rows, kind) {
+    const tb = document.getElementById(id);
+    const thead = el('thead'), hr = el('tr');
+    hr.append(el('th', 'unit', 'in $000s'));
+    YEARS.forEach((yr, y) => { const th = el('th', 'yh', String(yr)); th.style.setProperty('--c', 'var(--y' + (19 + y) + ')'); hr.append(th); });
+    thead.append(hr); tb.append(thead);
+    const body = el('tbody');
+    rows.forEach((r) => {
+      const tr = el('tr', r.tot ? 'tot' : '');
+      tr.append(el('th', (r.lvl ? 'l' + r.lvl : '') + (r.grp ? ' grp' : '') + (r.dots ? ' vd' : ''), r.lab));
+      YEARS.forEach((yr, y) => {
+        const td = el('td', r.tot ? 'rule' : '');
+        if (r.vals) {
+          const v = r.vals[y];
+          const at = kind === 'is' ? 2 * y + 1 : 2 * y + 2;
+          let node;
+          if (v == null) node = el('span', 'fsd', '–');
+          else node = el('span', 'amt ' + YC[y], r.neg ? '(' + f(v) + ')' : f(v));
+          td.append(node);
+          const src = v == null ? null : r.src ? r.src(y) : null;
+          CELLS.push({ node, at, y, v, src, delay: r.d, plain: v == null });
+        }
+        tr.append(td);
+      });
+      body.append(tr);
+    });
+    tb.append(body);
+  }
+  buildTable('is3', [
+    { lab: 'Long-term construction revenue', vals: [640, 560, 400], src: (y) => J('rev-' + y), d: 0 },
+    { lab: 'Construction expenses', vals: [400, 425, 245], neg: true, src: (y) => J('exp-' + y), d: 1 },
+    { lab: 'Gross profit', vals: [240, 135, 155], tot: true, src: (y) => J('cip-gp-' + y), d: 3 },
+  ], 'is');
+  buildTable('bs3', [
+    { lab: 'Assets', grp: true },
+    { lab: 'Current assets', lvl: 1, grp: true },
+    { lab: '⋮', lvl: 2, dots: true },
+    { lab: 'Accounts receivable', lvl: 2, vals: [30, 90, 175], src: (y) => T('ar-bal-' + y), d: 0 },
+    { lab: 'Inventory', lvl: 2, grp: true },
+    { lab: 'Construction in progress (CIP)', lvl: 3, vals: [640, 1200, null], src: (y) => T('cip-bal-' + y), d: 1 },
+    { lab: 'Less: Billings on CIP', lvl: 3, vals: [300, 900, null], neg: true, src: (y) => T('bill-bal-' + y), d: 2 },
+    { lab: 'Costs and recognized profits in excess of billings', lvl: 3, vals: [340, 300, null], tot: true, d: 4 },
+  ], 'bs');
+
+  // what each step points at in the compact copies
+  const HL = (s) => {
+    if (s === 0) return [];
+    const y = Math.floor((s - 1) / 2), bs = (s - 1) % 2 === 1;
+    if (!bs) return [J('rev-' + y), J('exp-' + y), J('cip-gp-' + y)];
+    if (y < 2) return [T('ar-bal-' + y), T('cip-bal-' + y), T('bill-bal-' + y)];
+    return [T('ar-bal-2'), T('cip-fin'), T('bill-fin')];
+  };
+
+  const CAP = [
+    ['Start', 'Where the numbers go. The income statement reports CURRENT amounts: this year\'s journal entries. The balance sheet reports TO DATE amounts: the T-account balances at year end.'],
+    ['20X1 · Income statement', 'Revenue 640 and construction expense 400 come straight from the 20X1 journal entries. Gross profit = 640 − 400 = 240, the same 240 debited to CIP.'],
+    ['20X1 · Balance sheet', 'Year-end balances: Accounts receivable 30, CIP 640, Billings on CIP 300. Billings on CIP is a contra account, so it is subtracted: 640 − 300 = 340, a current asset. If billings were larger than CIP, the difference would be a current liability (see the note).'],
+    ['20X2 · Income statement', 'Current amounts only: revenue 560, expense 425, gross profit 135. Not the 1,200 of revenue to date.'],
+    ['20X2 · Balance sheet', 'Balances are TO DATE: Accounts receivable 90, CIP 1,200, Billings on CIP 900. Net: 1,200 − 900 = 300, still a current asset.'],
+    ['20X3 · Income statement', 'Current amounts from the 20X3 journal entries: revenue 400, expense 245, gross profit 155.'],
+    ['20X3 · Balance sheet', 'The contract is complete. The completion entry closed CIP and Billings on CIP to zero, so neither appears. Accounts receivable of 175 stays until the customer pays.'],
+  ];
+  const CAPC = (s) => (s === 0 ? 'var(--ink)' : 'var(--y' + (19 + Math.floor((s - 1) / 2)) + ')');
+
+  // chips and dots
+  const chips = document.getElementById('chips3');
+  const CH = [{ l: 'Start', s: 0 }, { l: 'End of 20X1', s: 2, c: 'var(--y19)' }, { l: 'End of 20X2', s: 4, c: 'var(--y20)' }, { l: 'End of 20X3', s: 6, c: 'var(--y21)' }];
+  const chipEls = CH.map((ch) => {
+    const b = el('button', 'chip'); b.type = 'button';
+    if (ch.c) { const d = el('span', 'dot'); d.style.background = ch.c; b.append(d); }
+    b.append(document.createTextNode(ch.l));
+    b.addEventListener('click', () => go(ch.s, false));
+    chips.append(b); return b;
+  });
+  const dots = document.getElementById('dots3');
+  const dotEls = [];
+  ['var(--y19)', 'var(--y20)', 'var(--y21)'].forEach((c) => {
+    const g = el('div', 'dgrp');
+    for (let k = 0; k < 2; k++) { const d = el('div', 'dd'); d.style.setProperty('--c', c); g.append(d); dotEls.push(d); }
+    dots.append(g);
+  });
+
+  let step = 0, token = 0;
+  const restart = (n, cls) => { n.classList.remove(cls); void n.offsetWidth; n.classList.add(cls); };
+  function fly(src, dst, color, text, delay, done, my) {
+    if (reduce || !src || typeof document.body.animate !== 'function') { setTimeout(done, reduce ? 0 : delay + 400); return; }
+    setTimeout(() => { if (my === token) launch(src, dst, color, text, done); }, delay);
+  }
+  function launch(src, dst, color, text, done) {
+    const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+    if (!a.width || !b.width) { done(); return; }
+    const fl = el('div', 'fly ' + color, text);
+    fl.style.left = a.left + 'px'; fl.style.top = a.top + 'px'; fl.style.width = Math.max(a.width, 44) + 'px'; fl.style.height = Math.max(a.height, 24) + 'px';
+    fl.style.fontSize = '15px';
+    document.body.append(fl);
+    const dx = (b.left + b.width / 2) - (a.left + Math.max(a.width, 44) / 2), dy = (b.top + b.height / 2) - (a.top + Math.max(a.height, 24) / 2);
+    const an = fl.animate([
+      { transform: 'translate(0,0) scale(.85)', opacity: 0 },
+      { transform: 'translate(0,0) scale(1)', opacity: 1, offset: 0.12 },
+      { transform: 'translate(' + dx * 0.5 + 'px,' + (dy * 0.5 - 40) + 'px) scale(1.15)', opacity: 1, offset: 0.55 },
+      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1)', opacity: 1 },
+    ], { duration: 950, easing: 'cubic-bezier(.4,.1,.2,1)', fill: 'both' });
+    an.onfinish = () => { fl.remove(); done(); };
+  }
+
+  function render(s, animate) {
+    token++;
+    const my = token;
+    const root = document.documentElement;
+    if (!animate) root.classList.add('instant');
+    // on a short screen, scroll just enough to show this step's sources and targets together
+    let base = 300;
+    if (animate && s > 0) {
+      const nodes = CELLS.filter((c) => c.at === s).map((c) => c.node).concat(HL(s).filter(Boolean));
+      if ((s - 1) % 2 === 1) nodes.push(document.getElementById('note3'));
+      const rs = nodes.map((n) => n.getBoundingClientRect());
+      const top = Math.min.apply(null, rs.map((r) => r.top)), bot = Math.max.apply(null, rs.map((r) => r.bottom));
+      let dy = 0;
+      if (bot > window.innerHeight - 20) dy = bot - (window.innerHeight - 20);
+      if (top - dy < 10) dy = top - 10;
+      if (Math.abs(dy) > 4) { window.scrollBy({ top: dy, behavior: reduce ? 'auto' : 'smooth' }); base = 650; }
+    }
+    CELLS.forEach((c) => {
+      const on = s >= c.at;
+      c.node.classList.remove('pop');
+      if (!on) { c.node.classList.remove('on'); return; }
+      if (animate && c.at === s) {
+        c.node.classList.remove('on');
+        const reveal = () => { if (my === token) { c.node.classList.add('on'); restart(c.node, 'pop'); } };
+        const delay = base + c.delay * 380;
+        if (c.src) fly(c.src, c.node, YC[c.y], f(c.v), delay, reveal, my);
+        else setTimeout(reveal, delay + 700);
+      } else c.node.classList.add('on');
+    });
+    // highlights
+    page3.querySelectorAll('.cur').forEach((n) => n.classList.remove('cur'));
+    HL(s).forEach((n) => { if (n) n.classList.add('cur'); });
+    const y = s === 0 ? -1 : Math.floor((s - 1) / 2), bs = s > 0 && (s - 1) % 2 === 1;
+    const ring = y < 0 ? 'var(--ink)' : 'var(--y' + (19 + y) + ')';
+    [['jebox3', s > 0 && !bs], ['isbox3', s > 0 && !bs], ['tbox3', bs], ['bsbox3', bs]].forEach(([id, on]) => {
+      const n = document.getElementById(id); n.classList.toggle('live', on); n.style.setProperty('--ring', ring);
+    });
+    document.getElementById('note3').classList.toggle('on', s >= 2);
+    // caption and controls
+    const cap = document.getElementById('cap3');
+    cap.textContent = '';
+    cap.append(el('span', 'ph', CAP[s][0]), document.createTextNode(CAP[s][1]));
+    cap.style.setProperty('--capc', CAPC(s));
+    document.getElementById('where3').textContent = s === 0 ? 'Start' : YEARS[y] + ' · ' + (bs ? 'balance sheet' : 'income statement') + ' (' + (bs ? 2 : 1) + ' of 2)';
+    dotEls.forEach((d, i) => { d.classList.toggle('done', i < s); d.classList.toggle('now', i === s - 1); });
+    chipEls.forEach((b, i) => b.classList.toggle('on', CH[i].s === s));
+    document.getElementById('back3').textContent = s === 0 ? '◀ Page 2' : '◀ Back';
+    document.getElementById('next3').disabled = s >= LAST3;
+    if (!animate) { void root.offsetWidth; requestAnimationFrame(() => root.classList.remove('instant')); }
+  }
+  function go(s, animate) { step = Math.max(0, Math.min(LAST3, s)); render(step, animate); }
+  document.getElementById('next3').addEventListener('click', () => { if (step < LAST3) go(step + 1, true); });
+  document.getElementById('back3').addEventListener('click', () => { if (step > 0) go(step - 1, false); else if (window.TDPages) window.TDPages.show(2); });
+  document.addEventListener('keydown', (e) => {
+    if (e.defaultPrevented || page3.hidden) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); if (step < LAST3) go(step + 1, true); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (step > 0) go(step - 1, false); else if (window.TDPages) window.TDPages.show(2); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0, false); }
+    else if (e.key === 'End') { e.preventDefault(); go(LAST3, false); }
+  });
+  window.TDPage3 = { refresh: () => render(step, false) };
+  render(0, false);
+})();
+</script>
+<script>
+(() => {
+  'use strict';
+  const P = ['page1', 'page2', 'page3'].map((id) => document.getElementById(id));
+  const T = ['tab1', 'tab2', 'tab3'].map((id) => document.getElementById(id));
+  const H = ['#bars', '#entries', '#statements'];
+  function show(n) {
+    P.forEach((p, i) => { p.hidden = n !== i + 1; });
+    T.forEach((t, i) => { t.classList.toggle('on', n === i + 1); t.setAttribute('aria-pressed', String(n === i + 1)); });
+    try { history.replaceState(null, '', H[n - 1]); } catch (e) { /* frame may refuse */ }
+    if (n === 2 && window.TDPage2) window.TDPage2.refresh();
+    if (n === 3 && window.TDPage3) window.TDPage3.refresh();
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    window.scrollTo(0, 0);
+  }
+  window.TDPages = { show };
+  T.forEach((t, i) => t.addEventListener('click', () => show(i + 1)));
+  show(location.hash === '#entries' ? 2 : location.hash === '#statements' ? 3 : 1);
+})();
+</script>
+</body>
+</html>

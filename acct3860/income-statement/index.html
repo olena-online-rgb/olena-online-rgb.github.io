@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build the Income Statement - Sammy Enterprises</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #faf9f6; color: #1a1a1a; margin: 0; padding: 0; }
+  .topbar { background: #C8102E; color: #fff; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .topbar .brand { font-size: 13px; font-weight: bold; letter-spacing: 0.5px; }
+  .topbar .course { font-size: 12.5px; opacity: 0.9; }
+  .main { padding: 16px; }
+  h1 { font-size: 20px; text-align: center; margin: 8px 0 2px; color: #C8102E; }
+  .subtitle { text-align: center; font-size: 14px; color: #524727; margin-bottom: 12px; }
+  .steps { text-align: center; margin-bottom: 10px; font-size: 13.5px; }
+  .step { display: inline-block; padding: 5px 14px; border-radius: 14px; border: 1px solid #CAC7A7; background: #fff; color: #9B945F; margin: 0 4px; }
+  .step.active { background: #C8102E; border-color: #C8102E; color: #fff; font-weight: bold; }
+  .step.done { background: #F1BE48; border-color: #F1BE48; color: #524727; font-weight: bold; }
+  .instructions { max-width: 960px; margin: 0 auto 14px; font-size: 13.5px; background: #fff; border: 1px solid #CAC7A7; border-left: 4px solid #F1BE48; border-radius: 0 8px 8px 0; padding: 10px 14px; }
+  .controls { text-align: center; margin-bottom: 8px; }
+  button { font-family: inherit; font-size: 14px; padding: 8px 18px; margin: 0 6px; border-radius: 6px; border: 1px solid #C8102E; background: #C8102E; color: #fff; cursor: pointer; }
+  button.secondary { background: #fff; color: #C8102E; }
+  button:hover { opacity: 0.88; }
+  #feedback { max-width: 960px; margin: 0 auto 14px; font-size: 13.5px; color: #524727; text-align: center; min-height: 18px; }
+  #feedback .bad { color: #C8102E; font-weight: bold; }
+  .layout { display: flex; gap: 16px; max-width: 1180px; margin: 0 auto; align-items: flex-start; }
+  .bank-pane { flex: 0 0 300px; position: sticky; top: 10px; }
+  .sheet-pane { flex: 1; min-width: 0; }
+  .pane-title { font-weight: bold; font-size: 15px; margin: 0 0 6px 2px; color: #C8102E; }
+  #bank { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 10px; min-height: 120px; max-height: 84vh; overflow-y: auto; }
+
+  /* tiles: neutral until checked correct */
+  .tile { display: block; width: 100%; text-align: left; margin: 4px 0; padding: 6px 9px; font-size: 12.5px; line-height: 1.25; border-radius: 6px; cursor: grab; user-select: none; background: #fff; border: 1.5px solid #9a9a9a; color: #1a1a1a; }
+  .tile.struct { font-weight: bold; }
+  .tile .amt { float: right; color: #333; font-weight: normal; font-variant-numeric: tabular-nums; padding-left: 8px; }
+  .tile .mark { display: inline-block; width: 16px; font-weight: bold; }
+  .tile .mark.bad { color: #C8102E; }
+  .tile.selected { outline: 3px solid #006BA6; }
+  .tile.dragging { opacity: 0.5; }
+
+  /* area colors, applied only when a tile is in the right place */
+  .tile.c-title { background: #f1f1f1; border-color: #1a1a1a; }
+  .tile.c-sales { background: #e3f2e3; border-color: #2c7a2f; }
+  .tile.c-op    { background: #e2eef9; border-color: #006BA6; }
+  .tile.c-oth   { background: #fdeaea; border-color: #c0392b; }
+  .tile.c-tax   { background: #efe6f7; border-color: #6a3d9a; }
+  .tile.c-eps   { background: #f1f1f1; border-color: #1a1a1a; }
+  .tile.c-notis { background: #ecebe6; border-color: #7a7457; }
+
+  .t-sales { color: #2c7a2f; } .t-op { color: #005a8c; } .t-oth { color: #b03226; } .t-tax { color: #5b3486; } .t-eps { color: #1a1a1a; } .t-notis { color: #5f5a43; }
+
+  .sheet { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 14px 16px 18px; }
+  .is-co { text-align: center; font-weight: bold; font-size: 16px; }
+  .is-line { text-align: center; font-size: 13.5px; }
+  .zone-label { font-weight: bold; font-size: 14px; margin: 10px 0 3px; }
+  .zone-label.indent, .zone.indent, .subrow.indent { margin-left: 22px; }
+  .majorsec { font-weight: bold; font-size: 14.5px; margin: 14px 0 2px; }
+  .zone { min-height: 44px; border: 2px dashed #CAC7A7; border-radius: 6px; padding: 5px; background: #fefdfb; }
+  .zone.over { background: #f0f0ec; border-color: #888; }
+  .zone-title { font-size: 12.5px; color: #666; margin: 6px 0 3px; font-style: italic; }
+  #hdrzone { min-height: 110px; }
+  #hdrzone .tile { text-align: center; }
+  #bodyzone { min-height: 520px; margin-top: 10px; }
+
+  .subrow { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: bold; padding: 4px 12px 2px; border-top: 1px solid #1a1a1a; margin: 3px 0 6px; }
+  .subrow.minor { font-weight: normal; font-style: italic; }
+  .subrow.strong { font-size: 14px; }
+  .subrow.grand { font-size: 14.5px; border-top: 3px double #1a1a1a; }
+  .subrow .val { font-variant-numeric: tabular-nums; }
+  .subrow .val.pending { color: #b5b09a; font-weight: normal; }
+
+  .eps-box { margin: 14px 0 6px; padding: 10px 12px; border: 2px solid #1a1a1a; border-radius: 6px; background: #fafafa; }
+  .eps-row { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 14px; }
+  .eps-row input { font-family: inherit; font-size: 14px; width: 120px; padding: 5px 8px; text-align: right; border: 1.5px solid #9a9a9a; border-radius: 5px; }
+  .eps-row input.ok { border-color: #1a1a1a; background: #f1f1f1; }
+  .eps-row input.no { border-color: #C8102E; }
+  .eps-note { font-size: 12.5px; color: #524727; margin-top: 6px; }
+  .eps-msg { font-size: 13px; margin-top: 6px; min-height: 16px; }
+  .eps-msg.ok { color: #1a1a1a; font-weight: bold; }
+  .eps-msg.no { color: #C8102E; }
+
+  .notis-wrap { margin-top: 18px; padding-top: 10px; border-top: 1px dashed #CAC7A7; }
+  .notis-wrap .zone-label { color: #5f5a43; }
+
+  .transition { display: none; text-align: center; padding: 16px; margin: 12px auto; max-width: 480px; background: #fdf6e3; border: 2px solid #F1BE48; border-radius: 10px; }
+  .transition.show { display: block; }
+  .transition p { margin: 4px 0; font-size: 14px; color: #524727; }
+  .transition .countdown { font-weight: bold; color: #C8102E; font-size: 15px; }
+  .transition button { margin-top: 10px; }
+  .celebration { display: none; text-align: center; padding: 20px; margin: 16px auto; max-width: 520px; background: linear-gradient(135deg, #fdf6e3 0%, #fff 100%); border: 2px solid #F1BE48; border-radius: 12px; }
+  .celebration.show { display: block; }
+  .celebration h2 { margin: 0 0 6px; font-size: 22px; color: #C8102E; }
+  .celebration p { margin: 4px 0; font-size: 14px; color: #524727; }
+  .celebration .eq { margin-top: 10px; font-weight: bold; color: #C8102E; font-size: 15px; }
+  .celebration .closer { font-size: 12.5px; color: #9B945F; margin-top: 8px; }
+  .footer { max-width: 960px; margin: 14px auto 0; font-size: 12px; color: #9B945F; text-align: center; padding-bottom: 12px; }
+  .footer .copy { color: #C8102E; font-weight: bold; }
+  @media (max-width: 900px) { .layout { flex-direction: column; } .bank-pane { position: static; flex: 1 1 auto; width: 100%; } #bank { max-height: 260px; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Acct 3860 - Watanabe</div>
+  <div class="course">Chapter 4: Income Statement and Related Information</div>
+</div>
+
+<div class="main">
+
+<h1>Build the Income Statement</h1>
+<div class="subtitle">Sammy Enterprises &middot; Multiple-step format &middot; Exam practice</div>
+
+<div class="steps">
+  <span class="step active" id="step1pill">Step 1: Set up the statement</span>
+  <span class="step" id="step2pill">Step 2: Place the accounts</span>
+</div>
+
+<div class="instructions" id="instr">
+<b>Step 1.</b> Drag the three heading lines into the heading area in the correct order. Then drag the section headings and subtotal lines into the body in the order they appear on a multiple-step income statement. One heading tile does not belong on an income statement: leave it in the bank. You can also click a tile to select it, then click a zone to place it. Press <b>Check structure</b> when you are done. Anything marked <b style="color:#C8102E">&#10007;</b> is in the wrong spot; tiles change color when they are in the right place. The accounts unlock once the structure is right. To practice only the accounts, press <b>Skip to Step 2</b>.
+</div>
+
+<div class="controls">
+  <button id="checkbtn" onclick="checkWork()">Check structure</button>
+  <button class="secondary" id="skipbtn" onclick="skipToStep2()">Skip to Step 2</button>
+  <button class="secondary" onclick="resetAll()">Start over</button>
+</div>
+<div id="feedback"></div>
+
+<div class="layout">
+  <div class="bank-pane">
+    <div class="pane-title" id="banktitle">Titles and headings</div>
+    <div id="bank" class="dropzone" data-sec="bank"></div>
+  </div>
+
+  <div class="sheet-pane">
+    <div class="sheet" id="sheet">
+      <div class="zone-title">Heading (three lines, in order)</div>
+      <div id="hdrzone" class="zone dropzone" data-sec="hdr"></div>
+      <div class="zone-title">Body (section headings and subtotal lines, in order from top to bottom)</div>
+      <div id="bodyzone" class="zone dropzone" data-sec="body"></div>
+    </div>
+    <div class="transition" id="trans">
+      <p>Structure correct! Review your layout before moving on.</p>
+      <p>Accounts will load in <span class="countdown" id="countdown">15</span> seconds.</p>
+      <button onclick="goStep2Now()">I'm ready - next</button>
+    </div>
+    <div class="celebration" id="celeb">
+      <h2>Income statement complete!</h2>
+      <p>Every account in the right section, sales revenue ahead of its contras,</p>
+      <p>dividends kept off the statement, and EPS computed correctly.</p>
+      <p class="eq">Net income $163,500 &middot; Earnings per share $2.68</p>
+      <p class="closer">Well done. Keep practicing until there are no mistakes and you can build it in your sleep.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer"><span class="copy">© 2026 O. Watanabe</span>. All rights reserved. &middot; Acct 3860 &middot; Chapter 4: Income Statement and Related Information</div>
+
+</div>
+
+<script>
+/* ---------- Step 1: structure ---------- */
+var STRUCT = [
+  { t: "SAMMY ENTERPRISES", g: "hdr", i: 0, area: "title" },
+  { t: "Income Statement", g: "hdr", i: 1, area: "title" },
+  { t: "For the Year Ended December 31, 20XX", g: "hdr", i: 2, area: "title" },
+  { t: "At December 31, 20XX", g: "x" },
+  { t: "Sales", g: "body", i: 0, area: "sales" },
+  { t: "Net sales", g: "body", i: 1, area: "sales" },
+  { t: "Cost of goods sold", g: "body", i: 2, area: "sales" },
+  { t: "Gross profit", g: "body", i: 3, area: "sales" },
+  { t: "Operating expenses", g: "body", i: 4, area: "op" },
+  { t: "Selling expenses", g: "body", i: 5, area: "op" },
+  { t: "Administrative expenses", g: "body", i: 6, area: "op" },
+  { t: "Income from operations", g: "body", i: 7, area: "op" },
+  { t: "Other items", g: "body", i: 8, area: "oth" },
+  { t: "Income before income tax", g: "body", i: 9, area: "tax" },
+  { t: "Income tax", g: "body", i: 10, area: "tax" },
+  { t: "Net income", g: "body", i: 11, area: "tax" },
+  { t: "Earnings per share", g: "body", i: 12, area: "eps" }
+];
+var HDR_COUNT = 3, BODY_COUNT = 13;
+
+/* ---------- Step 2: accounts [name, amount, section] ---------- */
+var ACCOUNTS = [
+  ["Sales revenue", "1,240,000", "sales"],
+  ["Sales discounts", "(18,500)", "sales"],
+  ["Sales returns and allowances", "(31,500)", "sales"],
+  ["Cost of goods sold", "702,000", "cogs"],
+  ["Sales salaries and commissions", "96,400", "sell"],
+  ["Advertising expense", "28,700", "sell"],
+  ["Delivery expense", "17,300", "sell"],
+  ["Travel expense (salespersons)", "12,600", "sell"],
+  ["Depreciation expense (sales equipment)", "8,900", "sell"],
+  ["Bad debt expense (selling)", "6,100", "sell"],
+  ["Office salaries and wages", "64,800", "adm"],
+  ["Utilities expense (office)", "9,600", "adm"],
+  ["Depreciation expense (office equipment)", "7,400", "adm"],
+  ["Insurance expense (office)", "5,200", "adm"],
+  ["Property tax expense", "4,900", "adm"],
+  ["Office supplies expense", "3,100", "adm"],
+  ["Interest revenue", "6,500", "oth"],
+  ["Dividend revenue", "4,200", "oth"],
+  ["Gain on sale of equipment", "3,300", "oth"],
+  ["Interest expense", "(15,000)", "oth"],
+  ["Loss on sale of investments", "(4,000)", "oth"],
+  ["Income tax expense", "54,500", "tax"],
+  ["Dividends declared on preferred stock", "13,500", "notis"],
+  ["Dividends declared on common stock", "40,000", "notis"]
+];
+var SALES_REV_IDX = 0;
+var SEC_AREA = { sales:"sales", cogs:"sales", sell:"op", adm:"op", oth:"oth", tax:"tax", notis:"notis" };
+var SEC_COUNT = {};
+ACCOUNTS.forEach(function(a){ SEC_COUNT[a[2]] = (SEC_COUNT[a[2]] || 0) + 1; });
+
+/* statement layout for step 2 */
+var LAYOUT = [
+  { type:"label", text:"Sales", area:"sales" },
+  { type:"zone", sec:"sales", indent:true },
+  { type:"sub", id:"netsales", text:"Net sales", area:"sales", val:"$1,190,000" },
+  { type:"label", text:"Cost of goods sold", area:"sales" },
+  { type:"zone", sec:"cogs", indent:true },
+  { type:"sub", id:"gp", text:"Gross profit", area:"sales", val:"$488,000", cls:"strong" },
+  { type:"major", text:"Operating expenses", area:"op" },
+  { type:"label", text:"Selling expenses", area:"op", indent:true },
+  { type:"zone", sec:"sell", indent:true },
+  { type:"sub", id:"totsell", text:"Total selling expenses", area:"op", val:"$170,000", cls:"minor", indent:true },
+  { type:"label", text:"Administrative expenses", area:"op", indent:true },
+  { type:"zone", sec:"adm", indent:true },
+  { type:"sub", id:"totadm", text:"Total administrative expenses", area:"op", val:"$95,000", cls:"minor", indent:true },
+  { type:"sub", id:"totopex", text:"Total operating expenses", area:"op", val:"$265,000" },
+  { type:"sub", id:"iop", text:"Income from operations", area:"op", val:"$223,000", cls:"strong" },
+  { type:"label", text:"Other items", area:"oth" },
+  { type:"zone", sec:"oth", indent:true },
+  { type:"sub", id:"tototh", text:"Total other items", area:"oth", val:"(5,000)", cls:"minor" },
+  { type:"sub", id:"ibt", text:"Income before income tax", area:"tax", val:"$218,000", cls:"strong" },
+  { type:"label", text:"Income tax", area:"tax" },
+  { type:"zone", sec:"tax", indent:true },
+  { type:"sub", id:"ni", text:"Net income", area:"tax", val:"$163,500", cls:"grand" },
+  { type:"eps" },
+  { type:"notis" }
+];
+
+var SHARES = 56000;
+var EPS_RIGHT = 150000/SHARES, EPS_NO_PREF = 163500/SHARES, EPS_COMMON_A = 110000/SHARES, EPS_COMMON_B = 123500/SHARES;
+
+var stepN = 1, selected = null;
+
+function shuffle(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+function clearMarks(t){
+  t.classList.remove("c-title","c-sales","c-op","c-oth","c-tax","c-eps","c-notis");
+  var m=t.querySelector(".mark"); if(m){ m.textContent=""; m.classList.remove("bad"); }
+}
+function markRight(t, area){ clearMarks(t); t.classList.add("c-"+area); var m=t.querySelector(".mark"); if(m) m.textContent="✓"; }
+function markWrong(t, sym){ clearMarks(t); var m=t.querySelector(".mark"); if(m){ m.textContent=sym||"✗"; m.classList.add("bad"); } }
+
+function baseTile(id, cls){
+  var d=document.createElement("div"); d.className="tile "+cls; d.id=id; d.draggable=true;
+  d.addEventListener("dragstart",function(e){ e.dataTransfer.setData("text/plain",d.id); d.classList.add("dragging"); });
+  d.addEventListener("dragend",function(){ d.classList.remove("dragging"); });
+  d.addEventListener("click",function(e){
+    e.stopPropagation();
+    if(selected===d){ d.classList.remove("selected"); selected=null; return; }
+    if(selected) selected.classList.remove("selected");
+    selected=d; d.classList.add("selected");
+  });
+  return d;
+}
+function makeStructTile(s, idx){
+  var d=baseTile("s"+idx,"struct"); d.dataset.g=s.g; if(s.i!==undefined) d.dataset.i=s.i; if(s.area) d.dataset.area=s.area;
+  d.innerHTML="<span class='mark'></span>"+s.t; return d;
+}
+function makeAcctTile(a, idx){
+  var d=baseTile("a"+idx,"acct"); d.dataset.sec=a[2]; d.dataset.idx=idx;
+  d.innerHTML="<span class='amt'>"+a[1]+"</span><span class='mark'></span>"+a[0]; return d;
+}
+
+function insertAt(zone, tile, y){
+  var kids=Array.prototype.slice.call(zone.querySelectorAll(":scope > .tile")).filter(function(k){ return k!==tile; });
+  var before=null;
+  for(var i=0;i<kids.length;i++){ var r=kids[i].getBoundingClientRect(); if(y<r.top+r.height/2){ before=kids[i]; break; } }
+  if(before) zone.insertBefore(tile,before); else zone.appendChild(tile);
+}
+function placeTile(zone, tile, y){
+  if(y===undefined) zone.appendChild(tile); else insertAt(zone,tile,y);
+  clearMarks(tile);
+  liveSubtotals();
+  setFeedback("");
+  document.getElementById("celeb").classList.remove("show");
+}
+function bindZone(z){
+  z.addEventListener("dragover",function(e){ e.preventDefault(); z.classList.add("over"); });
+  z.addEventListener("dragleave",function(){ z.classList.remove("over"); });
+  z.addEventListener("drop",function(e){
+    e.preventDefault(); z.classList.remove("over");
+    var id=e.dataTransfer.getData("text/plain"), t=document.getElementById(id);
+    if(t) placeTile(z,t,e.clientY);
+  });
+  z.addEventListener("click",function(){
+    if(selected){ var t=selected; t.classList.remove("selected"); selected=null; placeTile(z,t); }
+  });
+}
+
+function setFeedback(html){ document.getElementById("feedback").innerHTML=html; }
+
+function populateStructure(){
+  var bank=document.getElementById("bank"); bank.innerHTML="";
+  shuffle(STRUCT.map(function(_,i){ return i; })).forEach(function(i){ bank.appendChild(makeStructTile(STRUCT[i],i)); });
+}
+function populateAccounts(){
+  var bank=document.getElementById("bank"); bank.innerHTML="";
+  shuffle(ACCOUNTS.map(function(_,i){ return i; })).forEach(function(i){ bank.appendChild(makeAcctTile(ACCOUNTS[i],i)); });
+}
+
+/* ---------- Step 1 check ---------- */
+function checkStructure(){
+  var ok=true, anyWrong=false;
+  var hdr=Array.prototype.slice.call(document.querySelectorAll("#hdrzone > .tile"));
+  var body=Array.prototype.slice.call(document.querySelectorAll("#bodyzone > .tile"));
+  hdr.forEach(function(t,k){
+    if(t.dataset.g==="hdr" && Number(t.dataset.i)===k) markRight(t,"title");
+    else { markWrong(t); ok=false; anyWrong=true; }
+  });
+  body.forEach(function(t,k){
+    if(t.dataset.g==="body" && Number(t.dataset.i)===k) markRight(t,t.dataset.area);
+    else { markWrong(t); ok=false; anyWrong=true; }
+  });
+  document.querySelectorAll("#bank > .tile").forEach(clearMarks);
+  var leftInBank=Array.prototype.slice.call(document.querySelectorAll("#bank > .tile")).filter(function(t){ return t.dataset.g!=="x"; }).length;
+  if(hdr.length!==HDR_COUNT || body.length!==BODY_COUNT) ok=false;
+  if(leftInBank>0) ok=false;
+  var msgs=[];
+  if(anyWrong) msgs.push("<span class='bad'>&#10007;</span> marks a tile in the wrong spot.");
+  if(leftInBank>0) msgs.push("Some tiles are still in the bank.");
+  if(ok){ setFeedback("Structure correct."); beginTransition(); }
+  else setFeedback(msgs.join(" ") || "Not quite yet. Check the order.");
+}
+
+var transTimer=null, transCount=15;
+function beginTransition(){
+  document.getElementById("trans").classList.add("show");
+  document.getElementById("trans").scrollIntoView({behavior:"smooth",block:"center"});
+  transCount=15; document.getElementById("countdown").textContent=transCount;
+  transTimer=setInterval(function(){ transCount--; document.getElementById("countdown").textContent=transCount; if(transCount<=0) goStep2Now(); },1000);
+}
+function goStep2Now(){
+  if(transTimer){ clearInterval(transTimer); transTimer=null; }
+  document.getElementById("trans").classList.remove("show");
+  startStep2();
+}
+
+/* ---------- Step 2 build ---------- */
+function el(tag, cls, text){ var d=document.createElement(tag); if(cls) d.className=cls; if(text!==undefined) d.textContent=text; return d; }
+
+function skipToStep2(){
+  if(transTimer){ clearInterval(transTimer); transTimer=null; }
+  document.getElementById("trans").classList.remove("show");
+  startStep2();
+}
+
+function startStep2(){
+  stepN=2;
+  var sk=document.getElementById("skipbtn"); if(sk) sk.style.display="none";
+  var sheet=document.getElementById("sheet"); sheet.innerHTML="";
+  sheet.appendChild(el("div","is-co",STRUCT[0].t));
+  sheet.appendChild(el("div","is-line",STRUCT[1].t));
+  sheet.appendChild(el("div","is-line",STRUCT[2].t));
+  LAYOUT.forEach(function(L){
+    if(L.type==="label"){ sheet.appendChild(el("div","zone-label t-"+L.area+(L.indent?" indent":""),L.text)); }
+    else if(L.type==="major"){ sheet.appendChild(el("div","majorsec t-"+L.area,L.text)); }
+    else if(L.type==="zone"){
+      var z=el("div","zone dropzone"+(L.indent?" indent":"")); z.dataset.sec=L.sec; bindZone(z); sheet.appendChild(z);
+    }
+    else if(L.type==="sub"){
+      var r=el("div","subrow t-"+L.area+(L.cls?" "+L.cls:"")+(L.indent?" indent":"")); r.id="sub-"+L.id;
+      r.appendChild(el("span","",L.text));
+      var v=el("span","val pending","—"); v.dataset.val=L.val; r.appendChild(v);
+      sheet.appendChild(r);
+    }
+    else if(L.type==="eps"){
+      var box=el("div","eps-box");
+      var row=el("div","eps-row");
+      row.appendChild(el("span","","Earnings per share"));
+      var inp=document.createElement("input"); inp.type="text"; inp.id="epsInput"; inp.placeholder="$0.00"; inp.setAttribute("aria-label","Earnings per share");
+      inp.addEventListener("input",function(){ inp.classList.remove("ok","no"); document.getElementById("epsMsg").textContent=""; document.getElementById("epsMsg").className="eps-msg"; document.getElementById("celeb").classList.remove("show"); });
+      row.appendChild(inp); box.appendChild(row);
+      box.appendChild(el("div","eps-note","Weighted-average common shares outstanding for the year: 56,000. Type your answer rounded to the cent (exactly two decimal places), with or without the $ sign."));
+      var msg=el("div","eps-msg"); msg.id="epsMsg"; box.appendChild(msg);
+      sheet.appendChild(box);
+    }
+    else if(L.type==="notis"){
+      var w=el("div","notis-wrap");
+      w.appendChild(el("div","zone-label","Not on the income statement"));
+      var nz=el("div","zone dropzone"); nz.dataset.sec="notis"; bindZone(nz); w.appendChild(nz);
+      sheet.appendChild(w);
+    }
+  });
+  document.getElementById("step1pill").className="step done";
+  document.getElementById("step2pill").className="step active";
+  document.getElementById("banktitle").textContent="Account bank";
+  document.getElementById("checkbtn").textContent="Check my statement";
+  document.getElementById("instr").innerHTML="<b>Step 2.</b> The statement structure is set. Now drag each account into the section where it belongs. In the Sales section, sales revenue comes first with its contra accounts below it. Order does not matter inside the other sections. Two accounts do not belong on the income statement; they go in the box at the bottom. Then compute earnings per share and type it in. Press <b>Check my statement</b> whenever you like: <b style='color:#C8102E'>&#10007;</b> means wrong section, <b style='color:#C8102E'>&#8597;</b> means right section but out of order, and tiles change color when they are in the right place. Subtotals fill in the moment each section is complete.";
+  setFeedback(""); populateAccounts();
+}
+
+function resetSubtotals(){
+  document.querySelectorAll(".subrow .val").forEach(function(v){ v.textContent="—"; v.classList.add("pending"); });
+}
+function showSub(id){ var r=document.getElementById("sub-"+id); if(!r) return; var v=r.querySelector(".val"); v.textContent=v.dataset.val; v.classList.remove("pending"); }
+
+function parseEPS(s){ s=(s||"").replace(/[\$,\s]/g,""); if(s==="") return null; var n=Number(s); return isNaN(n)?NaN:n; }
+function near(a,b){ return Math.abs(a-b)<0.006; }
+
+/* ---------- Step 2: section status (no marks) ---------- */
+function evalSections(){
+  var cnt={};
+  Object.keys(SEC_COUNT).forEach(function(k){ cnt[k]={ right:0, wrong:0 }; });
+  document.querySelectorAll(".tile.acct").forEach(function(t){
+    var zs=t.parentElement.dataset.sec;
+    if(!cnt[zs]) return;
+    if(zs===t.dataset.sec) cnt[zs].right++; else cnt[zs].wrong++;
+  });
+  var salesOrderOK=true, salesRevTile=null;
+  var sz=document.querySelector(".zone[data-sec='sales']");
+  if(sz){
+    var st=Array.prototype.slice.call(sz.querySelectorAll(":scope > .tile.acct")).filter(function(t){ return t.dataset.sec==="sales"; });
+    st.forEach(function(t,k){ if(Number(t.dataset.idx)===SALES_REV_IDX && k>0){ salesOrderOK=false; salesRevTile=t; } });
+  }
+  function full(sec){ return cnt[sec].right===SEC_COUNT[sec] && cnt[sec].wrong===0; }
+  var f={ sales:full("sales")&&salesOrderOK, cogs:full("cogs"), sell:full("sell"), adm:full("adm"), oth:full("oth"), tax:full("tax"), notis:full("notis"), salesOrderOK:salesOrderOK, salesRevTile:salesRevTile };
+  f.iop=f.sales&&f.cogs&&f.sell&&f.adm;
+  f.ibt=f.iop&&f.oth;
+  f.ni=f.ibt&&f.tax;
+  return f;
+}
+function showSubtotals(f){
+  resetSubtotals();
+  if(f.sales) showSub("netsales");
+  if(f.sales&&f.cogs) showSub("gp");
+  if(f.sell) showSub("totsell");
+  if(f.adm) showSub("totadm");
+  if(f.sell&&f.adm) showSub("totopex");
+  if(f.iop) showSub("iop");
+  if(f.oth) showSub("tototh");
+  if(f.ibt) showSub("ibt");
+  if(f.ni) showSub("ni");
+}
+function liveSubtotals(){ if(stepN===2) showSubtotals(evalSections()); }
+
+/* ---------- Step 2 check ---------- */
+function checkAccounts(){
+  var anyWrong=false, anyOrder=false;
+  document.querySelectorAll(".tile.acct").forEach(function(t){
+    var zs=t.parentElement.dataset.sec;
+    if(zs==="bank"){ clearMarks(t); return; }
+    if(zs===t.dataset.sec) markRight(t,SEC_AREA[zs]);
+    else { markWrong(t); anyWrong=true; }
+  });
+  var f=evalSections();
+  if(!f.salesOrderOK && f.salesRevTile){ markWrong(f.salesRevTile,"\u2195"); anyOrder=true; }
+  showSubtotals(f);
+
+  // EPS
+  var inp=document.getElementById("epsInput"), msg=document.getElementById("epsMsg");
+  var raw=(inp.value||"").replace(/[\$,\s]/g,"");
+  var v=parseEPS(inp.value), epsOK=false;
+  var decimals=(raw.indexOf(".")>=0)?raw.split(".")[1].length:0;
+  inp.classList.remove("ok","no"); msg.className="eps-msg";
+  function bad(text){ inp.classList.add("no"); msg.classList.add("no"); msg.textContent=text; }
+  var cents=Math.round(EPS_RIGHT*100)/100;
+  if(v===null){ msg.textContent=""; }
+  else if(isNaN(v)){ bad("Type a number, like 1.23 or $1.23."); }
+  else if(Math.abs(v-EPS_RIGHT)<0.015 || (decimals!==2 && Math.abs(v-EPS_RIGHT)<0.05)){
+    if(decimals===2 && Math.abs(v-cents)<1e-9){ inp.classList.add("ok"); msg.classList.add("ok"); msg.textContent="\u2713 Correct."; epsOK=true; }
+    else bad("\u2717 Close. Round to the nearest cent: exactly two decimal places.");
+  }
+  else if(near(v,EPS_NO_PREF)){ bad("\u2717 Did you subtract preferred dividends?"); }
+  else if(near(v,EPS_COMMON_A)||near(v,EPS_COMMON_B)){ bad("\u2717 Common dividends don't come out of EPS. Only preferred dividends do."); }
+  else { bad("\u2717 Not quite. Recheck the numerator and the denominator."); }
+
+  var inBank=document.querySelectorAll("#bank > .tile").length;
+  var msgs=[];
+  if(anyWrong) msgs.push("<span class='bad'>&#10007;</span> = wrong section.");
+  if(anyOrder) msgs.push("<span class='bad'>&#8597;</span> = right section, wrong order.");
+  if(inBank>0) msgs.push("Some accounts are still in the bank.");
+  if(v===null) msgs.push("Earnings per share is still blank.");
+  var perfect = inBank===0 && !anyWrong && !anyOrder && f.ni && f.notis && epsOK;
+  if(perfect){
+    setFeedback("Everything is in the right place.");
+    document.getElementById("celeb").classList.add("show");
+    document.getElementById("celeb").scrollIntoView({behavior:"smooth",block:"center"});
+  } else {
+    setFeedback(msgs.join(" ") || "Keep going.");
+  }
+}
+
+function checkWork(){ if(stepN===1) checkStructure(); else checkAccounts(); }
+function resetAll(){ location.reload(); }
+
+document.querySelectorAll(".dropzone").forEach(bindZone);
+populateStructure();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indirect Method: Add or Deduct - Sammy Enterprises</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #faf9f6; color: #1a1a1a; margin: 0; padding: 0; }
+  .topbar { background: #C8102E; color: #fff; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .topbar .brand { font-size: 13px; font-weight: bold; letter-spacing: 0.5px; white-space: nowrap; }
+  .topbar .course { font-size: 12.5px; opacity: 0.9; text-align: right; }
+  .main { padding: 16px; }
+  h1 { font-size: 20px; text-align: center; margin: 8px 0 2px; color: #C8102E; }
+  .subtitle { text-align: center; font-size: 14px; color: #524727; margin-bottom: 12px; }
+  .instructions { max-width: 960px; margin: 0 auto 14px; font-size: 13.5px; background: #fff; border: 1px solid #CAC7A7; border-left: 4px solid #F1BE48; border-radius: 0 8px 8px 0; padding: 10px 14px; line-height: 1.45; }
+  .layout { max-width: 760px; margin: 0 auto; }
+  .play-pane { max-width: 560px; margin: 0 auto 16px; }
+  .sheet-pane { min-width: 0; }
+
+  .card { background: #fff; border: 3px solid #F1BE48; border-radius: 12px; overflow: hidden; text-align: center; box-shadow: 0 2px 8px rgba(82,71,39,0.12); }
+  .card .count { background: #C8102E; color: #fff; font-size: 12.5px; font-weight: bold; letter-spacing: 0.4px; padding: 7px 10px; }
+  .card .body { padding: 14px 18px 12px; background: linear-gradient(180deg, #fff 0%, #fdf6e3 100%); }
+  .card .item { font-size: 18px; font-weight: bold; line-height: 1.35; margin: 4px 0 4px; color: #1a1a1a; }
+  .card .amt { font-size: 16px; font-variant-numeric: tabular-nums; color: #524727; margin-bottom: 14px; }
+  .card.pop { animation: pop 0.25s ease-out; }
+  @keyframes pop { from { transform: scale(0.94); opacity: 0.3; } to { transform: scale(1); opacity: 1; } }
+  .btns { display: flex; gap: 10px; justify-content: center; }
+  .btns { max-width: 380px; margin: 0 auto; }
+  .btns button { flex: 1; font-family: inherit; font-size: 16px; font-weight: bold; padding: 12px 10px; border-radius: 8px; cursor: pointer; background: #C8102E; color: #fff; border: 2px solid #C8102E; }
+  .btns button:hover { background: #F1BE48; border-color: #F1BE48; color: #524727; }
+  .btns button:disabled { opacity: 0.4; cursor: default; }
+  .keys { font-size: 14px; font-weight: bold; color: #524727; margin-top: 10px; }
+  .card .count .clock { display: inline-block; margin-left: 14px; padding: 1px 8px; border-radius: 10px; background: #F1BE48; color: #524727; font-variant-numeric: tabular-nums; }
+  .celebration .time { margin-top: 10px; font-weight: bold; color: #524727; font-size: 16px; }
+  .celebration .best { font-size: 13.5px; color: #524727; }
+  .celebration .best.new { color: #C8102E; font-weight: bold; }
+  #msg { margin-top: 10px; font-size: 13px; line-height: 1.45; min-height: 18px; text-align: center; }
+  #msg.no { color: #C8102E; }
+  #msg .again { color: #524727; font-style: italic; }
+
+  .sheet { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 14px 16px 18px; }
+  .is-co { text-align: center; font-weight: bold; font-size: 16px; }
+  .is-line { text-align: center; font-size: 13.5px; }
+  .sec { font-weight: bold; font-size: 14px; margin: 14px 0 4px; }
+  .row { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; padding: 5px 10px; margin: 3px 0; border-radius: 6px; font-variant-numeric: tabular-nums; }
+  .row .v { white-space: nowrap; }
+  .row.ni { font-weight: bold; }
+  .adjhead { font-size: 13.5px; margin: 8px 0 2px; }
+  .subhead { font-size: 12.5px; color: #666; font-style: italic; margin: 6px 0 2px 22px; }
+  .grp { margin-left: 22px; min-height: 30px; border-left: 2px dashed #e3e0cf; padding-left: 6px; }
+  .subhead2 { font-size: 12.5px; font-weight: bold; color: #524727; margin: 6px 0 2px 34px; }
+  .grp.nested { margin-left: 34px; }
+  .adj { border: 1.5px solid; }
+  .adj.c-nc  { background: #e2eef9; border-color: #006BA6; color: #00476e; }
+  .adj.c-add { background: #e3f2e3; border-color: #2c7a2f; color: #1f5a21; }
+  .adj.c-ded { background: #fdeaea; border-color: #c0392b; color: #8e2a1f; }
+  .adj.land { animation: land 0.5s ease-out; }
+  @keyframes land { 0% { box-shadow: 0 0 0 4px rgba(241,190,72,0.9); } 100% { box-shadow: 0 0 0 0 rgba(241,190,72,0); } }
+  .total { display: flex; justify-content: space-between; gap: 10px; font-size: 14.5px; font-weight: bold; padding: 6px 10px 2px; margin-top: 8px; border-top: 3px double #1a1a1a; font-variant-numeric: tabular-nums; }
+  .total .v.pending { color: #b5b09a; font-weight: normal; }
+  .floater { position: fixed; z-index: 50; pointer-events: none; transition: transform 0.6s cubic-bezier(.2,.7,.2,1), opacity 0.6s; border-radius: 6px; }
+
+  .celebration { display: none; text-align: center; padding: 20px; margin: 16px auto; max-width: 560px; background: linear-gradient(135deg, #fdf6e3 0%, #fff 100%); border: 2px solid #F1BE48; border-radius: 12px; }
+  .celebration.show { display: block; }
+  .celebration h2 { margin: 0 0 6px; font-size: 22px; color: #C8102E; }
+  .celebration p { margin: 4px 0; font-size: 14px; color: #524727; }
+  .celebration .eq { margin-top: 10px; font-weight: bold; color: #C8102E; font-size: 15px; }
+  .celebration button { font-family: inherit; font-size: 14px; padding: 8px 18px; margin-top: 10px; border-radius: 6px; border: 1px solid #C8102E; background: #C8102E; color: #fff; cursor: pointer; }
+  .celebration .closer { font-size: 12.5px; color: #9B945F; margin-top: 8px; }
+  .footer { max-width: 960px; margin: 14px auto 0; font-size: 12px; color: #9B945F; text-align: center; padding-bottom: 12px; }
+  .footer .copy { color: #C8102E; font-weight: bold; }
+  @media (max-width: 900px) { .topbar { padding: 10px 14px; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Acct 3860 - Watanabe</div>
+  <div class="course">Chapter 4: Income Statement, Comprehensive Income, and the Statement of Cash Flows</div>
+</div>
+
+<div class="main">
+
+<h1>Indirect Method: Add or Deduct?</h1>
+<div class="subtitle">Sammy Enterprises &middot; Operating activities &middot; Exam practice</div>
+
+<div class="instructions">
+The indirect method starts with net income and adjusts it to the cash that operating activities actually produced. One item at a time, decide: is it <b>added</b> to net income or <b>deducted</b> from it? A right answer moves the item into its place on the statement. A wrong answer sends the item back, and it returns a few turns later. The increases and decreases change every round, so you can play again without memorizing. Not graded.
+</div>
+
+<div class="layout">
+  <div class="play-pane">
+    <div class="card" id="card">
+      <div class="count"><span id="count"></span><span class="clock" id="clock">0:00</span></div>
+      <div class="body">
+      <div id="startpanel">
+        <div class="item">14 items. Ready?</div>
+        <div class="amt">The clock starts when you press Start.</div>
+        <div class="btns"><button id="startbtn" onclick="startRound()">Start</button></div>
+        <div class="keys">Keyboard: Enter = start</div>
+      </div>
+      <div id="playpanel" style="display:none">
+      <div class="item" id="item"></div>
+      <div class="amt" id="amt"></div>
+      <div class="btns">
+        <button class="add" id="addbtn" onclick="answer(1)">Add</button>
+        <button class="ded" id="dedbtn" onclick="answer(-1)">Deduct</button>
+      </div>
+      <div class="keys">Keyboard: A = add, D = deduct</div>
+      </div>
+      </div>
+    </div>
+    <div id="msg"></div>
+  </div>
+
+  <div class="sheet-pane">
+    <div class="sheet" id="sheet">
+      <div class="is-co">SAMMY ENTERPRISES</div>
+      <div class="is-line">Statement of Cash Flows (Indirect Method)</div>
+      <div class="is-line">For the Year Ended December 31, 20XX</div>
+      <div class="sec">Cash flows from operating activities</div>
+      <div class="row ni"><span>Net income</span><span class="v">$179,580</span></div>
+      <div class="adjhead">Adjustments to reconcile net income to net cash flows from operating activities:</div>
+      <div class="subhead">Noncash and nonoperating items</div>
+      <div class="grp" id="grp0"></div>
+      <div class="subhead">Changes in current assets and current liabilities</div>
+      <div class="subhead2">Add:</div>
+      <div class="grp nested" id="grpAdd"></div>
+      <div class="subhead2">Deduct:</div>
+      <div class="grp nested" id="grpDed"></div>
+      <div class="total"><span>Net cash flows from operating activities</span><span class="v pending" id="totalv">&mdash;</span></div>
+    </div>
+    <div class="celebration" id="celeb">
+      <h2>Operating section complete!</h2>
+      <p>Every adjustment added or deducted, and every one in its place.</p>
+      <p class="eq" id="celebeq"></p>
+      <p class="time" id="celebtime"></p>
+      <p class="time" id="celebmiss"></p>
+      <p class="best" id="celebbest"></p>
+      <button onclick="newRound(true)">Play again with new increases and decreases</button>
+      <p class="closer">Well done. Keep practicing until it takes less and less time to correctly classify an item.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer"><span class="copy">© 2026 O. Watanabe</span>. All rights reserved. &middot; Acct 3860 &middot; Chapter 4: Income Statement, Comprehensive Income, and the Statement of Cash Flows</div>
+
+</div>
+
+<script>
+var NET_INCOME = 179580;
+/* kind: nc (noncash/nonoperating, fixed sign) | ca (current asset) | cl (current liability)
+   array order = the order items appear on the statement */
+var ITEMS = [
+  { kind:"nc", label:"Depreciation expense", amt:46000, sign:1,
+    why:"Depreciation reduced net income, but no cash was paid for it this year. Add it back." },
+  { kind:"nc", label:"Amortization expense (patents)", amt:5000, sign:1,
+    why:"Amortization reduced net income, but no cash was paid for it this year. Add it back." },
+  { kind:"nc", label:"Loss on sale of equipment", amt:4200, sign:1,
+    why:"The loss reduced net income, but the cash from the sale is an investing inflow. Add the loss back." },
+  { kind:"nc", label:"Gain on sale of machinery", amt:7500, sign:-1,
+    why:"The gain is in net income, but the cash from the sale is an investing inflow. Deduct the gain." },
+  { kind:"ca", acct:"accounts receivable", amt:18400,
+    up:"Revenue was recorded but not yet collected, so cash is lower than net income. Deduct.",
+    down:"Customers paid more than this year's sales on account, so cash is higher than net income. Add." },
+  { kind:"ca", acct:"inventory", amt:22700,
+    up:"Sammy bought more inventory than it sold, and cost of goods sold doesn't include that extra. Deduct.",
+    down:"Part of cost of goods sold came out of inventory bought in earlier years, not this year's cash. Add." },
+  { kind:"ca", acct:"prepaid insurance", amt:3600,
+    up:"Cash was paid for insurance that isn't an expense yet. Deduct.",
+    down:"Some insurance expense came from a payment made in an earlier year, not this year's cash. Add." },
+  { kind:"ca", acct:"supplies", amt:1250,
+    up:"Cash bought supplies that haven't been used and expensed yet. Deduct.",
+    down:"Some supplies expense came from supplies bought in an earlier year, not this year's cash. Add." },
+  { kind:"ca", acct:"interest receivable", amt:900,
+    up:"Interest revenue was recorded but not received in cash. Deduct.",
+    down:"More interest cash came in than was earned this year. Add." },
+  { kind:"cl", acct:"accounts payable", amt:15300,
+    up:"Purchases were made on credit and not paid yet, so the cash stayed in the company. Add.",
+    down:"Sammy paid suppliers more than it bought on credit this year. Deduct." },
+  { kind:"cl", acct:"salaries and wages payable", amt:6800,
+    up:"Salaries expense is in net income, but part of it hasn't been paid in cash yet. Add.",
+    down:"Sammy paid more in salaries than it expensed this year, catching up on last year's. Deduct." },
+  { kind:"cl", acct:"interest payable", amt:1100,
+    up:"Interest expense is in net income, but part of it hasn't been paid in cash yet. Add.",
+    down:"Sammy paid more interest than it expensed this year. Deduct." },
+  { kind:"cl", acct:"income taxes payable", amt:2450,
+    up:"Income tax expense is in net income, but part of it hasn't been paid yet. Add.",
+    down:"Sammy paid more in taxes than this year's expense. Deduct." },
+  { kind:"cl", acct:"deferred revenue", amt:9000,
+    up:"Cash came in before the revenue was earned, so it isn't in net income yet. Add.",
+    down:"Revenue was earned from cash collected in an earlier year: it's in net income, but no cash came in this year. Deduct." }
+];
+
+var deck = [], cur = null, placed = 0, busy = false, started = false, misses = 0;
+var t0 = 0, tick = null, best = null, BEST_KEY = "acct3860_indirect_best";
+try { var b = parseInt(localStorage.getItem(BEST_KEY), 10); if(b > 0) best = b; } catch(e) {}
+var rounds = 0, ROUNDS_KEY = "acct3860_indirect_rounds";
+try { var r = parseInt(localStorage.getItem(ROUNDS_KEY), 10); if(r > 0) rounds = r; } catch(e) {}
+function clockText(ms){ var s=Math.floor(ms/1000); return Math.floor(s/60) + ":" + (s%60<10 ? "0" : "") + (s%60); }
+function startClock(){ t0=Date.now(); document.getElementById("clock").textContent="0:00"; clearInterval(tick); tick=setInterval(function(){ document.getElementById("clock").textContent=clockText(Date.now()-t0); }, 250); }
+function stopClock(){ clearInterval(tick); tick=null; var ms=Date.now()-t0; document.getElementById("clock").textContent=clockText(ms); return ms; }
+
+function fmt(n){ return Math.abs(n).toLocaleString("en-US"); }
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function $(id){ return document.getElementById(id); }
+
+function newRound(go){
+  clearInterval(tick); tick=null; started=false;
+  $("celeb").classList.remove("show");
+  $("grp0").innerHTML=""; $("grpAdd").innerHTML=""; $("grpDed").innerHTML="";
+  $("totalv").textContent="—"; $("totalv").classList.add("pending");
+  $("msg").textContent=""; $("msg").className="";
+  placed=0; misses=0;
+  ITEMS.forEach(function(it, i){
+    it.idx=i;
+    if(it.kind!=="nc"){
+      it.dir = Math.random()<0.5 ? "up" : "down";
+      it.sign = (it.kind==="ca") === (it.dir==="up") ? -1 : 1;
+      it.rowLabel = (it.dir==="up" ? "Increase in " : "Decrease in ") + it.acct;
+      it.prompt = cap(it.acct) + (it.dir==="up" ? " increased" : " decreased");
+      it.reason = it[it.dir];
+    } else {
+      it.rowLabel = it.label; it.prompt = it.label; it.reason = it.why;
+    }
+  });
+  deck = ITEMS.slice();
+  for(var i=deck.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=deck[i]; deck[i]=deck[j]; deck[j]=t; }
+  $("card").style.display="";
+  $("count").textContent = "Placed 0 of " + ITEMS.length;
+  $("clock").textContent = "0:00";
+  if(go) startRound();
+  else { $("startpanel").style.display=""; $("playpanel").style.display="none"; }
+}
+
+function startRound(){
+  if(started) return;
+  started=true;
+  $("startpanel").style.display="none"; $("playpanel").style.display="";
+  startClock();
+  next();
+}
+
+function next(){
+  cur = deck.shift();
+  var c=$("card");
+  if(!cur){ finish(); return; }
+  $("count").textContent = "Placed " + placed + " of " + ITEMS.length;
+  $("item").textContent = cur.prompt;
+  $("amt").textContent = (cur.kind==="nc" ? "" : "by ") + "$" + fmt(cur.amt);
+  c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
+  $("addbtn").disabled=false; $("dedbtn").disabled=false;
+  busy=false;
+}
+
+function colorOf(it){ return it.kind==="nc" ? "c-nc" : (it.sign>0 ? "c-add" : "c-ded"); }
+
+function answer(sign){
+  if(!started || busy || !cur) return;
+  busy=true; $("addbtn").disabled=true; $("dedbtn").disabled=true;
+  var it=cur;
+  if(sign===it.sign){
+    $("msg").textContent=""; $("msg").className="";
+    placeRow(it, function(){ placed++; next(); });
+  } else {
+    var m=$("msg"); m.className="no";
+    m.textContent = "Incorrect. It will come back later.";
+    misses++;
+    deck.splice(Math.min(3, deck.length), 0, it);
+    next();
+  }
+}
+
+function placeRow(it, done){
+  var row=document.createElement("div");
+  row.className="row adj "+colorOf(it); row.dataset.idx=it.idx;
+  var l=document.createElement("span"); l.textContent=it.rowLabel.charAt(0).toUpperCase()+it.rowLabel.slice(1);
+  var v=document.createElement("span"); v.className="v"; v.textContent = it.sign>0 ? fmt(it.amt) : "(" + fmt(it.amt) + ")";
+  row.appendChild(l); row.appendChild(v);
+  var grp = it.kind==="nc" ? $("grp0") : (it.sign>0 ? $("grpAdd") : $("grpDed"));
+  var before=null;
+  Array.prototype.forEach.call(grp.children, function(r){ if(!before && +r.dataset.idx > it.idx) before=r; });
+  grp.insertBefore(row, before);
+  row.style.visibility="hidden";
+
+  var from=$("card").getBoundingClientRect(), to=row.getBoundingClientRect();
+  var f=row.cloneNode(true); f.classList.add("floater"); f.style.visibility="visible";
+  f.style.left=from.left+"px"; f.style.top=(from.top+from.height/2-to.height/2)+"px"; f.style.width=to.width+"px"; f.style.height=to.height+"px";
+  document.body.appendChild(f);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    f.style.transform="translate("+(to.left-from.left)+"px,"+(to.top-(from.top+from.height/2-to.height/2))+"px)";
+  }); });
+  var finished=false;
+  function end(){ if(finished) return; finished=true; f.remove(); row.style.visibility="visible"; row.classList.add("land"); done(); }
+  f.addEventListener("transitionend", end); setTimeout(end, 750);
+}
+
+function finish(){
+  var total = NET_INCOME + ITEMS.reduce(function(s,it){ return s + it.sign*it.amt; }, 0);
+  var tv=$("totalv"); tv.classList.remove("pending");
+  tv.textContent = total<0 ? "($"+fmt(total)+")" : "$"+fmt(total);
+  $("count").textContent="Placed " + ITEMS.length + " of " + ITEMS.length;
+  $("card").style.display="none";
+  $("celebeq").textContent = "Net income $" + fmt(NET_INCOME) + " → Net cash flows from operating activities " + tv.textContent;
+  var ms = stopClock(); started=false;
+  $("celebtime").textContent = "Your time: " + clockText(ms);
+  $("celebmiss").textContent = "Incorrect classifications: " + misses + (misses===0 ? ". A clean round!" : "");
+  var bb=$("celebbest");
+  rounds++;
+  try { localStorage.setItem(ROUNDS_KEY, String(rounds)); } catch(e) {}
+  if(best===null || ms < best){
+    best = ms;
+    try { localStorage.setItem(BEST_KEY, String(ms)); } catch(e) {}
+  }
+  bb.className = "best";
+  bb.textContent = rounds===1
+    ? "Round 1 on this device. Aim for zero incorrect classifications. The clock is only for comparing your rounds."
+    : "Round " + rounds + " on this device. Fastest round so far: " + clockText(best) + ".";
+  $("celeb").classList.add("show");
+  $("celeb").scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+document.addEventListener("keydown", function(e){
+  if(e.key==="Enter" && !started && $("startpanel").style.display!=="none"){ e.preventDefault(); startRound(); return; }
+  if(e.key==="a" || e.key==="A") answer(1);
+  if(e.key==="d" || e.key==="D") answer(-1);
+});
+newRound();
+</script>
+
+</body>
+</html>

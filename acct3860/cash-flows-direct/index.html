@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statement of Cash Flows, Direct Method - Sammy Enterprises</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #faf9f6; color: #1a1a1a; margin: 0; padding: 0; }
+  .topbar { background: #C8102E; color: #fff; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .topbar .brand { font-size: 13px; font-weight: bold; letter-spacing: 0.5px; white-space: nowrap; }
+  .topbar .course { font-size: 12.5px; opacity: 0.9; text-align: right; }
+  .main { padding: 16px; }
+  h1 { font-size: 20px; text-align: center; margin: 8px 0 2px; color: #C8102E; }
+  .subtitle { text-align: center; font-size: 14px; color: #524727; margin-bottom: 12px; }
+  .steps { text-align: center; margin-bottom: 10px; font-size: 13.5px; }
+  .step { display: inline-block; padding: 5px 14px; border-radius: 14px; border: 1px solid #CAC7A7; background: #fff; color: #9B945F; margin: 3px 4px; }
+  .step.active { background: #C8102E; border-color: #C8102E; color: #fff; font-weight: bold; }
+  .step.done { background: #F1BE48; border-color: #F1BE48; color: #524727; font-weight: bold; }
+  .instructions { max-width: 960px; margin: 0 auto 14px; font-size: 13.5px; background: #fff; border: 1px solid #CAC7A7; border-left: 4px solid #F1BE48; border-radius: 0 8px 8px 0; padding: 10px 14px; line-height: 1.45; }
+  .controls { text-align: center; margin-bottom: 8px; }
+  button { font-family: inherit; font-size: 14px; padding: 8px 18px; margin: 3px 6px; border-radius: 6px; border: 1px solid #C8102E; background: #C8102E; color: #fff; cursor: pointer; }
+  button.secondary { background: #fff; color: #C8102E; }
+  button:hover { opacity: 0.88; }
+  #feedback { max-width: 960px; margin: 0 auto 14px; font-size: 13.5px; color: #524727; text-align: center; min-height: 18px; line-height: 1.45; }
+  #feedback .bad { color: #C8102E; font-weight: bold; }
+  .layout { display: flex; gap: 16px; max-width: 1180px; margin: 0 auto; align-items: flex-start; }
+  .bank-pane { flex: 0 0 320px; position: sticky; top: 10px; }
+  .sheet-pane { flex: 1; min-width: 0; }
+  .pane-title { font-weight: bold; font-size: 15px; margin: 0 0 6px 2px; color: #C8102E; }
+  #bank { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 10px; min-height: 120px; max-height: 86vh; overflow-y: auto; }
+
+  .tile { display: block; width: 100%; text-align: left; margin: 4px 0; padding: 6px 9px; font-size: 12.5px; line-height: 1.25; border-radius: 6px; cursor: grab; user-select: none; background: #fff; border: 1.5px solid #9a9a9a; color: #1a1a1a; }
+  .tile.struct { font-weight: bold; }
+  .tile .amt { float: right; color: #333; font-weight: normal; font-variant-numeric: tabular-nums; padding-left: 8px; white-space: nowrap; }
+  .tile .mark { display: inline-block; width: 16px; font-weight: bold; }
+  .tile .mark.bad { color: #C8102E; }
+  .tile.selected { outline: 3px solid #006BA6; }
+  .tile.dragging { opacity: 0.5; }
+
+  .tile.c-title { background: #f1f1f1; border-color: #1a1a1a; }
+  .tile.c-end   { background: #f1f1f1; border-color: #1a1a1a; }
+  .tile.c-opr   { background: #e3f2e3; border-color: #2c7a2f; }
+  .tile.c-inv   { background: #e2eef9; border-color: #006BA6; }
+  .tile.c-fin   { background: #fdeaea; border-color: #c0392b; }
+  .tile.c-nc    { background: #fdf3d8; border-color: #b8860b; }
+  .tile.c-notis { background: #ecebe6; border-color: #7a7457; }
+  .t-opr { color: #2c7a2f; } .t-inv { color: #005a8c; } .t-fin { color: #b03226; } .t-end { color: #1a1a1a; }
+
+  .sheet { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 14px 16px 18px; }
+  .is-co { text-align: center; font-weight: bold; font-size: 16px; }
+  .is-line { text-align: center; font-size: 13.5px; }
+  .zone-label { font-weight: bold; font-size: 14px; margin: 10px 0 3px; }
+  .indent { margin-left: 22px; }
+  .zone { min-height: 44px; border: 2px dashed #CAC7A7; border-radius: 6px; padding: 5px; background: #fefdfb; }
+  .zone.over { background: #f0f0ec; border-color: #888; }
+  .zone-title { font-size: 12.5px; color: #666; margin: 6px 0 3px; font-style: italic; }
+  #hdrzone { min-height: 110px; }
+  #hdrzone .tile { text-align: center; }
+  #bodyzone { min-height: 400px; margin-top: 10px; }
+  #bodyzone .tile.net { margin-left: 22px; width: calc(100% - 22px); }
+
+  .subrow { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: bold; padding: 4px 12px 2px; border-top: 1px solid #1a1a1a; margin: 3px 0 6px; }
+  .subrow.plain { border-top: none; font-weight: normal; padding-left: 34px; }
+  .subrow.grand { font-size: 14.5px; border-top: 3px double #1a1a1a; }
+  .subrow .val { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .subrow .val.pending { color: #b5b09a; font-weight: normal; }
+
+  .nc-wrap { margin-top: 16px; padding: 8px 10px 10px; border: 2px solid #b8860b; border-radius: 8px; background: #fffaf0; }
+  .nc-wrap .zone-label { margin: 0 0 4px; color: #8a6400; }
+  .notis-wrap { margin-top: 18px; padding-top: 10px; border-top: 1px dashed #CAC7A7; }
+  .notis-wrap .zone-label { color: #5f5a43; margin-top: 0; }
+
+  .transition { display: none; text-align: center; padding: 16px; margin: 12px auto; max-width: 480px; background: #fdf6e3; border: 2px solid #F1BE48; border-radius: 10px; }
+  .transition.show { display: block; }
+  .transition p { margin: 4px 0; font-size: 14px; color: #524727; }
+  .transition .countdown { font-weight: bold; color: #C8102E; font-size: 15px; }
+  .celebration { display: none; text-align: center; padding: 20px; margin: 16px auto; max-width: 560px; background: linear-gradient(135deg, #fdf6e3 0%, #fff 100%); border: 2px solid #F1BE48; border-radius: 12px; }
+  .celebration.show { display: block; }
+  .celebration h2 { margin: 0 0 6px; font-size: 22px; color: #C8102E; }
+  .celebration p { margin: 4px 0; font-size: 14px; color: #524727; }
+  .celebration .eq { margin-top: 10px; font-weight: bold; color: #C8102E; font-size: 15px; }
+  .celebration .closer { font-size: 12.5px; color: #9B945F; margin-top: 8px; }
+  .footer { max-width: 960px; margin: 14px auto 0; font-size: 12px; color: #9B945F; text-align: center; padding-bottom: 12px; }
+  .footer .copy { color: #C8102E; font-weight: bold; }
+  @media (max-width: 900px) { .layout { flex-direction: column; } .bank-pane { position: static; flex: 1 1 auto; width: 100%; } #bank { max-height: 300px; } .topbar { padding: 10px 14px; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Acct 3860 - Watanabe</div>
+  <div class="course">Chapter 4: Income Statement, Comprehensive Income, and the Statement of Cash Flows</div>
+</div>
+
+<div class="main">
+
+<h1>Build the Statement of Cash Flows: Direct Method</h1>
+<div class="subtitle">Sammy Enterprises &middot; Direct method &middot; Exam practice</div>
+
+<div class="steps">
+  <span class="step active" id="step1pill">Step 1: Set up the statement</span>
+  <span class="step" id="step2pill">Step 2: Sort the cash flows</span>
+</div>
+
+<div class="instructions" id="instr">
+<b>Step 1.</b> Sammy Enterprises reports operating activities using the <b>direct method</b>: cash received and cash paid, by source. Drag the three heading lines into the heading area in order. Then drag the section headings and total lines into the body in the order they appear on the statement, including the three lines that carry cash from the beginning of the year to the end. One heading tile does not belong on this statement: leave it in the bank. You can also click a tile to select it, then click a zone to place it. Press <b>Check structure</b> when you are done: <b style="color:#C8102E">&#10007;</b> means it does not belong there, <b style="color:#C8102E">&#8597;</b> means right place but out of order, and tiles change color when they are right. To practice only the sorting, press <b>Skip to Step 2</b>.
+</div>
+
+<div class="controls">
+  <button id="checkbtn" onclick="checkWork()">Check structure</button>
+  <button class="secondary" id="skipbtn" onclick="skipToStep2()">Skip to Step 2</button>
+  <button class="secondary" onclick="resetAll()">Start over</button>
+</div>
+<div id="feedback"></div>
+
+<div class="layout">
+  <div class="bank-pane">
+    <div class="pane-title" id="banktitle">Headings and total lines</div>
+    <div id="bank" class="dropzone" data-sec="bank"></div>
+  </div>
+
+  <div class="sheet-pane">
+    <div class="sheet" id="sheet">
+      <div class="zone-title">Heading (three lines, in order)</div>
+      <div id="hdrzone" class="zone dropzone" data-sec="hdr"></div>
+      <div class="zone-title">Body (section headings and total lines, in order from top to bottom)</div>
+      <div id="bodyzone" class="zone dropzone" data-sec="body"></div>
+    </div>
+    <div class="transition" id="trans">
+      <p>Structure correct! Review your layout before moving on.</p>
+      <p>Cash flows will load in <span class="countdown" id="countdown">15</span> seconds.</p>
+      <button onclick="goStep2Now()">I'm ready - next</button>
+    </div>
+    <div class="celebration" id="celeb">
+      <h2>Statement of cash flows complete!</h2>
+      <p>Every cash flow in its section, every noncash deal in the schedule,</p>
+      <p>and nothing on the statement that the direct method leaves out.</p>
+      <p class="eq">Operating $272,400<br>Investing $75,000<br>Financing ($75,000)</p>
+      <p class="eq">Cash: $127,600 &rarr; $400,000</p>
+      <p class="closer">Well done. Keep practicing until there are no mistakes and you can build it in your sleep.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer"><span class="copy">© 2026 O. Watanabe</span>. All rights reserved. &middot; Acct 3860 &middot; Chapter 4: Income Statement, Comprehensive Income, and the Statement of Cash Flows</div>
+
+</div>
+
+<script>
+/* ---------- Step 1: structure ---------- */
+var STRUCT = [
+  { t:"SAMMY ENTERPRISES", g:"hdr", i:0, area:"title" },
+  { t:"Statement of Cash Flows (Direct Method)", g:"hdr", i:1, area:"title" },
+  { t:"For the Year Ended December 31, 20XX", g:"hdr", i:2, area:"title" },
+  { t:"At December 31, 20XX", g:"x", why:"date" },
+  { t:"Cash flows from operating activities", g:"body", i:0, area:"opr" },
+  { t:"Net cash flows from operating activities", g:"body", i:1, area:"opr", net:true },
+  { t:"Cash flows from investing activities", g:"body", i:2, area:"inv" },
+  { t:"Net cash flows from investing activities", g:"body", i:3, area:"inv", net:true },
+  { t:"Cash flows from financing activities", g:"body", i:4, area:"fin" },
+  { t:"Net cash flows from financing activities", g:"body", i:5, area:"fin", net:true },
+  { t:"Net increase (decrease) in cash", g:"body", i:6, area:"end" },
+  { t:"Cash, January 1, 20XX", g:"body", i:7, area:"end" },
+  { t:"Cash, December 31, 20XX", g:"body", i:8, area:"end" }
+];
+var HDR_COUNT = 3, BODY_COUNT = 9;
+
+/* ---------- Step 2: cash flows [name, amount, section, order group, trap note] ----------
+   operating: group 1 = cash received, group 2 = cash paid (received comes first) */
+var ACCOUNTS = [
+  ["Cash received from customers", "2,041,000", "opr", 1],
+  ["Cash received from interest and dividends", "12,400", "opr", 1],
+  ["Cash paid to suppliers", "(1,184,000)", "opr", 2],
+  ["Cash paid to employees", "(362,000)", "opr", 2],
+  ["Cash paid for other operating expenses", "(131,500)", "opr", 2],
+  ["Interest paid", "(39,500)", "opr", 2],
+  ["Income taxes paid", "(64,000)", "opr", 2],
+  ["Purchase of equipment", "(215,000)", "inv", 0],
+  ["Proceeds from sale of equipment", "38,000", "inv", 0],
+  ["Purchase of land", "(120,000)", "inv", 0],
+  ["Proceeds from sale of Morningstar Division assets", "460,000", "inv", 0],
+  ["Purchase of bonds issued by the State of Iowa", "(85,000)", "inv", 0],
+  ["Proceeds from sale of NVIDIA Corp. common stock", "52,000", "inv", 0],
+  ["Loan to Singer Salvage Yard (note receivable)", "(40,000)", "inv", 0],
+  ["Collection of note receivable (principal)", "15,000", "inv", 0],
+  ["Purchase of patent", "(30,000)", "inv", 0],
+  ["Proceeds from issuance of common stock", "150,000", "fin", 0],
+  ["Proceeds from issuance of bonds payable", "250,000", "fin", 0],
+  ["Proceeds from bank loan (note payable)", "80,000", "fin", 0],
+  ["Repayment of note payable", "(125,000)", "fin", 0],
+  ["Retirement of bonds payable", "(320,000)", "fin", 0],
+  ["Purchase of treasury stock", "(60,000)", "fin", 0],
+  ["Payment of cash dividends", "(50,000)", "fin", 0],
+  ["Acquired land by issuing common stock", "90,000", "nc", 0, "nc"],
+  ["Purchased machinery by issuing a note payable", "75,000", "nc", 0, "nc"],
+  ["Net income", "179,580", "notis", 0, "ni"],
+  ["Depreciation expense", "46,000", "notis", 0, "dep"],
+  ["Distributed a stock dividend", "30,000", "notis", 0, "sd"]
+];
+var SEC_AREA = { opr:"opr", inv:"inv", fin:"fin", nc:"nc", notis:"notis" };
+var SEC_COUNT = {};
+ACCOUNTS.forEach(function(a){ SEC_COUNT[a[2]] = (SEC_COUNT[a[2]] || 0) + 1; });
+
+var WHY = {
+  date: "“At December 31, 20XX” is a balance sheet date. A statement of cash flows covers a period.",
+  indirect: "This statement uses the direct method: operating activities are listed as cash received and cash paid.",
+  ni: "Net income belongs to the indirect method. The direct method lists cash received and cash paid instead.",
+  dep: "Depreciation is not a cash flow. On a direct-method statement it does not appear at all.",
+  sd: "A stock dividend only moves amounts within equity: no cash, and no investing or financing exchange. It is not reported.",
+  nc: "No cash changed hands. Noncash investing and financing activities go in the schedule below the statement.",
+  order: "In the operating section, cash received comes before cash paid."
+};
+
+/* statement layout for step 2 */
+var LAYOUT = [
+  { type:"label", text:"Cash flows from operating activities", area:"opr" },
+  { type:"zone", sec:"opr" },
+  { type:"sub", id:"opr", text:"Net cash flows from operating activities", area:"opr", val:"$272,400" },
+  { type:"label", text:"Cash flows from investing activities", area:"inv" },
+  { type:"zone", sec:"inv" },
+  { type:"sub", id:"inv", text:"Net cash flows from investing activities", area:"inv", val:"75,000" },
+  { type:"label", text:"Cash flows from financing activities", area:"fin" },
+  { type:"zone", sec:"fin" },
+  { type:"sub", id:"fin", text:"Net cash flows from financing activities", area:"fin", val:"(75,000)" },
+  { type:"sub", id:"net", text:"Net increase (decrease) in cash", area:"end", val:"272,400" },
+  { type:"fixed", text:"Cash, January 1, 20XX", val:"127,600" },
+  { type:"sub", id:"end", text:"Cash, December 31, 20XX", area:"end", val:"$400,000", cls:"grand" },
+  { type:"nc" },
+  { type:"notis" }
+];
+
+var stepN = 1, selected = null;
+
+function $(id){ return document.getElementById(id); }
+function shuffle(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+function kidsOf(z){ return Array.prototype.slice.call(z.querySelectorAll(":scope > .tile")); }
+function el(tag, cls, text){ var d=document.createElement(tag); if(cls) d.className=cls; if(text!==undefined) d.textContent=text; return d; }
+function clearMarks(t){
+  t.classList.remove("c-title","c-end","c-opr","c-inv","c-fin","c-nc","c-notis");
+  var m=t.querySelector(".mark"); if(m){ m.textContent=""; m.classList.remove("bad"); }
+}
+function markRight(t, area){ clearMarks(t); t.classList.add("c-"+area); var m=t.querySelector(".mark"); if(m) m.textContent="✓"; }
+function markWrong(t, sym){ clearMarks(t); var m=t.querySelector(".mark"); if(m){ m.textContent=sym||"✗"; m.classList.add("bad"); } }
+function setFeedback(html){ $("feedback").innerHTML=html; }
+function hideCeleb(){ $("celeb").classList.remove("show"); }
+
+/* longest non-decreasing run: tiles outside it are out of order */
+function inOrderSet(gs){
+  var n=gs.length, len=[], prev=[], best=-1, s={};
+  for(var i=0;i<n;i++){
+    len[i]=1; prev[i]=-1;
+    for(var j=0;j<i;j++){ if(gs[j]<=gs[i] && len[j]+1>len[i]){ len[i]=len[j]+1; prev[i]=j; } }
+    if(best<0 || len[i]>len[best]) best=i;
+  }
+  while(best>=0){ s[best]=true; best=prev[best]; }
+  return s;
+}
+
+function baseTile(id, cls){
+  var d=el("div","tile "+cls); d.id=id; d.draggable=true;
+  d.addEventListener("dragstart",function(e){ e.dataTransfer.setData("text/plain",d.id); d.classList.add("dragging"); });
+  d.addEventListener("dragend",function(){ d.classList.remove("dragging"); });
+  d.addEventListener("click",function(e){
+    e.stopPropagation();
+    if(selected===d){ d.classList.remove("selected"); selected=null; return; }
+    if(selected && d.parentElement.id!=="bank"){
+      var s=selected; s.classList.remove("selected"); selected=null;
+      placeTile(d.parentElement, s, undefined, d); return;
+    }
+    if(selected) selected.classList.remove("selected");
+    selected=d; d.classList.add("selected");
+  });
+  return d;
+}
+function makeStructTile(s, idx){
+  var d=baseTile("s"+idx,"struct"+(s.net?" net":"")); d.dataset.idx=idx;
+  d.innerHTML="<span class='mark'></span>"; d.appendChild(document.createTextNode(s.t)); return d;
+}
+function makeAcctTile(a, idx){
+  var d=baseTile("a"+idx,"acct"); d.dataset.idx=idx; d.dataset.sec=a[2];
+  d.appendChild(el("span","amt",a[1])); d.appendChild(el("span","mark")); d.appendChild(document.createTextNode(a[0])); return d;
+}
+function insertAt(zone, tile, y){
+  var kids=kidsOf(zone).filter(function(k){ return k!==tile; }), before=null;
+  for(var i=0;i<kids.length;i++){ var r=kids[i].getBoundingClientRect(); if(y<r.top+r.height/2){ before=kids[i]; break; } }
+  if(before) zone.insertBefore(tile,before); else zone.appendChild(tile);
+}
+function placeTile(zone, tile, y, beforeEl){
+  if(beforeEl && beforeEl!==tile) zone.insertBefore(tile,beforeEl);
+  else if(y===undefined) zone.appendChild(tile);
+  else insertAt(zone,tile,y);
+  clearMarks(tile);
+  liveTotals(); setFeedback(""); hideCeleb();
+}
+function bindZone(z){
+  z.addEventListener("dragover",function(e){ e.preventDefault(); z.classList.add("over"); });
+  z.addEventListener("dragleave",function(){ z.classList.remove("over"); });
+  z.addEventListener("drop",function(e){
+    e.preventDefault(); z.classList.remove("over");
+    var t=$(e.dataTransfer.getData("text/plain"));
+    if(t && t.classList.contains("tile")) placeTile(z,t,e.clientY);
+  });
+  z.addEventListener("click",function(){ if(selected){ var t=selected; t.classList.remove("selected"); selected=null; placeTile(z,t); } });
+}
+
+/* ---------- Step 1 ---------- */
+function populateStructure(){
+  var bank=$("bank"); bank.innerHTML="";
+  shuffle(STRUCT.map(function(_,i){ return i; })).forEach(function(i){ bank.appendChild(makeStructTile(STRUCT[i],i)); });
+}
+function checkStructure(){
+  var ok=true, anyWrong=false, anyOrder=false, notes=[];
+  function note(k){ if(k && notes.indexOf(WHY[k])<0) notes.push(WHY[k]); }
+  var hdr=kidsOf($("hdrzone")), body=kidsOf($("bodyzone"));
+  hdr.forEach(function(t,k){
+    var s=STRUCT[+t.dataset.idx];
+    if(s.g==="hdr" && s.i===k) markRight(t,"title");
+    else if(s.g==="hdr"){ markWrong(t,"↕"); anyOrder=true; ok=false; }
+    else { markWrong(t); anyWrong=true; ok=false; note(s.why); }
+  });
+  var bIdx=[], is=[];
+  body.forEach(function(t,k){
+    var s=STRUCT[+t.dataset.idx];
+    if(s.g==="body"){ bIdx.push(k); is.push(s.i); }
+    else { markWrong(t); anyWrong=true; ok=false; note(s.why); }
+  });
+  var keep=inOrderSet(is);
+  bIdx.forEach(function(k,p){ var t=body[k]; if(keep[p]) markRight(t,STRUCT[+t.dataset.idx].area); else { markWrong(t,"↕"); anyOrder=true; ok=false; } });
+  kidsOf($("bank")).forEach(clearMarks);
+  var leftInBank=kidsOf($("bank")).filter(function(t){ return STRUCT[+t.dataset.idx].g!=="x"; }).length;
+  if(hdr.length!==HDR_COUNT || body.length!==BODY_COUNT || leftInBank>0) ok=false;
+  var msgs=[];
+  if(anyWrong) msgs.push("<span class='bad'>&#10007;</span> = does not belong there.");
+  if(anyOrder) msgs.push("<span class='bad'>&#8597;</span> = right place, wrong order.");
+  if(leftInBank>0) msgs.push("Some tiles are still in the bank.");
+  notes.forEach(function(n){ msgs.push(n); });
+  if(ok){ setFeedback("Structure correct."); beginTransition(); }
+  else setFeedback(msgs.join(" ") || "Not quite yet. Check the order.");
+}
+
+var transTimer=null, transCount=15;
+function beginTransition(){
+  $("trans").classList.add("show");
+  $("trans").scrollIntoView({behavior:"smooth",block:"center"});
+  transCount=15; $("countdown").textContent=transCount;
+  transTimer=setInterval(function(){ transCount--; $("countdown").textContent=transCount; if(transCount<=0) goStep2Now(); },1000);
+}
+function goStep2Now(){
+  if(transTimer){ clearInterval(transTimer); transTimer=null; }
+  $("trans").classList.remove("show");
+  startStep2();
+}
+function skipToStep2(){ goStep2Now(); }
+
+/* ---------- Step 2 ---------- */
+function startStep2(){
+  stepN=2;
+  var sk=$("skipbtn"); if(sk) sk.style.display="none";
+  var sheet=$("sheet"); sheet.innerHTML="";
+  sheet.appendChild(el("div","is-co",STRUCT[0].t));
+  sheet.appendChild(el("div","is-line",STRUCT[1].t));
+  sheet.appendChild(el("div","is-line",STRUCT[2].t));
+  LAYOUT.forEach(function(L){
+    if(L.type==="label"){ sheet.appendChild(el("div","zone-label t-"+L.area,L.text)); }
+    else if(L.type==="zone"){ var z=el("div","zone dropzone indent"); z.dataset.sec=L.sec; bindZone(z); sheet.appendChild(z); }
+    else if(L.type==="sub"){
+      var r=el("div","subrow t-"+L.area+(L.cls?" "+L.cls:"")); r.id="sub-"+L.id;
+      r.appendChild(el("span","",L.text));
+      var v=el("span","val pending","—"); v.dataset.val=L.val; r.appendChild(v);
+      sheet.appendChild(r);
+    }
+    else if(L.type==="fixed"){
+      var f=el("div","subrow plain"); f.appendChild(el("span","",L.text)); f.appendChild(el("span","val",L.val)); sheet.appendChild(f);
+    }
+    else if(L.type==="nc"){
+      var w=el("div","nc-wrap");
+      w.appendChild(el("div","zone-label","Noncash investing and financing activities"));
+      var nz=el("div","zone dropzone"); nz.dataset.sec="nc"; bindZone(nz); w.appendChild(nz);
+      sheet.appendChild(w);
+    }
+    else if(L.type==="notis"){
+      var w2=el("div","notis-wrap");
+      w2.appendChild(el("div","zone-label","Not on the Direct Method Cash Flows Statement"));
+      var tz=el("div","zone dropzone"); tz.dataset.sec="notis"; bindZone(tz); w2.appendChild(tz);
+      sheet.appendChild(w2);
+    }
+  });
+  $("step1pill").className="step done";
+  $("step2pill").className="step active";
+  $("banktitle").textContent="Cash flow bank";
+  $("checkbtn").textContent="Check my statement";
+  $("instr").innerHTML="<b>Step 2.</b> The statement structure is set. Drag each item into its section. In the operating section, cash received comes before cash paid. Within investing and within financing, any order is fine. Two transactions involved no cash at all: they go in the noncash schedule. Three items do not belong on a direct-method statement: they go in the box at the bottom. Totals fill in the moment each section is complete. Press <b>Check my statement</b> whenever you like: <b style='color:#C8102E'>&#10007;</b> means wrong section, <b style='color:#C8102E'>&#8597;</b> means right section but out of order, and tiles change color when they are in the right place.";
+  setFeedback("");
+  var bank=$("bank"); bank.innerHTML="";
+  shuffle(ACCOUNTS.map(function(_,i){ return i; })).forEach(function(i){ bank.appendChild(makeAcctTile(ACCOUNTS[i],i)); });
+  liveTotals();
+}
+
+function zoneOf(sec){ return document.querySelector(".zone[data-sec='"+sec+"']"); }
+function evalSections(){
+  var f={ oprOrderTiles:[] };
+  Object.keys(SEC_COUNT).forEach(function(sec){
+    var z=zoneOf(sec); if(!z){ f[sec]=false; return; }
+    var kids=kidsOf(z), right=kids.filter(function(t){ return t.dataset.sec===sec; });
+    f[sec] = right.length===SEC_COUNT[sec] && kids.length===right.length;
+  });
+  var oz=zoneOf("opr");
+  if(oz){
+    var right=kidsOf(oz).filter(function(t){ return t.dataset.sec==="opr"; });
+    var keep=inOrderSet(right.map(function(t){ return ACCOUNTS[+t.dataset.idx][3]; }));
+    right.forEach(function(t,p){ if(!keep[p]) f.oprOrderTiles.push(t); });
+  }
+  f.oprOK = f.opr && f.oprOrderTiles.length===0;
+  f.all = f.oprOK && f.inv && f.fin;
+  return f;
+}
+function liveTotals(){
+  if(stepN!==2) return;
+  document.querySelectorAll(".subrow .val.pending, .subrow[id] .val").forEach(function(v){ if(v.dataset.val){ v.textContent="—"; v.classList.add("pending"); } });
+  var f=evalSections();
+  function show(id){ var v=$("sub-"+id).querySelector(".val"); v.textContent=v.dataset.val; v.classList.remove("pending"); }
+  if(f.oprOK) show("opr");
+  if(f.inv) show("inv");
+  if(f.fin) show("fin");
+  if(f.all){ show("net"); show("end"); }
+}
+function checkAccounts(){
+  var anyWrong=false, anyOrder=false, notes=[];
+  function note(k){ if(k && notes.indexOf(WHY[k])<0) notes.push(WHY[k]); }
+  document.querySelectorAll(".tile.acct").forEach(function(t){
+    var zs=t.parentElement.dataset.sec, a=ACCOUNTS[+t.dataset.idx];
+    if(zs==="bank"){ clearMarks(t); return; }
+    if(zs===a[2]) markRight(t,SEC_AREA[zs]);
+    else { markWrong(t); anyWrong=true; note(a[4]); }
+  });
+  var f=evalSections();
+  f.oprOrderTiles.forEach(function(t){ markWrong(t,"↕"); anyOrder=true; });
+  if(anyOrder) note("order");
+  liveTotals();
+  var inBank=kidsOf($("bank")).length;
+  var msgs=[];
+  if(anyWrong) msgs.push("<span class='bad'>&#10007;</span> = wrong section.");
+  if(anyOrder) msgs.push("<span class='bad'>&#8597;</span> = right section, wrong order.");
+  if(inBank>0) msgs.push("Some items are still in the bank.");
+  notes.forEach(function(n){ msgs.push(n); });
+  var perfect = inBank===0 && !anyWrong && !anyOrder && f.all && f.nc && f.notis;
+  if(perfect){
+    setFeedback("Everything is in the right place.");
+    $("celeb").classList.add("show");
+    $("celeb").scrollIntoView({behavior:"smooth",block:"center"});
+  } else {
+    hideCeleb();
+    setFeedback(msgs.join(" ") || "Keep going.");
+  }
+}
+
+function checkWork(){ if(stepN===1) checkStructure(); else checkAccounts(); }
+function resetAll(){ location.reload(); }
+
+document.querySelectorAll(".dropzone").forEach(bindZone);
+populateStructure();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Profit Recognition Walkthrough</title>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* Layout: one column grid (label + three years) runs from the problem data down through the solution grid, so each year reads straight down the page. A caption bar with the step controls stays at the bottom. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #E9AE1F;          /* gold: a number used in this step */
+  --use-tint: #FCEFC9;
+  --loss: #C8102E;         /* cardinal: a loss */
+  --ok: #2F7D50;           /* green: a check that passed */
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 132px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F1BE48; --use-tint: rgba(241, 190, 72, 0.22); --loss: #FF6B7D; --ok: #62C48E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F1BE48; --use-tint: rgba(241, 190, 72, 0.22); --loss: #FF6B7D; --ok: #62C48E;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.45;
+  padding-inline: 20px;
+  padding-block: 28px calc(var(--bar-h) + 32px);
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+
+header { display: grid; gap: 6px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.problem { font-family: var(--serif); font-size: 18px; margin: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+.sw.use { background: var(--use-tint); outline: 2px solid var(--use); }
+.sw.loss { background: var(--loss); }
+.sw.ok { background: var(--ok); }
+
+.price-chip {
+  display: inline-flex; align-items: baseline; gap: 10px;
+  font-family: var(--mono); font-size: 18px; padding: 4px 10px; border-radius: 6px;
+  border: 1px solid var(--rule);
+  outline: 2px solid transparent;
+}
+.price-chip small { font-family: var(--sans); font-size: 14px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; }
+table { width: 100%; min-width: 680px; border-collapse: collapse; table-layout: fixed; }
+col.c-label { width: 31%; }
+col.c-year { width: 23%; }
+th, td { border-bottom: 1px solid var(--rule); padding: 8px 10px; vertical-align: middle; }
+thead th { font-size: 15px; font-weight: 700; text-align: right; color: var(--muted); border-bottom: 2px solid var(--ink); }
+thead th:first-child { text-align: left; }
+tbody th { text-align: left; font-weight: 400; font-size: 16px; }
+td { text-align: right; font-family: var(--mono); font-size: 17px; font-variant-numeric: tabular-nums; }
+.section-title { font-family: var(--serif); font-weight: 600; font-size: 20px; margin: 0 0 4px; }
+tr.derived th b { font-weight: 700; }
+tr.derived td, tr.derived th { background: var(--surface); }
+.num { font-weight: 700; }
+
+/* grid cells: formula on top, value below */
+.cell { min-height: 54px; display: grid; justify-items: end; align-content: center; gap: 2px; }
+.f { font-size: 14px; color: var(--muted); line-height: 1.25; }
+.v { font-size: 20px; font-weight: 700; }
+.frac { display: inline-grid; justify-items: center; line-height: 1.15; }
+.frac .n { border-bottom: 1.5px solid var(--muted); padding: 0 4px 1px; }
+.frac .d { padding: 1px 4px 0; }
+.fracline { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.loss { color: var(--loss); }
+.ok { color: var(--ok); }
+td.sumcell { text-align: center; }
+.sumline { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 6px 10px; font-size: 19px; }
+
+/* states */
+.use-on { background: var(--use-tint) !important; outline: 2px solid var(--use); outline-offset: -2px; }
+.price-chip.use-on { outline-offset: 0; }
+td.target { box-shadow: inset 0 -3px 0 var(--ink); }
+.cell > * { visibility: hidden; }
+.shown .cell > * { visibility: visible; }
+.write .cell { animation: write 0.6s ease-out both; }
+@keyframes write { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+
+.copyright { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* caption bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: var(--bg); border-top: 2px solid var(--ink);
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.bar-in { max-width: 1080px; margin: 0 auto; display: grid; gap: 10px; }
+.caption { font-size: 18px; min-height: 2.9em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.counter { margin-left: auto; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.progress { height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+
+@media (max-width: 560px) {
+  body { font-size: 16px; padding-inline: 16px; }
+  .caption { font-size: 16px; }
+  .counter { margin-left: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write .cell { animation: none; }
+  .progress > div { transition: none; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Revenue recognition · Long-term contracts</div>
+    <h1>Recognition of Profit on a Long-Term Contract</h1>
+  </header>
+
+  <p class="problem">Shanahan Construction Company has entered into a contract beginning January 1, 2014, to build a parking complex. It has been estimated that the complex will cost $600,000 and will take 3 years to construct. The complex will be billed to the purchasing company at $900,000. Compute the estimated gross profit that would be recognized during each year of the construction period using (a) the percentage-of-completion method and (b) the completed-contract method.</p>
+
+  <div class="legend" aria-label="Color key">
+    <span><i class="sw use"></i>Used in this step</span>
+    <span><i class="sw ok"></i>A check that passed</span>
+  </div>
+
+  <section>
+    <h2 class="section-title">The problem</h2>
+    <p style="margin:0 0 8px"><span class="price-chip" id="price"><small>Total contract price</small>$900,000</span></p>
+    <div class="tablebox">
+      <table aria-label="Problem data">
+        <colgroup><col class="c-label"><col class="c-year"><col class="c-year"><col class="c-year"></colgroup>
+        <thead><tr><th>&nbsp;</th><th>2014</th><th>2015</th><th>2016</th></tr></thead>
+        <tbody>
+          <tr><th>Costs to date</th><td id="d-ctd-0">270,000</td><td id="d-ctd-1">450,000</td><td id="d-ctd-2">610,000</td></tr>
+          <tr><th>Estimated costs to complete</th><td id="d-etc-0">330,000</td><td id="d-etc-1">150,000</td><td id="d-etc-2">0</td></tr>
+          <tr><th>Progress billings to date</th><td>270,000</td><td>550,000</td><td>900,000</td></tr>
+          <tr><th>Cash collected to date</th><td>240,000</td><td>500,000</td><td>900,000</td></tr>
+          <tr class="derived"><th>Estimated <b>total</b> costs</th><td id="d-etot-0"><div class="cell"></div></td><td id="d-etot-1"><div class="cell"></div></td><td id="d-etot-2"><div class="cell"></div></td></tr>
+          <tr class="derived"><th>Below the contract price?</th><td id="d-test-0"><div class="cell"></div></td><td id="d-test-1"><div class="cell"></div></td><td id="d-test-2"><div class="cell"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">(a) Percentage-of-completion</h2>
+    <div class="tablebox">
+      <table aria-label="Percentage-of-completion grid">
+        <colgroup><col class="c-label"><col class="c-year"><col class="c-year"><col class="c-year"></colgroup>
+        <thead><tr><th>&nbsp;</th><th>2014</th><th>2015</th><th>2016</th></tr></thead>
+        <tbody>
+          <tr><th>1. Percent complete</th><td id="g-pc-0"><div class="cell"></div></td><td id="g-pc-1"><div class="cell"></div></td><td id="g-pc-2"><div class="cell"></div></td></tr>
+          <tr><th>2. Revenue to date</th><td id="g-rtd-0"><div class="cell"></div></td><td id="g-rtd-1"><div class="cell"></div></td><td id="g-rtd-2"><div class="cell"></div></td></tr>
+          <tr><th>3. Current period revenue</th><td id="g-cpr-0"><div class="cell"></div></td><td id="g-cpr-1"><div class="cell"></div></td><td id="g-cpr-2"><div class="cell"></div></td></tr>
+          <tr><th>4. Current period costs</th><td id="g-cpc-0"><div class="cell"></div></td><td id="g-cpc-1"><div class="cell"></div></td><td id="g-cpc-2"><div class="cell"></div></td></tr>
+          <tr><th>5. Gross profit</th><td id="g-gp-0"><div class="cell"></div></td><td id="g-gp-1"><div class="cell"></div></td><td id="g-gp-2"><div class="cell"></div></td></tr>
+          <tr><th>Check: total gross profit</th><td id="g-sum" class="sumcell" colspan="3"><div class="cell" style="justify-items:center"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">(b) Completed-contract</h2>
+    <div class="tablebox">
+      <table aria-label="Completed-contract gross profit">
+        <colgroup><col class="c-label"><col class="c-year"><col class="c-year"><col class="c-year"></colgroup>
+        <thead><tr><th>&nbsp;</th><th>2014</th><th>2015</th><th>2016</th></tr></thead>
+        <tbody>
+          <tr><th>Gross profit</th><td id="b-cc-0"><div class="cell"></div></td><td id="b-cc-1"><div class="cell"></div></td><td id="b-cc-2"><div class="cell"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+</div>
+
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="bar-in">
+    <div class="progress" aria-hidden="true"><div id="prog"></div></div>
+    <p class="caption" id="caption" aria-live="polite"></p>
+    <div class="controls">
+      <button id="restart" type="button">Start over</button>
+      <button id="back" type="button">Back</button>
+      <button id="next" type="button" class="primary">Next</button>
+      <button id="all" type="button">Show solution</button>
+      <span class="counter" id="counter"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const frac = (n, d, v) => `<span class="fracline"><span class="frac"><span class="n">${n}</span><span class="d">${d}</span></span>= ${v}</span>`;
+
+  // What each cell shows once revealed: f = the working, v = the result.
+  const CONTENT = {
+    'd-etot-0': { f: '270,000 + 330,000', v: '600,000' },
+    'd-etot-1': { f: '450,000 + 150,000', v: '600,000' },
+    'd-etot-2': { f: '610,000 + 0', v: '610,000' },
+    'd-test-0': { v: '<span class="ok">Yes ✓</span>' },
+    'd-test-1': { v: '<span class="ok">Yes ✓</span>' },
+    'd-test-2': { v: '<span class="ok">Yes ✓</span>' },
+    'g-pc-0': { v: frac('270,000', '600,000', '0.45') },
+    'g-pc-1': { v: frac('450,000', '600,000', '0.75') },
+    'g-pc-2': { v: frac('610,000', '610,000', '1.00') },
+    'g-rtd-0': { f: '900,000 × 0.45', v: '405,000' },
+    'g-rtd-1': { f: '900,000 × 0.75', v: '675,000' },
+    'g-rtd-2': { f: '900,000 × 1.00', v: '900,000' },
+    'g-cpr-0': { f: 'first year', v: '405,000' },
+    'g-cpr-1': { f: '675,000 − 405,000', v: '270,000' },
+    'g-cpr-2': { f: '900,000 − 675,000', v: '225,000' },
+    'g-cpc-0': { f: 'first year', v: '(270,000)' },
+    'g-cpc-1': { f: '450,000 − 270,000', v: '(180,000)' },
+    'g-cpc-2': { f: '610,000 − 450,000', v: '(160,000)' },
+    'g-gp-0': { f: '405,000 − 270,000', v: '135,000' },
+    'g-gp-1': { f: '270,000 − 180,000', v: '90,000' },
+    'g-gp-2': { f: '225,000 − 160,000', v: '65,000' },
+    'g-sum': { v: '<span class="sumline"><span>135,000 + 90,000 + 65,000 = 290,000</span><span>=</span><span>900,000 − 610,000</span><span class="ok">✓</span></span>' },
+    'b-cc-0': { v: '0' },
+    'b-cc-1': { v: '0' },
+    'b-cc-2': { f: '900,000 − 610,000', v: '290,000' },
+  };
+
+  // show: cells written in this step. use: cells this step reads from (gold).
+  const STEPS = [
+    { show: [], use: ['price'],
+      caption: "Worked solution. Shanahan will bill $900,000 for the parking complex: that is the contract price. Costs in this problem are given to date, so each year already includes the years before it. Billings and cash collected don't affect gross profit. Use Next or the right arrow key to step through." },
+    { show: ['d-etot-0'], use: ['d-ctd-0', 'd-etc-0'],
+      caption: 'Estimated total costs = costs to date + estimated costs to complete. 2014: 270,000 + 330,000 = 600,000.' },
+    { show: ['d-etot-1'], use: ['d-ctd-1', 'd-etc-1'],
+      caption: '2015: 450,000 + 150,000 = 600,000. The estimate holds.' },
+    { show: ['d-etot-2'], use: ['d-ctd-2', 'd-etc-2'],
+      caption: '2016: the complex is finished. Total costs are the actual 610,000, with nothing left to complete: 10,000 over the estimate.' },
+    { show: ['d-test-0', 'd-test-1', 'd-test-2'], use: ['price', 'd-etot-0', 'd-etot-1', 'd-etot-2'],
+      caption: 'Is each estimate below the 900,000 price? Yes, every year. The contract is profitable overall, so the grid applies as is.' },
+    { show: ['g-pc-0'], use: ['d-ctd-0', 'd-etot-0'],
+      caption: '1. Percent complete = costs to date ÷ estimated total costs. 2014: 270,000 ÷ 600,000 = 0.45.' },
+    { show: ['g-pc-1'], use: ['d-ctd-1', 'd-etot-1'],
+      caption: '2015: 450,000 ÷ 600,000 = 0.75. The costs are already to date, so nothing needs adding up first.' },
+    { show: ['g-pc-2'], use: ['d-ctd-2', 'd-etot-2'],
+      caption: '2016: 610,000 ÷ 610,000 = 1.00. Finished means 100%.' },
+    { show: ['g-rtd-0'], use: ['price', 'g-pc-0'],
+      caption: '2. Revenue to date = contract price × percent complete. 2014: 900,000 × 0.45 = 405,000.' },
+    { show: ['g-rtd-1'], use: ['price', 'g-pc-1'],
+      caption: '2015: 900,000 × 0.75 = 675,000.' },
+    { show: ['g-rtd-2'], use: ['price', 'g-pc-2'],
+      caption: '2016: 900,000 × 1.00 = 900,000. At completion, the whole price is revenue to date.' },
+    { show: ['g-cpr-0'], use: ['g-rtd-0'],
+      caption: '3. Current period revenue = revenue to date − revenue recognized in earlier years. 2014 is the first year, so all 405,000 belongs to 2014.' },
+    { show: ['g-cpr-1'], use: ['g-rtd-1', 'g-rtd-0'],
+      caption: '2015: 675,000 − 405,000 = 270,000.' },
+    { show: ['g-cpr-2'], use: ['g-rtd-2', 'g-rtd-1'],
+      caption: '2016: 900,000 − 675,000 = 225,000.' },
+    { show: ['g-cpc-0'], use: ['d-ctd-0'],
+      caption: "4. Current period costs. This problem's twist: costs are given to date, not for the year. 2014 is the first year, so its costs are the full 270,000. Costs are subtracted, so they go in parentheses." },
+    { show: ['g-cpc-1'], use: ['d-ctd-1', 'd-ctd-0'],
+      caption: "2015: costs to date minus last year's, 450,000 − 270,000 = 180,000." },
+    { show: ['g-cpc-2'], use: ['d-ctd-2', 'd-ctd-1'],
+      caption: '2016: 610,000 − 450,000 = 160,000.' },
+    { show: ['g-gp-0'], use: ['g-cpr-0', 'g-cpc-0'],
+      caption: '5. Gross profit = current period revenue − current period costs. 2014: 405,000 − 270,000 = 135,000.' },
+    { show: ['g-gp-1'], use: ['g-cpr-1', 'g-cpc-1'],
+      caption: '2015: 270,000 − 180,000 = 90,000.' },
+    { show: ['g-gp-2'], use: ['g-cpr-2', 'g-cpc-2', 'd-etot-1', 'd-etot-2'],
+      caption: '2016: 225,000 − 160,000 = 65,000. The 10,000 cost overrun lands in 2016, the year it shows up, so 2016 earns less than the 75,000 the original estimate implied.' },
+    { show: ['g-sum'], use: ['g-gp-0', 'g-gp-1', 'g-gp-2', 'price', 'd-etot-2'],
+      caption: 'Check: 135,000 + 90,000 + 65,000 = 290,000, which equals the contract price minus total costs, 900,000 − 610,000.' },
+    { show: ['b-cc-0', 'b-cc-1', 'b-cc-2'], use: ['price', 'd-etot-2'],
+      caption: '(b) Completed-contract: no gross profit until the complex is finished, so 0 in 2014, 0 in 2015, and all 290,000 in 2016.' },
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const last = STEPS.length - 1;
+  let k = 0;
+
+  // Fill every cell's content once; visibility is controlled by the "shown" class.
+  for (const [id, c] of Object.entries(CONTENT)) {
+    const cell = $(id).querySelector('.cell');
+    cell.innerHTML = (c.f ? `<div class="f">${c.f}</div>` : '') + `<div class="v">${c.v}</div>`;
+  }
+
+  function render(animate) {
+    const shown = new Set();
+    for (let i = 1; i <= k; i++) STEPS[i].show.forEach((id) => shown.add(id));
+    const fresh = new Set(animate ? STEPS[k].show : []);
+    for (const id of Object.keys(CONTENT)) {
+      const el = $(id);
+      el.classList.toggle('shown', shown.has(id));
+      el.classList.remove('write', 'target');
+      if (fresh.has(id)) { void el.offsetWidth; el.classList.add('write'); }
+    }
+    STEPS[k].show.forEach((id) => $(id).classList.add('target'));
+    document.querySelectorAll('.use-on').forEach((el) => el.classList.remove('use-on'));
+    STEPS[k].use.forEach((id) => $(id).classList.add('use-on'));
+
+    $('caption').textContent = STEPS[k].caption;
+    $('counter').textContent = `Step ${k} of ${last}`;
+    $('prog').style.width = `${(k / last) * 100}%`;
+    $('back').disabled = k === 0;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last;
+    $('all').disabled = k === last;
+
+    const focus = STEPS[k].show[0] ? $(STEPS[k].show[0]) : null;
+    if (focus && animate) {
+      const r = focus.getBoundingClientRect();
+      const barTop = window.innerHeight - document.querySelector('.bar').offsetHeight;
+      if (r.bottom > barTop - 8 || r.top < 0) {
+        focus.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
+    }
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+  }
+
+  $('next').addEventListener('click', () => { go(k + 1, true); });
+  $('back').addEventListener('click', () => { go(k - 1, false); });
+  $('restart').addEventListener('click', () => { go(0, false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', () => { go(last, false); });
+  document.addEventListener('keydown', (e) => {
+    if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(k + 1, true); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(k - 1, false); }
+  });
+
+  // Keep page padding in step with the caption bar's real height.
+  const setBar = () => document.documentElement.style.setProperty('--bar-h', document.querySelector('.bar').offsetHeight + 'px');
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(document.querySelector('.bar'));
+  setBar();
+  render(false);
+})();
+</script>
+</body>
+</html>

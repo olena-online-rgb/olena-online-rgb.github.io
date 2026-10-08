@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build the Balance Sheet - Sandover Bridge &amp; Iron</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #faf9f6; color: #1a1a1a; margin: 0; padding: 0; }
+  .topbar { background: #C8102E; color: #fff; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .topbar .brand { font-size: 13px; font-weight: bold; letter-spacing: 0.5px; }
+  .topbar .brand span { color: #F1BE48; }
+  .topbar .course { font-size: 12.5px; opacity: 0.9; }
+  .main { padding: 16px; }
+  h1 { font-size: 20px; text-align: center; margin: 8px 0 2px; color: #C8102E; }
+  .subtitle { text-align: center; font-size: 14px; color: #524727; margin-bottom: 12px; }
+  .steps { text-align: center; margin-bottom: 10px; font-size: 13.5px; }
+  .step { display: inline-block; padding: 5px 14px; border-radius: 14px; border: 1px solid #CAC7A7; background: #fff; color: #9B945F; margin: 0 4px; }
+  .step.active { background: #C8102E; border-color: #C8102E; color: #fff; font-weight: bold; }
+  .step.done { background: #F1BE48; border-color: #F1BE48; color: #524727; font-weight: bold; }
+  .instructions { max-width: 960px; margin: 0 auto 14px; font-size: 13.5px; background: #fff; border: 1px solid #CAC7A7; border-left: 4px solid #F1BE48; border-radius: 0 8px 8px 0; padding: 10px 14px; }
+  .controls { text-align: center; margin-bottom: 14px; }
+  button { font-family: inherit; font-size: 14px; padding: 8px 18px; margin: 0 6px; border-radius: 6px; border: 1px solid #C8102E; background: #C8102E; color: #fff; cursor: pointer; }
+  button.secondary { background: #fff; color: #C8102E; }
+  button:hover { opacity: 0.88; }
+  #score { display: inline-block; margin-left: 10px; font-size: 14px; font-weight: bold; color: #524727; }
+  .layout { display: flex; gap: 16px; max-width: 1280px; margin: 0 auto; align-items: flex-start; }
+  .bank-pane { flex: 0 0 290px; position: sticky; top: 10px; }
+  .sheet-pane { flex: 1; min-width: 0; }
+  .pane-title { font-weight: bold; font-size: 15px; margin: 0 0 6px 2px; color: #C8102E; }
+  #bank { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 10px; min-height: 120px; max-height: 84vh; overflow-y: auto; }
+  .tile { display: block; width: 100%; text-align: left; margin: 4px 0; padding: 6px 9px; font-size: 12.5px; line-height: 1.25; border-radius: 6px; cursor: grab; user-select: none; background: #fff; border: 1.5px solid #524727; color: #1a1a1a; }
+  .tile.struct { font-weight: bold; }
+  .tile.z-asset { background: #e3f2e3; border-color: #2c7a2f; }
+  .tile.z-liab { background: #fdeaea; border-color: #c0392b; }
+  .tile.z-se { background: #efe6f7; border-color: #6a3d9a; }
+  .tile.contra-ok { background: #e2eef9; border-color: #006BA6; }
+  .tile .amt { float: right; color: #333; font-weight: normal; font-variant-numeric: tabular-nums; padding-left: 8px; }
+  .tile .mark { display: inline-block; width: 16px; font-weight: bold; }
+  .tile.selected { outline: 3px solid #006BA6; }
+  .tile.dragging { opacity: 0.5; }
+  .sheet { background: #fff; border: 1px solid #CAC7A7; border-radius: 8px; padding: 14px 16px 18px; }
+  .bs-co { text-align: center; font-weight: bold; font-size: 16px; }
+  .bs-line { text-align: center; font-size: 13.5px; }
+  .majorsec { text-align: center; font-weight: bold; text-decoration: underline; font-size: 15px; margin: 14px 0 4px; color: #1a1a1a; }
+  .zone-label { font-weight: bold; font-size: 14px; margin: 10px 0 3px; color: #1a1a1a; }
+  .zone { min-height: 44px; border: 2px dashed #CAC7A7; border-radius: 6px; padding: 5px; background: #fefdfb; }
+  .zone.over { background: #f0f0ec; border-color: #888; }
+  .zone-title { font-size: 12.5px; color: #666; margin: 6px 0 3px; font-style: italic; }
+  #hdrzone { min-height: 110px; }
+  #hdrzone .tile { text-align: center; }
+  #bodyzone { min-height: 500px; margin-top: 10px; }
+  .cols { display: flex; gap: 16px; align-items: stretch; margin-top: 4px; }
+  .col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .col .grand-total-wrap { margin-top: auto; }
+  .sec-total { font-size: 13px; font-weight: bold; text-align: right; padding: 4px 12px 2px; color: #1a1a1a; border-top: 1px solid #1a1a1a; margin: 2px 0 6px; display: none; }
+  .grand-total { font-size: 14px; font-weight: bold; text-align: right; padding: 6px 12px 2px; color: #1a1a1a; border-top: 3px double #1a1a1a; margin: 6px 0 4px; display: none; }
+  .transition { display: none; text-align: center; padding: 16px; margin: 12px auto; max-width: 480px; background: #fdf6e3; border: 2px solid #F1BE48; border-radius: 10px; }
+  .transition.show { display: block; }
+  .transition p { margin: 4px 0; font-size: 14px; color: #524727; }
+  .transition .countdown { font-weight: bold; color: #C8102E; font-size: 15px; }
+  .transition button { margin-top: 10px; }
+  .celebration { display: none; text-align: center; padding: 20px; margin: 16px auto; max-width: 520px; background: linear-gradient(135deg, #fdf6e3 0%, #fff 100%); border: 2px solid #F1BE48; border-radius: 12px; }
+  .celebration h2 { margin: 0 0 6px; font-size: 22px; color: #C8102E; }
+  .celebration p { margin: 4px 0; font-size: 14px; color: #524727; }
+  .celebration .eq { margin-top: 10px; font-weight: bold; color: #C8102E; font-size: 15px; }
+  .celebration .closer { font-size: 12.5px; color: #9B945F; margin-top: 8px; }
+  .celebration.show { display: block; }
+  .footer { max-width: 960px; margin: 14px auto 0; font-size: 12px; color: #9B945F; text-align: center; padding-bottom: 12px; }
+  .footer .copy { color: #C8102E; font-weight: bold; }
+  @media (max-width: 900px) { .layout { flex-direction: column; } .bank-pane { position: static; flex: 1 1 auto; width: 100%; } #bank { max-height: 260px; } .cols { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Acct 3860 - Watanabe</div>
+  <div class="course">Chapter 3: The Balance Sheet and Financial Disclosures</div>
+</div>
+
+<div class="main">
+
+<h1>Build the Balance Sheet</h1>
+<div class="subtitle">Sandover Bridge &amp; Iron, Inc.</div>
+
+<div class="steps">
+  <span class="step active" id="step1pill">Step 1: Set up the statement</span>
+  <span class="step" id="step2pill">Step 2: Place the accounts</span>
+</div>
+
+<div class="instructions" id="instr">
+<b>Step 1.</b> Drag the three title lines into the heading area in the correct order, then drag the section headings and subheadings into the body in the order they appear on a classified balance sheet. You can also click a tile to select it, then click a zone to place it. Press <b>Check structure</b> when you are done. The accounts unlock once the structure is right.
+</div>
+
+<div class="controls">
+  <button id="checkbtn" onclick="checkWork()">Check structure</button>
+  <button class="secondary" onclick="resetAll()">Start over</button>
+  <span id="score"></span>
+</div>
+
+<div class="layout">
+  <div class="bank-pane">
+    <div class="pane-title" id="banktitle">Titles and headings</div>
+    <div id="bank" class="dropzone" data-sec="bank"></div>
+  </div>
+
+  <div class="sheet-pane">
+    <div class="sheet" id="sheet">
+      <div class="zone-title">Heading (three lines, in order)</div>
+      <div id="hdrzone" class="zone dropzone" data-sec="hdr"></div>
+      <div class="zone-title">Body (sections and subsections, in order from top to bottom)</div>
+      <div id="bodyzone" class="zone dropzone" data-sec="body"></div>
+    </div>
+    <div class="transition" id="trans">
+      <p>Structure correct! Review your layout before moving on.</p>
+      <p>Accounts will load in <span class="countdown" id="countdown">15</span> seconds.</p>
+      <button onclick="goStep2Now()">I'm ready - next</button>
+    </div>
+    <div class="celebration" id="celeb">
+      <h2>Balance sheet complete!</h2>
+      <p>Every account classified correctly, contras in the right place,</p>
+      <p>liquidity order maintained, and both sides balance.</p>
+      <p class="eq">Total assets $3,166,000 = Total liabilities and shareholders' equity $3,166,000</p>
+      <p class="closer">Well done. Keep practicing until there are no mistakes and you can build it in your sleep.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer"><span class="copy">Acct 3860 - Watanabe</span> &middot; Chapter 3: The Balance Sheet and Financial Disclosures</div>
+
+</div>
+
+<script>
+var STRUCT = [
+  { t: "SANDOVER BRIDGE & IRON, INC.", g: "hdr", i: 0 },
+  { t: "Balance Sheet", g: "hdr", i: 1 },
+  { t: "At December 31, 2025", g: "hdr", i: 2 },
+  { t: "Assets", g: "body", i: 0, major: true, col: 0 },
+  { t: "Current assets", g: "body", i: 1, zone: "ca", col: 0 },
+  { t: "Long-term investments", g: "body", i: 2, zone: "lti", col: 0 },
+  { t: "Property, plant, and equipment", g: "body", i: 3, zone: "ppe", col: 0 },
+  { t: "Intangible assets", g: "body", i: 4, zone: "int", col: 0 },
+  { t: "Other assets", g: "body", i: 5, zone: "oth", col: 0 },
+  { t: "Liabilities", g: "body", i: 6, major: true, col: 1 },
+  { t: "Current liabilities", g: "body", i: 7, zone: "cl", col: 1 },
+  { t: "Long-term liabilities", g: "body", i: 8, zone: "ltl", col: 1 },
+  { t: "Shareholders\u2019 Equity", g: "body", i: 9, major: true, zone: "se", col: 1 }
+];
+
+var ACCOUNTS = [
+  ["Cash and cash equivalents", "125,000", "ca"],
+  ["U.S. Treasury bills (bought 3 months before maturity)", "25,000", "ca"],
+  ["Short-term investments (trading securities)", "110,000", "ca"],
+  ["Accounts receivable", "240,000", "ca"],
+  ["Allowance for doubtful accounts", "(12,000)", "ca", 1],
+  ["Interest receivable", "8,000", "ca"],
+  ["Merchandise inventory", "60,000", "ca"],
+  ["Prepaid insurance", "18,000", "ca"],
+  ["Supplies", "9,000", "ca"],
+  ["Land held for speculation", "150,000", "lti"],
+  ["Plant site held for future use", "200,000", "lti"],
+  ["Bond sinking fund", "75,000", "lti"],
+  ["Investments in bonds (held to maturity)", "120,000", "lti"],
+  ["Investment in equity securities (30% holding)", "180,000", "lti"],
+  ["Notes receivable (due in three years)", "65,000", "lti"],
+  ["Restricted cash (to retire bonds in ten years)", "45,000", "lti"],
+  ["Land (used in operations)", "300,000", "ppe"],
+  ["Buildings", "850,000", "ppe"],
+  ["Machinery", "420,000", "ppe"],
+  ["Equipment", "260,000", "ppe"],
+  ["Accumulated depreciation", "(510,000)", "ppe", 1],
+  ["Goodwill", "220,000", "int"],
+  ["Patents (net)", "95,000", "int"],
+  ["Copyrights", "30,000", "int"],
+  ["Franchise", "55,000", "int"],
+  ["Deferred charges (long-term prepaid expenses)", "28,000", "oth"],
+  ["Accounts payable", "210,000", "cl"],
+  ["Salaries payable", "46,000", "cl"],
+  ["Interest payable (due in three months)", "14,000", "cl"],
+  ["Income taxes payable", "58,000", "cl"],
+  ["Sales tax payable", "12,000", "cl"],
+  ["Notes payable (due in five months)", "80,000", "cl"],
+  ["Current maturities of long-term debt", "50,000", "cl"],
+  ["Lease liability (due in one year)", "30,000", "cl"],
+  ["Deferred revenue", "36,000", "cl"],
+  ["Dividends payable", "25,000", "cl"],
+  ["Refundable deposits (due within one year)", "9,000", "cl"],
+  ["Bonds payable (due in ten years)", "600,000", "ltl"],
+  ["Discount on bonds payable", "(28,000)", "ltl", 1],
+  ["Notes payable (due in five years)", "150,000", "ltl"],
+  ["Lease liability (due beyond one year)", "175,000", "ltl"],
+  ["Preferred stock", "100,000", "se"],
+  ["Common stock", "800,000", "se"],
+  ["Common stock dividend distributable", "40,000", "se"],
+  ["Additional paid-in capital", "350,000", "se"],
+  ["Retained earnings", "429,000", "se"],
+  ["Accumulated other comprehensive income", "65,000", "se"],
+  ["Treasury stock (at cost)", "(85,000)", "se", 1]
+];
+
+var CA_RANK = { 0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:7 };
+var SE_ORDER = [42, 41, 44];
+var LTL_BONDS = 37, LTL_DISC = 38;
+var SECTION_COUNTS = { ca:9, lti:7, ppe:5, int:4, oth:1, cl:11, ltl:4, se:7 };
+var SECTION_TOTALS = { ca:"$583,000", lti:"$835,000", ppe:"$1,320,000", int:"$400,000", oth:"$28,000", cl:"$570,000", ltl:"$897,000", se:"$1,699,000" };
+var ASSET_SECS = ["ca","lti","ppe","int","oth"];
+var LIAB_SECS = ["cl","ltl"];
+var ZONE_GROUP = { ca:"asset", lti:"asset", ppe:"asset", int:"asset", oth:"asset", cl:"liab", ltl:"liab", se:"se" };
+
+var stepN = 1, selected = null;
+
+function shuffle(a) {
+  for (var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+
+function clearMarks(t) {
+  t.classList.remove("z-asset","z-liab","z-se","contra-ok");
+  var m=t.querySelector(".mark"); if(m) m.textContent="";
+}
+
+function colorByZone(t, zoneSec) {
+  clearMarks(t);
+  var g=ZONE_GROUP[zoneSec];
+  if(g) t.classList.add("z-"+g);
+}
+
+function setMark(t, s) { var m=t.querySelector(".mark"); if(m) m.textContent=s; }
+
+function baseTile(id, cls) {
+  var d=document.createElement("div"); d.className="tile "+cls; d.id=id; d.draggable=true;
+  d.addEventListener("dragstart",function(e){e.dataTransfer.setData("text/plain",d.id);d.classList.add("dragging");});
+  d.addEventListener("dragend",function(){d.classList.remove("dragging");});
+  d.addEventListener("click",function(e){
+    e.stopPropagation();
+    if(selected===d){d.classList.remove("selected");selected=null;return;}
+    if(selected) selected.classList.remove("selected");
+    selected=d;d.classList.add("selected");
+  });
+  return d;
+}
+
+function makeStructTile(s,idx){
+  var d=baseTile("s"+idx,"struct"); d.dataset.g=s.g; d.dataset.i=s.i;
+  d.innerHTML="<span class='mark'></span>"+s.t; return d;
+}
+
+function makeAcctTile(a,idx){
+  var d=baseTile("a"+idx,"acct"); d.dataset.sec=a[2]; d.dataset.idx=idx;
+  if(a[3]) d.dataset.contra="1";
+  d.innerHTML="<span class='amt'>"+a[1]+"</span><span class='mark'></span>"+a[0]; return d;
+}
+
+function insertAt(zone,tile,y){
+  var kids=Array.prototype.slice.call(zone.querySelectorAll(":scope > .tile")).filter(function(k){return k!==tile;});
+  var before=null;
+  for(var i=0;i<kids.length;i++){var r=kids[i].getBoundingClientRect();if(y<r.top+r.height/2){before=kids[i];break;}}
+  if(before) zone.insertBefore(tile,before); else zone.appendChild(tile);
+}
+
+function placeTile(zone,tile,y){
+  if(y===undefined) zone.appendChild(tile); else insertAt(zone,tile,y);
+  var sec=zone.dataset.sec;
+  if(sec&&sec!=="bank") colorByZone(tile,sec); else clearMarks(tile);
+  hideTotals(); clearScore();
+  document.getElementById("celeb").classList.remove("show");
+}
+
+function bindZone(z){
+  z.addEventListener("dragover",function(e){e.preventDefault();z.classList.add("over");});
+  z.addEventListener("dragleave",function(){z.classList.remove("over");});
+  z.addEventListener("drop",function(e){
+    e.preventDefault();z.classList.remove("over");
+    var id=e.dataTransfer.getData("text/plain"),t=document.getElementById(id);
+    if(t) placeTile(z,t,e.clientY);
+  });
+  z.addEventListener("click",function(){
+    if(selected){var t=selected;t.classList.remove("selected");selected=null;placeTile(z,t);}
+  });
+}
+
+function clearScore(){document.getElementById("score").textContent="";}
+
+function hideTotals(){document.querySelectorAll(".sec-total,.grand-total").forEach(function(el){el.style.display="none";});}
+
+function showTotal(sec){var el=document.getElementById("total-"+sec);if(el){el.textContent=SECTION_TOTALS[sec];el.style.display="block";}}
+
+function showGrandTotals(){
+  var ta=document.getElementById("total-assets"),tl=document.getElementById("total-liabilities"),tse=document.getElementById("total-lse");
+  if(ta){ta.textContent="Total assets: $3,166,000";ta.style.display="block";}
+  if(tl){tl.textContent="Total liabilities: $1,467,000";tl.style.display="block";}
+  if(tse){tse.textContent="Total liabilities and shareholders\u2019 equity: $3,166,000";tse.style.display="block";}
+}
+
+function populateStructure(){
+  var bank=document.getElementById("bank");bank.innerHTML="";
+  shuffle(STRUCT.map(function(_,i){return i;})).forEach(function(i){bank.appendChild(makeStructTile(STRUCT[i],i));});
+}
+
+function populateAccounts(){
+  var bank=document.getElementById("bank");bank.innerHTML="";
+  shuffle(ACCOUNTS.map(function(_,i){return i;})).forEach(function(i){bank.appendChild(makeAcctTile(ACCOUNTS[i],i));});
+}
+
+function checkStructure(){
+  var ok=true,good=0;
+  var hdr=Array.prototype.slice.call(document.querySelectorAll("#hdrzone > .tile"));
+  var body=Array.prototype.slice.call(document.querySelectorAll("#bodyzone > .tile"));
+  hdr.forEach(function(t,k){
+    if(t.dataset.g==="hdr"&&Number(t.dataset.i)===k){setMark(t,"\u2713");good++;}
+    else{setMark(t,"\u2717");ok=false;}
+  });
+  body.forEach(function(t,k){
+    if(t.dataset.g==="body"&&Number(t.dataset.i)===k){setMark(t,"\u2713");good++;}
+    else{setMark(t,"\u2717");ok=false;}
+  });
+  var unplaced=document.querySelectorAll("#bank > .tile").length;
+  if(unplaced>0) ok=false;
+  var msg=good+" of "+STRUCT.length+" in the right place";
+  if(unplaced>0) msg+=" ("+unplaced+" not yet placed)";
+  document.getElementById("score").textContent=msg;
+  if(ok) beginTransition();
+}
+
+var transTimer=null, transCount=15;
+
+function beginTransition(){
+  document.getElementById("trans").classList.add("show");
+  document.getElementById("trans").scrollIntoView({behavior:"smooth",block:"center"});
+  transCount=15;
+  document.getElementById("countdown").textContent=transCount;
+  transTimer=setInterval(function(){
+    transCount--;
+    document.getElementById("countdown").textContent=transCount;
+    if(transCount<=0) goStep2Now();
+  },1000);
+}
+
+function goStep2Now(){
+  if(transTimer){clearInterval(transTimer);transTimer=null;}
+  document.getElementById("trans").classList.remove("show");
+  startStep2();
+}
+
+function startStep2(){
+  stepN=2;
+  var sheet=document.getElementById("sheet");sheet.innerHTML="";
+  var h0=document.createElement("div");h0.className="bs-co";h0.textContent=STRUCT[0].t;sheet.appendChild(h0);
+  var h1=document.createElement("div");h1.className="bs-line";h1.textContent=STRUCT[1].t;sheet.appendChild(h1);
+  var h2=document.createElement("div");h2.className="bs-line";h2.textContent=STRUCT[2].t;sheet.appendChild(h2);
+  var cols=document.createElement("div");cols.className="cols";
+  var colL=document.createElement("div");colL.className="col";
+  var colR=document.createElement("div");colR.className="col";
+  cols.appendChild(colL);cols.appendChild(colR);sheet.appendChild(cols);
+  STRUCT.filter(function(s){return s.g==="body";}).forEach(function(s){
+    var target=s.col===0?colL:colR;
+    var lab=document.createElement("div");
+    lab.className=s.major?"majorsec":"zone-label";
+    lab.textContent=s.t+(s.major?"":":");
+    target.appendChild(lab);
+    if(s.zone){
+      var z=document.createElement("div");z.className="zone dropzone";z.dataset.sec=s.zone;
+      bindZone(z);target.appendChild(z);
+      var tot=document.createElement("div");tot.className="sec-total";tot.id="total-"+s.zone;
+      target.appendChild(tot);
+    }
+  });
+  var gta=document.createElement("div");gta.className="grand-total";gta.id="total-assets";colL.appendChild(gta);
+  var gtWrap=document.createElement("div");gtWrap.className="grand-total-wrap";
+  var gtl=document.createElement("div");gtl.className="grand-total";gtl.id="total-liabilities";gtWrap.appendChild(gtl);
+  var gtse=document.createElement("div");gtse.className="grand-total";gtse.id="total-lse";gtWrap.appendChild(gtse);
+  colR.appendChild(gtWrap);
+  document.getElementById("step1pill").className="step done";
+  document.getElementById("step2pill").className="step active";
+  document.getElementById("banktitle").textContent="Account bank";
+  document.getElementById("checkbtn").textContent="Check accounts";
+  document.getElementById("instr").innerHTML="<b>Step 2.</b> Structure correct. Now drag each account into the section where it belongs. Contra accounts go directly under the account they reduce. Within current assets, liquidity order is graded from cash through inventory. In shareholders\u2019 equity, the first three accounts must be in order. Press <b>Check accounts</b> when every account is placed.";
+  clearScore();populateAccounts();
+}
+
+function checkAccounts(){
+  var correct=0,placed=0,total=ACCOUNTS.length,issues=[];
+  var sectionCorrect={};
+  Object.keys(SECTION_COUNTS).forEach(function(k){sectionCorrect[k]=0;});
+  document.querySelectorAll(".tile.acct").forEach(function(t){
+    var zoneSec=t.parentElement.dataset.sec;
+    t.classList.remove("contra-ok");setMark(t,"");
+    if(zoneSec==="bank") return;
+    placed++;
+    if(zoneSec===t.dataset.sec){
+      setMark(t,"\u2713");correct++;
+      if(t.dataset.contra) t.classList.add("contra-ok");
+      sectionCorrect[zoneSec]++;
+    } else { setMark(t,"\u2717"); }
+  });
+  var caZone=document.querySelector(".zone[data-sec='ca']"),caOOO=0;
+  if(caZone){
+    var maxRank=-1;
+    Array.prototype.slice.call(caZone.querySelectorAll(":scope > .tile.acct")).forEach(function(t){
+      if(t.dataset.sec!=="ca") return;
+      var r=CA_RANK[Number(t.dataset.idx)];
+      if(r!==undefined){if(r<maxRank){setMark(t,"\u2195");caOOO++;}else if(r>maxRank){maxRank=r;}}
+    });
+  }
+  if(caOOO>0) issues.push(caOOO+" current asset"+(caOOO>1?"s":"")+" out of liquidity order");
+  var seZone=document.querySelector(".zone[data-sec='se']");
+  if(seZone){
+    var seTiles=Array.prototype.slice.call(seZone.querySelectorAll(":scope > .tile.acct")).filter(function(t){return t.dataset.sec==="se";});
+    for(var si=0;si<3&&si<seTiles.length;si++){
+      if(Number(seTiles[si].dataset.idx)!==SE_ORDER[si]){
+        setMark(seTiles[si],"\u2195");
+        issues.push("shareholders\u2019 equity: first three accounts out of order");
+        break;
+      }
+    }
+  }
+  var ltlZone=document.querySelector(".zone[data-sec='ltl']");
+  if(ltlZone){
+    var ltlTiles=Array.prototype.slice.call(ltlZone.querySelectorAll(":scope > .tile.acct")).filter(function(t){return t.dataset.sec==="ltl";});
+    for(var li=0;li<ltlTiles.length;li++){
+      if(Number(ltlTiles[li].dataset.idx)===LTL_DISC){
+        if(li===0||Number(ltlTiles[li-1].dataset.idx)!==LTL_BONDS){
+          setMark(ltlTiles[li],"\u2195");
+          issues.push("discount on bonds payable must be directly under bonds payable");
+        }
+        break;
+      }
+    }
+  }
+  var ppeZone=document.querySelector(".zone[data-sec='ppe']");
+  if(ppeZone){
+    var ppeTiles=Array.prototype.slice.call(ppeZone.querySelectorAll(":scope > .tile.acct")).filter(function(t){return t.dataset.sec==="ppe";});
+    for(var pi=0;pi<ppeTiles.length;pi++){
+      if(Number(ppeTiles[pi].dataset.idx)===20&&pi<ppeTiles.length-1){
+        setMark(ppeTiles[pi],"\u2195");
+        issues.push("accumulated depreciation must be the last item in PPE");
+        break;
+      }
+    }
+  }
+  hideTotals();
+  var allAssets=true,allLiab=true,allSE=true;
+  Object.keys(SECTION_COUNTS).forEach(function(sec){
+    if(sectionCorrect[sec]===SECTION_COUNTS[sec]){showTotal(sec);}
+    else{
+      if(ASSET_SECS.indexOf(sec)>=0) allAssets=false;
+      if(LIAB_SECS.indexOf(sec)>=0) allLiab=false;
+      if(sec==="se") allSE=false;
+    }
+  });
+  if(allAssets&&allLiab&&allSE) showGrandTotals();
+  var msg=correct+" of "+total+" in the right section";
+  if(placed<total) msg+=" ("+(total-placed)+" not yet placed)";
+  if(issues.length>0) msg+=" \u00b7 "+issues.join("; ");
+  var perfect=correct===total&&issues.length===0;
+  if(perfect) msg="All "+total+" correct and in order!";
+  document.getElementById("score").textContent=msg;
+  if(perfect){
+    document.getElementById("celeb").classList.add("show");
+    document.getElementById("celeb").scrollIntoView({behavior:"smooth",block:"center"});
+  }
+}
+
+function checkWork(){if(stepN===1) checkStructure(); else checkAccounts();}
+function resetAll(){location.reload();}
+
+document.querySelectorAll(".dropzone").forEach(bindZone);
+populateStructure();
+</script>
+
+</body>
+</html>

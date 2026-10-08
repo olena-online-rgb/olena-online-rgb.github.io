@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Overall Loss Walkthrough</title>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* Layout: one column grid (label + three years) runs from the problem data down through the solution grid and the chart, so each year reads straight down the page. A caption bar with the step controls stays at the bottom. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #E9AE1F;          /* gold: a number used in this step */
+  --use-tint: #FCEFC9;
+  --loss: #C8102E;         /* cardinal: a loss */
+  --ok: #2F7D50;           /* green: a check that passed */
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 132px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F1BE48; --use-tint: rgba(241, 190, 72, 0.22); --loss: #FF6B7D; --ok: #62C48E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F1BE48; --use-tint: rgba(241, 190, 72, 0.22); --loss: #FF6B7D; --ok: #62C48E;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.45;
+  padding-inline: 20px;
+  padding-block: 28px calc(var(--bar-h) + 32px);
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+
+header { display: grid; gap: 6px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.problem { font-family: var(--serif); font-size: 18px; margin: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+.sw.use { background: var(--use-tint); outline: 2px solid var(--use); }
+.sw.loss { background: var(--loss); }
+.sw.ok { background: var(--ok); }
+
+.price-chip {
+  display: inline-flex; align-items: baseline; gap: 10px;
+  font-family: var(--mono); font-size: 18px; padding: 4px 10px; border-radius: 6px;
+  border: 1px solid var(--rule);
+  outline: 2px solid transparent;
+}
+.price-chip small { font-family: var(--sans); font-size: 14px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; }
+table { width: 100%; min-width: 680px; border-collapse: collapse; table-layout: fixed; }
+col.c-label { width: 31%; }
+col.c-year { width: 23%; }
+th, td { border-bottom: 1px solid var(--rule); padding: 8px 10px; vertical-align: middle; }
+thead th { font-size: 15px; font-weight: 700; text-align: right; color: var(--muted); border-bottom: 2px solid var(--ink); }
+thead th:first-child { text-align: left; }
+tbody th { text-align: left; font-weight: 400; font-size: 16px; }
+td { text-align: right; font-family: var(--mono); font-size: 17px; font-variant-numeric: tabular-nums; }
+.section-title { font-family: var(--serif); font-weight: 600; font-size: 20px; margin: 0 0 8px; }
+tr.derived th, tr.derived td { background: var(--surface); }
+tr.derived th b { font-weight: 700; }
+
+/* grid cells: working on top, value below */
+.cell { min-height: 54px; display: grid; justify-items: end; align-content: center; gap: 2px; }
+.f { font-size: 14px; color: var(--muted); line-height: 1.25; }
+.v { font-size: 20px; font-weight: 700; }
+.frac { display: inline-grid; justify-items: center; line-height: 1.15; }
+.frac .n { border-bottom: 1.5px solid var(--muted); padding: 0 4px 1px; }
+.frac .d { padding: 1px 4px 0; }
+.fracline { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.loss { color: var(--loss); }
+.ok { color: var(--ok); }
+.na { color: var(--muted); font-weight: 400; }
+td.sumcell { text-align: center; }
+.sumline { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 4px 10px; font-size: 18px; }
+
+/* the two routes: row 2 decides which one a year takes */
+.routes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 14px; }
+.route { border: 1px solid var(--rule); border-left: 5px solid var(--ink); border-radius: 6px; padding: 8px 12px 9px; font-size: 16px; line-height: 1.4; }
+.route b { display: block; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
+.route.lossroute { border-left-color: var(--loss); }
+.route.lossroute b { color: var(--loss); }
+.routes .either { grid-column: 1 / -1; margin: 0; font-size: 15px; color: var(--muted); }
+.routes .either strong { color: var(--ink); }
+.ccnote { margin: 0 0 14px; }
+
+/* "Overall loss" tag on a year's column */
+.flag {
+  display: inline-block; margin-right: 8px; padding: 0 8px; border: 1.5px solid var(--loss); border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.03em; color: var(--loss); vertical-align: 1px;
+}
+
+/* chart row: gross profit (loss) to date, one bar per year */
+tr.chart th, tr.chart td { vertical-align: top; padding: 12px 0; }
+tr.chart th { padding-inline: 10px; }
+.wf { position: relative; height: 220px; }
+.wf-title { position: absolute; left: 0; top: 0; max-width: 58%; font-size: 16px; font-weight: 700; line-height: 1.25; }
+.wf-title small { display: block; margin-top: 4px; font-size: 13px; font-weight: 400; color: var(--muted); }
+.tick { position: absolute; right: 6px; transform: translateY(-50%); font-family: var(--mono); font-size: 14px; color: var(--muted); font-weight: 400; }
+.zero { position: absolute; left: 0; right: 0; border-top: 1.5px solid var(--muted); }
+.wbar { position: absolute; inset: 0; }
+.seg { position: absolute; left: 14%; width: 26%; }
+.seg.up { transform-origin: bottom; background: var(--ink); }
+.seg.down { transform-origin: top; }
+.seg.lossp { background: var(--loss); }
+.seg.revp { background: repeating-linear-gradient(135deg, var(--loss) 0 2px, transparent 2px 7px); box-shadow: inset 0 0 0 2px var(--loss); }
+.seg-label { position: absolute; left: 45%; right: 4px; transform: translateY(-50%); font-family: var(--sans); font-size: 14px; line-height: 1.2; text-align: left; color: var(--ink); }
+.seg-label.loss { color: var(--loss); }
+.conn { position: absolute; border-top: 1.5px dashed var(--muted); }
+
+/* states */
+.use-on { background: var(--use-tint) !important; outline: 2px solid var(--use); outline-offset: -2px; }
+.price-chip.use-on { outline-offset: 0; }
+td.target { box-shadow: inset 0 -3px 0 var(--ink); }
+.cell > * { visibility: hidden; }
+.shown .cell > * { visibility: visible; }
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.write .cell { animation: write 0.6s ease-out both; }
+@keyframes write { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+@keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.write .seg { animation: grow 0.5s ease-out both; }
+.write .seg.second { animation-delay: 0.55s; }
+.write .seg-label { animation: fade 0.35s ease-out 0.45s both; }
+.write .seg-label.second { animation-delay: 1s; }
+.flag.write, .tick.write { animation: fade 0.4s ease-out 0.3s both; }
+.conn.write { animation: fade 0.3s ease-out both; }
+
+.copyright { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* caption bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: var(--bg); border-top: 2px solid var(--ink);
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.bar-in { max-width: 1080px; margin: 0 auto; display: grid; gap: 10px; }
+.caption { font-size: 18px; min-height: 2.9em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.counter { margin-left: auto; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.progress { height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+
+@media (max-width: 560px) {
+  body { font-size: 16px; padding-inline: 16px; }
+  .caption { font-size: 16px; }
+  .counter { margin-left: 0; width: 100%; }
+  .routes { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write .cell, .write .seg, .write .seg-label, .flag.write, .tick.write, .conn.write { animation: none; }
+  .progress > div { transition: none; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Revenue recognition · Long-term contracts</div>
+    <h1>Long-Term Contract with Overall Loss</h1>
+  </header>
+
+  <p class="problem">On July 1, 20X1, Overrun Builders Inc. contracted to build an office building for Fixed Price Corp. Overrun Builders estimated that the building would take between 2 and 3 years to complete, and on December 31, 20X3, it was deemed substantially completed. Compute the profit or loss to recognize in 20X1, 20X2 and 20X3 under (a) the percentage-of-completion method and (b) the completed-contract method. Ignore income taxes.</p>
+
+  <div class="legend" aria-label="Color key">
+    <span><i class="sw use"></i>Used in this step</span>
+    <span><i class="sw loss"></i>A loss</span>
+    <span><i class="sw ok"></i>A check that passed</span>
+  </div>
+
+  <section>
+    <h2 class="section-title">The problem</h2>
+    <p style="margin:0 0 8px"><span class="price-chip" id="price"><small>Total contract price</small>$1,900,000</span></p>
+    <div class="tablebox">
+      <table aria-label="Problem data">
+        <colgroup><col class="c-label"><col class="c-year"><col class="c-year"><col class="c-year"></colgroup>
+        <thead><tr><th>At December 31</th><th>20X1</th><th>20X2</th><th>20X3</th></tr></thead>
+        <tbody>
+          <tr><th>Contract costs incurred to date</th><td id="d-ctd-0">300,000</td><td id="d-ctd-1">1,200,000</td><td id="d-ctd-2">2,100,000</td></tr>
+          <tr><th>Estimated costs to complete the contract</th><td id="d-etc-0">1,200,000</td><td id="d-etc-1">800,000</td><td id="d-etc-2">0</td></tr>
+          <tr><th>Billings to Fixed Price Corp. to date</th><td>300,000</td><td>1,100,000</td><td>1,850,000</td></tr>
+          <tr class="derived"><th>Estimated <b>total</b> costs</th><td id="d-etot-0"><div class="cell"></div></td><td id="d-etot-1"><div class="cell"></div></td><td id="d-etot-2"><div class="cell"></div></td></tr>
+          <tr class="derived"><th>Estimated <b>total</b> gross profit (loss)</th><td id="d-egp-0"><div class="cell"></div></td><td id="d-egp-1"><div class="cell"></div></td><td id="d-egp-2"><div class="cell"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">(a) Percentage-of-completion</h2>
+    <div class="routes" aria-label="Estimated total gross profit (loss) decides the route for each year">
+      <div class="route" id="route-profit"><b>If a profit is expected</b>Gross profit to date = estimated total gross profit × percent complete.</div>
+      <div class="route lossroute" id="route-loss"><b>If a loss is expected</b>Recognize the entire estimated loss in the current period, and reverse the gross profit recognized in prior periods.</div>
+      <p class="either"><strong>Either way:</strong> recognized this year = gross profit (loss) to date − gross profit (loss) recognized in prior years.</p>
+    </div>
+    <div class="tablebox">
+      <table aria-label="Percentage-of-completion grid">
+        <colgroup><col class="c-label"><col class="c-year"><col class="c-year"><col class="c-year"></colgroup>
+        <thead><tr><th>&nbsp;</th><th>20X1</th><th><span class="flag rv" id="flag-1">Overall loss</span>20X2</th><th><span class="flag rv" id="flag-2">Overall loss</span>20X3</th></tr></thead>
+        <tbody>
+          <tr><th>1. Percent complete (if profitable)</th><td id="g-pc-0"><div class="cell"></div></td><td id="g-pc-1"><div class="cell"></div></td><td id="g-pc-2"><div class="cell"></div></td></tr>
+          <tr><th>2. Gross profit (loss) recognized in prior years</th><td id="g-prior-0"><div class="cell"></div></td><td id="g-prior-1"><div class="cell"></div></td><td id="g-prior-2"><div class="cell"></div></td></tr>
+          <tr><th>3. Gross profit (loss) recognized this year</th><td id="g-this-0"><div class="cell"></div></td><td id="g-this-1"><div class="cell"></div></td><td id="g-this-2"><div class="cell"></div></td></tr>
+          <tr class="chart">
+            <th scope="row"><div class="wf">
+              <span class="wf-title">Gross profit (loss) to date<small>Each bar is the amount recognized that year.</small></span>
+              <span class="tick rv" id="w-tick-80" data-at="80000">80,000</span>
+              <span class="tick" data-at="0">0</span>
+              <span class="tick rv" id="w-tick-m100" data-at="-100000">(100,000)</span>
+              <span class="tick rv" id="w-tick-m200" data-at="-200000">(200,000)</span>
+            </div></th>
+            <td><div class="wf">
+              <div class="zero" data-at="0"></div>
+              <div class="wbar rv" id="w-bar-0" role="img" aria-label="20X1: up 80,000, to a profit of 80,000 to date">
+                <div class="seg up" data-from="0" data-to="80000"></div>
+                <div class="seg-label" data-at="40000">80,000 profit</div>
+              </div>
+              <div class="conn rv" id="w-conn-0a" data-at="80000" style="left:40%;right:0"></div>
+            </div></td>
+            <td><div class="wf">
+              <div class="zero" data-at="0"></div>
+              <div class="conn rv" id="w-conn-0b" data-at="80000" style="left:0;right:86%"></div>
+              <div class="wbar rv" id="w-bar-1" role="img" aria-label="20X2: down 180,000: the 80,000 from 20X1 reversed, then the entire 100,000 loss, to a loss of 100,000 to date">
+                <div class="seg down revp" data-from="80000" data-to="0"></div>
+                <div class="seg down lossp second" data-from="0" data-to="-100000"></div>
+                <div class="seg-label loss" data-at="40000">80,000 reversed</div>
+                <div class="seg-label loss second" data-at="-50000">100,000 loss</div>
+              </div>
+              <div class="conn rv" id="w-conn-1a" data-at="-100000" style="left:40%;right:0"></div>
+            </div></td>
+            <td><div class="wf">
+              <div class="zero" data-at="0"></div>
+              <div class="conn rv" id="w-conn-1b" data-at="-100000" style="left:0;right:86%"></div>
+              <div class="wbar rv" id="w-bar-2" role="img" aria-label="20X3: down another 100,000, to a loss of 200,000 to date">
+                <div class="seg down lossp" data-from="-100000" data-to="-200000"></div>
+                <div class="seg-label loss" data-at="-150000">100,000 more loss</div>
+              </div>
+            </div></td>
+          </tr>
+          <tr><th>Check: total gross profit (loss)</th><td id="g-sum" class="sumcell" colspan="3"><div class="cell" style="justify-items:center"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">(b) Completed-contract</h2>
+    <div class="route lossroute ccnote" id="cc-note"><b>Profit waits, a loss does not</b>Gross profit is recognized only when the contract is complete. An expected loss is recognized at once: recognize the entire estimated loss in the current period.</div>
+    <div class="tablebox">
+      <table aria-label="Completed-contract gross profit (loss)">
+        <colgroup><col class="c-label"><col class="c-year"><col class="c-year"><col class="c-year"></colgroup>
+        <thead><tr><th>&nbsp;</th><th>20X1</th><th>20X2</th><th>20X3</th></tr></thead>
+        <tbody>
+          <tr><th>Gross profit (loss) recognized this year</th><td id="b-cc-0"><div class="cell"></div></td><td id="b-cc-1"><div class="cell"></div></td><td id="b-cc-2"><div class="cell"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+</div>
+
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="bar-in">
+    <div class="progress" aria-hidden="true"><div id="prog"></div></div>
+    <p class="caption" id="caption" aria-live="polite"></p>
+    <div class="controls">
+      <button id="restart" type="button">Start over</button>
+      <button id="back" type="button">Back</button>
+      <button id="next" type="button" class="primary">Next</button>
+      <button id="all" type="button">Show solution</button>
+      <span class="counter" id="counter"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const frac = (n, d, v) => `<span class="fracline"><span class="frac"><span class="n">${n}</span><span class="d">${d}</span></span>= ${v}</span>`;
+  const L = (s) => `<span class="loss">${s}</span>`;
+
+  // What each grid cell shows once revealed: f = the working, v = the result.
+  const CONTENT = {
+    'd-etot-0': { f: '300,000 + 1,200,000', v: '1,500,000' },
+    'd-etot-1': { f: '1,200,000 + 800,000', v: '2,000,000' },
+    'd-etot-2': { f: '2,100,000 + 0', v: '2,100,000' },
+    'd-egp-0': { f: '1,900,000 − 1,500,000', v: '400,000' },
+    'd-egp-1': { f: '1,900,000 − 2,000,000', v: L('(100,000)') },
+    'd-egp-2': { f: '1,900,000 − 2,100,000', v: L('(200,000)') },
+    'g-pc-0': { v: frac('300,000', '1,500,000', '0.20') },
+    'g-pc-1': { f: 'loss year', v: '<span class="na">n/a</span>' },
+    'g-pc-2': { f: 'loss year', v: '<span class="na">n/a</span>' },
+    'g-prior-0': { f: 'first year', v: '0' },
+    'g-prior-1': { f: 'from 20X1', v: '80,000' },
+    'g-prior-2': { f: '80,000 − 180,000', v: L('(100,000)') },
+    'g-this-0': { f: '400,000 × 0.20 − 0', v: '80,000' },
+    'g-this-1': { f: '(100,000) − 80,000', v: L('(180,000)') },
+    'g-this-2': { f: '(200,000) − (100,000)', v: L('(100,000)') },
+    'g-sum': { v: `<span class="sumline"><span>80,000 − 180,000 − 100,000 = ${L('(200,000)')}</span><span>= 1,900,000 − 2,100,000 <span class="ok">✓</span></span></span>` },
+    'b-cc-0': { f: 'profit waits', v: '0' },
+    'b-cc-1': { f: 'entire estimated loss', v: L('(100,000)') },
+    'b-cc-2': { f: '(200,000) − (100,000)', v: L('(100,000)') },
+  };
+
+  // show: what this step writes. use: what this step reads from (gold).
+  const STEPS = [
+    { show: [], use: ['price'],
+      caption: "Overrun Builders' contract price is $1,900,000. The costs in the problem are to date: each year already includes the years before it. Billings don't affect profit, so they are not used. Use Next or the right arrow key to step through." },
+    { show: ['d-etot-0'], use: ['d-ctd-0', 'd-etc-0'],
+      caption: 'Estimated total costs = costs to date + estimated costs to complete. 20X1: 300,000 + 1,200,000 = 1,500,000.' },
+    { show: ['d-etot-1'], use: ['d-ctd-1', 'd-etc-1'],
+      caption: '20X2: 1,200,000 + 800,000 = 2,000,000. The estimate jumped by 500,000 in one year.' },
+    { show: ['d-etot-2'], use: ['d-ctd-2', 'd-etc-2'],
+      caption: '20X3: the building is done. Total costs are the actual 2,100,000, with nothing left to complete.' },
+    { show: ['d-egp-0'], use: ['price', 'd-etot-0', 'route-profit'],
+      caption: 'Estimated total gross profit (loss) = contract price − estimated total costs. 20X1: 1,900,000 − 1,500,000 = 400,000. A profit, so 20X1 takes the profit route.' },
+    { show: ['d-egp-1', 'flag-1'], use: ['price', 'd-etot-1', 'route-loss'],
+      caption: '20X2: 1,900,000 − 2,000,000 = (100,000). Costs now exceed the price, so the contract as a whole will lose money: an overall loss. This is where the grid forks. 20X2 takes the loss route: no percent, the entire loss now, and any earlier profit reversed.' },
+    { show: ['d-egp-2', 'flag-2'], use: ['price', 'd-etot-2', 'route-loss'],
+      caption: '20X3: 1,900,000 − 2,100,000 = (200,000). Still the loss route, and the final loss is twice the 100,000 expected in 20X2.' },
+    { show: ['g-pc-0'], use: ['d-ctd-0', 'd-etot-0', 'route-profit'],
+      caption: '1. Percent complete is used only in a profit year: costs to date ÷ estimated total costs. 20X1: 300,000 ÷ 1,500,000 = 0.20.' },
+    { show: ['g-pc-1', 'g-pc-2'], use: ['d-egp-1', 'd-egp-2', 'route-loss'],
+      caption: '20X2 and 20X3 are loss years, so no percent. The trap is 1,200,000 ÷ 2,000,000 = 0.60, then 0.60 × (100,000) = (60,000). That recognizes only part of the loss. A loss is not spread over the work; all of it is recognized as soon as it is expected.' },
+    { show: ['g-prior-0', 'g-this-0', 'w-bar-0', 'w-tick-80'], use: ['d-egp-0', 'g-pc-0', 'route-profit'],
+      caption: '2–3. 20X1: gross profit to date = 400,000 × 0.20 = 80,000. Nothing was recognized before, so prior years = 0 and this year = 80,000. The chart under the grid tracks gross profit to date.' },
+    { show: ['g-prior-1'], use: ['g-this-0'],
+      caption: '2. Prior years for 20X2: the 80,000 recognized in 20X1.' },
+    { show: ['g-this-1', 'w-bar-1', 'w-conn-0a', 'w-conn-0b', 'w-tick-m100'], use: ['d-egp-1', 'g-prior-1', 'route-loss'],
+      caption: '3. 20X2: gross profit to date must drop to the entire (100,000) loss. (100,000) − 80,000 = (180,000), in two pieces: reverse the 80,000 recognized in 20X1, then recognize the 100,000 loss.' },
+    { show: ['g-prior-2'], use: ['g-this-0', 'g-this-1'],
+      caption: '2. Prior years for 20X3: 80,000 − 180,000 = (100,000), the loss already on the books.' },
+    { show: ['g-this-2', 'w-bar-2', 'w-conn-1a', 'w-conn-1b', 'w-tick-m200'], use: ['d-egp-2', 'g-prior-2', 'route-loss'],
+      caption: '3. 20X3: the total loss is now 200,000, and 100,000 of it is already recognized. (200,000) − (100,000) = (100,000) more.' },
+    { show: ['g-sum'], use: ['g-this-0', 'g-this-1', 'g-this-2', 'price', 'd-etot-2'],
+      caption: 'Check: 80,000 − 180,000 − 100,000 = (200,000), which equals the contract price minus total costs, 1,900,000 − 2,100,000.' },
+    { show: ['b-cc-0'], use: ['cc-note'],
+      caption: '(b) Completed-contract: profit waits until the building is finished, so 20X1 shows 0, even though a 400,000 profit was expected.' },
+    { show: ['b-cc-1'], use: ['d-egp-1', 'cc-note'],
+      caption: '20X2: a loss does not wait. Completed-contract also recognizes the entire estimated loss at once, (100,000). Nothing was recognized in 20X1, so there is nothing to reverse.' },
+    { show: ['b-cc-2'], use: ['d-egp-2', 'b-cc-1'],
+      caption: '20X3: the loss grew to 200,000, so (200,000) − (100,000) = (100,000) more. Both methods total (200,000); they differ only in timing.' },
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const last = STEPS.length - 1;
+  const REVEAL = [...new Set(STEPS.flatMap((s) => s.show))];
+  let k = 0;
+
+  // Fill every grid cell once; visibility is controlled by the "shown" class.
+  for (const [id, c] of Object.entries(CONTENT)) {
+    const cell = $(id).querySelector('.cell');
+    cell.innerHTML = (c.f ? `<div class="f">${c.f}</div>` : '') + `<div class="v">${c.v}</div>`;
+  }
+
+  // Chart scale: the top of the chart is +110,000 and the bottom is -260,000.
+  const TOP = 110000, BOT = -260000;
+  const pct = (v) => ((TOP - v) / (TOP - BOT)) * 100 + '%';
+  document.querySelectorAll('[data-at]').forEach((el) => { el.style.top = pct(+el.dataset.at); });
+  document.querySelectorAll('[data-from]').forEach((el) => {
+    const a = +el.dataset.from, b = +el.dataset.to;
+    el.style.top = pct(Math.max(a, b));
+    el.style.height = (Math.abs(a - b) / (TOP - BOT)) * 100 + '%';
+  });
+
+  function render(animate) {
+    const shown = new Set();
+    for (let i = 1; i <= k; i++) STEPS[i].show.forEach((id) => shown.add(id));
+    const fresh = new Set(animate ? STEPS[k].show : []);
+    for (const id of REVEAL) {
+      const el = $(id);
+      el.classList.toggle('shown', shown.has(id));
+      el.classList.remove('write', 'target');
+      if (fresh.has(id)) { void el.offsetWidth; el.classList.add('write'); }
+    }
+    STEPS[k].show.forEach((id) => $(id).classList.add('target'));
+    document.querySelectorAll('.use-on').forEach((el) => el.classList.remove('use-on'));
+    STEPS[k].use.forEach((id) => $(id).classList.add('use-on'));
+
+    $('caption').textContent = STEPS[k].caption;
+    $('counter').textContent = `Step ${k} of ${last}`;
+    $('prog').style.width = `${(k / last) * 100}%`;
+    $('back').disabled = k === 0;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last;
+    $('all').disabled = k === last;
+  }
+
+  // Bring this step into view: everything it touches if that fits above the caption bar, else what it writes.
+  function bring() {
+    const s = STEPS[k];
+    if (!s.show.length) return;
+    const barTop = window.innerHeight - document.querySelector('.bar').offsetHeight;
+    const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    for (const ids of [s.show.concat(s.use), s.show]) {
+      let top = Infinity, bottom = -Infinity;
+      ids.forEach((id) => { const r = $(id).getBoundingClientRect(); top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom); });
+      if (bottom - top > barTop - 24) continue;
+      let dy = 0;
+      if (top < 12) dy = top - 12;
+      else if (bottom > barTop - 12) dy = bottom - (barTop - 12);
+      if (dy) window.scrollBy({ top: dy, behavior });
+      return;
+    }
+    $(s.show[0]).scrollIntoView({ block: 'center', behavior });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+  }
+
+  $('next').addEventListener('click', () => { go(k + 1, true); bring(); });
+  $('back').addEventListener('click', () => { go(k - 1, false); bring(); });
+  $('restart').addEventListener('click', () => { go(0, false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', () => { go(last, false); });
+  document.addEventListener('keydown', (e) => {
+    if (e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(k + 1, true); bring(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(k - 1, false); bring(); }
+  });
+
+  // Keep page padding in step with the caption bar's real height.
+  const setBar = () => document.documentElement.style.setProperty('--bar-h', document.querySelector('.bar').offsetHeight + 'px');
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(document.querySelector('.bar'));
+  setBar();
+  render(false);
+})();
+</script>
+</body>
+</html>
