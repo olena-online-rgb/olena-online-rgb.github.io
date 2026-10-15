@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Allowance Walkthrough</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Step-by-step allowance method walkthrough: T-accounts, journal entries and the year-end bad debt adjustment based on a percent of ending receivables.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Shared look for the Chapter 7 walkthroughs. Colors are tokens; each page's legend says what the five chip colors mean there. Table text stays plain ink; color lives in the chip tint and its left bar. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #E9AE1F;          /* gold: a number used in this step (same as Chapter 6) */
+  --use-tint: #FCEFC9;
+  --loss: #C8102E;         /* cardinal */
+  --ok: #2F7D50;           /* green: a check that passed */
+  --accent: #1E1A1B;
+  --on-accent: #FCFCFB;
+  --wine: #8B1E3F;   --wine-t: #F6DEE5;
+  --gold: #C48A00;   --gold-t: #FCEBBE;
+  --green: #2F7D50;  --green-t: #DCEFE2;
+  --blue: #2463A8;   --blue-t: #DDE8F6;
+  --purple: #6B42A3; --purple-t: #EBE2F6;
+  --lcd: #2A2325;    --lcd-ink: #F4EFE6;
+  --paper: #FFFFFF;  --gridline: #ECE5E6;
+  --shadow: rgba(30, 26, 27, 0.22);
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 140px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F1BE48; --use-tint: rgba(241, 190, 72, 0.22); --loss: #FF6B7D; --ok: #62C48E;
+    --accent: #F2EEEF; --on-accent: #161314;
+    --wine: #E6849E;   --wine-t: rgba(230, 132, 158, 0.22);
+    --gold: #E9B23E;   --gold-t: rgba(233, 178, 62, 0.22);
+    --green: #62C48E;  --green-t: rgba(98, 196, 142, 0.20);
+    --blue: #83B2EF;   --blue-t: rgba(131, 178, 239, 0.22);
+    --purple: #B79AE6; --purple-t: rgba(183, 154, 230, 0.22);
+    --lcd: #0E0B0C;    --lcd-ink: #F1E6CF;
+    --paper: #1B1718;  --gridline: #2C2527;
+    --shadow: rgba(0, 0, 0, 0.55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F1BE48; --use-tint: rgba(241, 190, 72, 0.22); --loss: #FF6B7D; --ok: #62C48E;
+  --accent: #F2EEEF; --on-accent: #161314;
+  --wine: #E6849E;   --wine-t: rgba(230, 132, 158, 0.22);
+  --gold: #E9B23E;   --gold-t: rgba(233, 178, 62, 0.22);
+  --green: #62C48E;  --green-t: rgba(98, 196, 142, 0.20);
+  --blue: #83B2EF;   --blue-t: rgba(131, 178, 239, 0.22);
+  --purple: #B79AE6; --purple-t: rgba(183, 154, 230, 0.22);
+  --lcd: #0E0B0C;    --lcd-ink: #F1E6CF;
+  --paper: #1B1718;  --gridline: #2C2527;
+  --shadow: rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px calc(var(--bar-h) + 32px);
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+
+header { display: grid; gap: 6px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.co { margin: 0; font-size: 15px; color: var(--muted); }
+.problem { font-family: var(--serif); font-size: 18px; max-width: 74ch; }
+.problem p { margin: 0 0 8px; }
+.problem ol { margin: 4px 0 10px; padding-left: 1.7em; display: grid; gap: 2px; }
+.problem .req b { font-weight: 600; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 20px; height: 14px; border-radius: 3px; display: inline-block; background: var(--ct, transparent); box-shadow: inset 4px 0 0 var(--cb, var(--ink)); }
+.sw.use { background: var(--use-tint); box-shadow: none; outline: 2px solid var(--use); outline-offset: -2px; }
+.sw.ok { background: var(--ok); box-shadow: none; }
+
+/* chip colors */
+.c-wine { --cb: var(--wine); --ct: var(--wine-t); }
+.c-gold { --cb: var(--gold); --ct: var(--gold-t); }
+.c-green { --cb: var(--green); --ct: var(--green-t); }
+.c-blue { --cb: var(--blue); --ct: var(--blue-t); }
+.c-purple { --cb: var(--purple); --ct: var(--purple-t); }
+.amt {
+  display: inline-block;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding: 1px 6px 1px 9px;
+  border-radius: 4px;
+  background: var(--ct, transparent);
+  box-shadow: inset 3px 0 0 var(--cb, transparent);
+}
+.b .amt, .amt.b { font-weight: 700; }
+
+.panel { border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px 16px; min-width: 0; }
+.panel > h2, .ptitle { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 0 0 10px; line-height: 1.25; }
+.panel .sub { font-size: 14px; margin: -6px 0 10px; }
+
+/* T-accounts */
+.tset { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px 18px; }
+.t { min-width: 0; }
+.tname { text-align: center; font-weight: 700; font-size: 15px; line-height: 1.25; padding-bottom: 4px; min-height: 2.75em; display: flex; align-items: flex-end; justify-content: center; }
+.tdc { display: grid; grid-template-columns: 1fr 1fr; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 2px solid var(--ink); padding: 0 8px 2px; }
+.tdc span:last-child { text-align: right; }
+.tgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); position: relative; padding-top: 2px; }
+.tgrid::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 2px solid var(--ink); transform: translateX(-1px); }
+.tc { min-height: 34px; padding: 3px 7px; display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0; }
+.tc .amt { font-size: 15px; }
+.ent { display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; }
+.tag { font-size: 11.5px; white-space: nowrap; }
+.trule { grid-column: 1 / -1; border-top: 1.5px solid var(--ink); margin: 3px 6px; height: 0; }
+
+/* computation lines */
+.calc { display: grid; gap: 0; }
+.cl { margin: 0; padding: 8px 0; border-top: 1px solid var(--rule); display: grid; gap: 2px; }
+.cl:first-of-type { border-top: 0; padding-top: 0; }
+.cl .k { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
+.cl .x { font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; }
+.math { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* tables */
+.tbl { overflow-x: auto; padding: 4px; margin: -4px; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th, td { border-bottom: 1px solid var(--rule); padding: 6px 8px; vertical-align: middle; text-align: left; }
+thead th { background: var(--surface); font-size: 14px; font-weight: 700; border-bottom: 2px solid var(--ink); line-height: 1.25; }
+thead th small { display: block; font-weight: 400; font-size: 12px; }
+th.n, td.n { text-align: right; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.je td { height: 38px; font-size: 15px; }
+.je td.acct.cr { padding-left: 30px; }
+.je tbody tr:first-child td { border-top: 1.5px solid var(--muted); }
+.je tbody:first-of-type tr:first-child td { border-top: 0; }
+.je td.d { font-size: 14px; white-space: nowrap; }
+
+/* reveal states */
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.gi { display: inline-block; }
+.rvg:not(.shown) .gi { visibility: hidden; }
+.write { animation: write 0.5s ease-out both; }
+.rvg.write .gi { animation: write 0.5s ease-out both; }
+.rvg.write { animation: none; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); opacity: 0.4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.land { animation: land 0.5s ease-out both; }
+@keyframes land { 0% { transform: scale(1.22); } 55% { transform: scale(0.95); } 100% { transform: scale(1); } }
+.fill { display: inline-block; }
+.use-on { background-color: var(--use-tint) !important; outline: 2px solid var(--use) !important; outline-offset: 2px; border-radius: 4px; }
+td.use-on, th.use-on { outline-offset: -3px; }
+
+/* the flying number */
+.ghost { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; will-change: transform; }
+.ghost .gy { will-change: transform; }
+.ghost .amt {
+  font-weight: 700;
+  font-size: 16px;
+  background: var(--ct, var(--surface));
+  box-shadow: inset 3px 0 0 var(--cb, var(--ink)), 0 8px 18px var(--shadow);
+  outline: 1.5px solid var(--cb, var(--ink));
+}
+
+.copyright { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* caption bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  background: var(--bg);
+  border-top: 2px solid var(--ink);
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.bar-in { max-width: 1120px; margin: 0 auto; display: grid; gap: 10px; }
+.caption { font-size: 18px; min-height: 2.9em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.progrow { display: flex; align-items: center; gap: 12px; }
+.counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress { flex: 1; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+button .sm { display: none; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+
+@media (max-width: 560px) {
+  body { font-size: 16px; padding-block: 20px calc(var(--bar-h) + 24px); }
+  .problem { font-size: 17px; }
+  .caption { font-size: 15px; line-height: 1.4; min-height: 2.8em; }
+  .bar { padding-top: 10px; }
+  .bar-in { gap: 8px; }
+  .controls { flex-wrap: nowrap; gap: 6px; }
+  button { padding: 7px 10px; font-size: 14px; flex: 1 1 auto; }
+  button .lg { display: none; } button .sm { display: inline; }
+  .tc { padding: 3px 5px; min-height: 30px; }
+  .amt { padding: 1px 4px 1px 7px; }
+  th, td { padding: 5px 5px; }
+  .je td { font-size: 14px; height: 36px; }
+  .je td.acct.cr { padding-left: 18px; }
+  .je td.d { font-size: 12.5px; }
+  thead th { font-size: 13px; }
+  .hide-sm { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write, .rvg.write .gi, .land { animation: none !important; }
+  .progress > div { transition: none; }
+}
+
+/* graph-paper work area, like the grids in the notes */
+.graph {
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--gridline) 1px, transparent 1px), linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border: 1px solid var(--rule); border-radius: 6px; padding: 18px 16px;
+}
+.ok { color: var(--ok); font-weight: 700; }
+.loss { color: var(--loss); }
+
+/* page */
+
+.work { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); grid-template-areas: "l j" "l b"; gap: 20px 24px; align-items: start; }
+.left { grid-area: l; display: grid; gap: 20px; min-width: 0; }
+.journal { grid-area: j; }
+.bs { grid-area: b; }
+.je col.c1 { width: 9%; } .je col.c2 { width: 53%; } .je col.c3, .je col.c4 { width: 19%; }
+.bs-t col.w { width: 34%; }
+.bs-t tr.tot td { border-top: 1.5px solid var(--ink); border-bottom: 3px double var(--ink); }
+.isline { margin: 12px 0 0; font-size: 15px; }
+@media (max-width: 900px) {
+  .work { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; }
+  .left { display: contents; }
+  .tpanel { order: 1; } .journal { order: 2; grid-area: auto; } .calc-panel { order: 3; } .bs { order: 4; grid-area: auto; }
+}
+@media (max-width: 560px) {
+  .panel { padding: 12px 10px 14px; }
+  .tset { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tset .tname { font-size: 13px; min-height: 2.5em; display: flex; align-items: flex-end; justify-content: center; }
+  .tset .tdc { font-size: 9.5px; padding: 0 4px 2px; }
+  .tset .tc { padding: 2px 4px; }
+  .tset .ent { flex-direction: column; align-items: flex-end; gap: 0; }
+  .tset .tag { font-size: 10.5px; line-height: 1.1; }
+  .tset .amt { font-size: 13.5px; }
+  .je col.c1 { width: 9%; } .je col.c2 { width: 47%; } .je col.c3, .je col.c4 { width: 22%; }
+  .je td.n .amt { font-size: 13px; padding: 1px 3px 1px 6px; }
+  .je td.n { padding-left: 2px; padding-right: 3px; }
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Receivables · Allowance method</div>
+    <h1>Allowance Method: Percent of Receivables</h1>
+    <p class="co">Moondoor Games · fiscal year ends December 31</p>
+  </header>
+
+  <section class="problem" aria-label="Problem">
+    <p>Moondoor Games sells LARP costumes, foam swords and game kits on account. It uses the allowance method and estimates that 5% of ending accounts receivable will prove uncollectible. On January 1, 20X1, Accounts Receivable had a $120,000 debit balance and the Allowance for Doubtful Accounts had a $6,000 credit balance. During 20X1:</p>
+    <ol>
+      <li>Sales on account, $850,000.</li>
+      <li>Collections from customers on account, $815,000.</li>
+      <li>Accounts written off as uncollectible, $7,500.</li>
+      <li>A $1,200 account written off earlier in 20X1 was recovered: the customer paid in full.</li>
+      <li>On December 31, 20X1, the allowance was adjusted to 5% of ending accounts receivable.</li>
+    </ol>
+    <p class="req"><b>Required:</b> record the entries, post them to the T-accounts, and present net accounts receivable on the December 31, 20X1 balance sheet.</p>
+  </section>
+
+  <div class="legend" aria-label="Color key"><span><i class="sw c-purple"></i>(1) Sales on account</span><span><i class="sw c-green"></i>(2) Collections</span><span><i class="sw c-wine"></i>(3) Write-offs</span><span><i class="sw c-blue"></i>(4) Recovery</span><span><i class="sw c-gold"></i>(5) Filler #: bad debt expense</span><span><i class="sw use"></i>Used in this step</span></div>
+
+  <div class="work">
+    <div class="left">
+      <section class="panel tpanel" aria-label="T-accounts">
+        <h2>T-accounts</h2>
+        <div class="tset">
+<div class="t" id="t-ar" role="group" aria-label="Accounts Receivable T-account">
+<div class="tname">Accounts Receivable</div><div class="tdc"><span>Debit</span><span>Credit</span></div>
+<div class="tgrid">
+<div class="tc"><div class="ent rv" id="ar-beg"><span class="tag">Beg.</span><span class="amt">120,000</span></div></div>
+<div class="tc"></div>
+<div class="tc"><div class="ent rv c-purple" id="ar-1"><span class="tag">(1)</span><span class="amt">850,000</span></div></div>
+<div class="tc"><div class="ent rv c-green" id="ar-2"><span class="tag">(2)</span><span class="amt">815,000</span></div></div>
+<div class="tc"><div class="ent rv c-blue" id="ar-4a"><span class="tag">(4a)</span><span class="amt">1,200</span></div></div>
+<div class="tc"><div class="ent rv c-wine" id="ar-3"><span class="tag">(3)</span><span class="amt">7,500</span></div></div>
+<div class="tc"></div>
+<div class="tc"><div class="ent rv c-blue" id="ar-4b"><span class="tag">(4b)</span><span class="amt">1,200</span></div></div>
+<div class="trule rv" id="ar-rule"></div>
+<div class="tc"><div class="ent rv b" id="ar-end"><span class="tag">End.</span><span class="amt">147,500</span></div></div>
+<div class="tc"></div>
+</div></div>
+<div class="t" id="t-al" role="group" aria-label="Allowance for Doubtful Accounts T-account">
+<div class="tname">Allowance for Doubtful Accounts</div><div class="tdc"><span>Debit</span><span>Credit</span></div>
+<div class="tgrid">
+<div class="tc"></div>
+<div class="tc"><div class="ent rv" id="al-beg"><span class="tag">Beg.</span><span class="amt">6,000</span></div></div>
+<div class="tc"><div class="ent rv c-wine" id="al-3"><span class="tag">(3)</span><span class="amt">7,500</span></div></div>
+<div class="tc"><div class="ent rv c-blue" id="al-4a"><span class="tag">(4a)</span><span class="amt">1,200</span></div></div>
+<div class="trule rv" id="al-rule1"></div>
+<div class="tc"><div class="ent rv" id="al-unadj"><span class="tag">Unadj.</span><span class="amt">300</span></div></div>
+<div class="tc"></div>
+<div class="tc"></div>
+<div class="tc"><div class="ent rv c-gold" id="al-5"><span class="tag">(5)</span><span class="amt">7,675</span></div></div>
+<div class="trule rv" id="al-rule2"></div>
+<div class="tc"></div>
+<div class="tc"><div class="ent rv b" id="al-end"><span class="tag">End.</span><span class="amt">7,375</span></div></div>
+</div></div>
+        </div>
+      </section>
+      <section class="panel calc-panel" aria-label="Year-end computations">
+        <h2>Year-end computations</h2>
+        <div class="calc">
+          <p class="cl rv" id="calc-ar"><span class="k">Ending accounts receivable</span><span class="x">120,000 + 850,000 + 1,200 − 815,000 − 7,500 − 1,200 = <span class="amt b" id="calc-ar-r">147,500</span></span></p>
+          <p class="cl rv" id="calc-req"><span class="k">Required ending allowance: 5% of A/R</span><span class="x">147,500 × 5% = <span class="amt b" id="calc-req-r">7,375</span></span></p>
+          <p class="cl rv" id="calc-before"><span class="k">Allowance before adjustment</span><span class="x">6,000 + 1,200 − 7,500 = (300), a 300 debit balance</span></p>
+          <p class="cl rv" id="calc-fill"><span class="k">Filler #: bad debt expense</span><span class="x">300 + 7,375 = <span class="amt c-gold" id="calc-fill-r">7,675</span></span></p>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel journal" aria-label="Journal">
+      <h2>Journal</h2>
+<div class="tbl"><table class="je" id="jr" aria-label="Journal entries for 20X1">
+<colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"></colgroup>
+<thead><tr><th>No.</th><th>General Journal</th><th class="n">Debit</th><th class="n">Credit</th></tr></thead>
+<tbody class="rvg" id="j1">
+<tr><td class="d"><span class="gi">1</span></td><td class="acct"><span class="gi">Accounts Receivable</span></td><td class="n"><span class="fill rv c-purple" id="j1-dr"><span class="amt">850,000</span></span></td><td class="n"></td></tr>
+<tr><td class="d"><span class="gi"></span></td><td class="acct cr"><span class="gi">Sales Revenue</span></td><td class="n"></td><td class="n"><span class="fill rv c-purple" id="j1-cr"><span class="amt">850,000</span></span></td></tr>
+</tbody>
+<tbody class="rvg" id="j2">
+<tr><td class="d"><span class="gi">2</span></td><td class="acct"><span class="gi">Cash</span></td><td class="n"><span class="fill rv c-green" id="j2-dr"><span class="amt">815,000</span></span></td><td class="n"></td></tr>
+<tr><td class="d"><span class="gi"></span></td><td class="acct cr"><span class="gi">Accounts Receivable</span></td><td class="n"></td><td class="n"><span class="fill rv c-green" id="j2-cr"><span class="amt">815,000</span></span></td></tr>
+</tbody>
+<tbody class="rvg" id="j3">
+<tr><td class="d"><span class="gi">3</span></td><td class="acct"><span class="gi">Allowance for Doubtful Accounts</span></td><td class="n"><span class="fill rv c-wine" id="j3-dr"><span class="amt">7,500</span></span></td><td class="n"></td></tr>
+<tr><td class="d"><span class="gi"></span></td><td class="acct cr"><span class="gi">Accounts Receivable</span></td><td class="n"></td><td class="n"><span class="fill rv c-wine" id="j3-cr"><span class="amt">7,500</span></span></td></tr>
+</tbody>
+<tbody class="rvg" id="j4a">
+<tr><td class="d"><span class="gi">4a</span></td><td class="acct"><span class="gi">Accounts Receivable</span></td><td class="n"><span class="fill rv c-blue" id="j4a-dr"><span class="amt">1,200</span></span></td><td class="n"></td></tr>
+<tr><td class="d"><span class="gi"></span></td><td class="acct cr"><span class="gi">Allowance for Doubtful Accounts</span></td><td class="n"></td><td class="n"><span class="fill rv c-blue" id="j4a-cr"><span class="amt">1,200</span></span></td></tr>
+</tbody>
+<tbody class="rvg" id="j4b">
+<tr><td class="d"><span class="gi">4b</span></td><td class="acct"><span class="gi">Cash</span></td><td class="n"><span class="fill rv c-blue" id="j4b-dr"><span class="amt">1,200</span></span></td><td class="n"></td></tr>
+<tr><td class="d"><span class="gi"></span></td><td class="acct cr"><span class="gi">Accounts Receivable</span></td><td class="n"></td><td class="n"><span class="fill rv c-blue" id="j4b-cr"><span class="amt">1,200</span></span></td></tr>
+</tbody>
+<tbody class="rvg" id="j5">
+<tr><td class="d"><span class="gi">5</span></td><td class="acct"><span class="gi">Bad Debt Expense</span></td><td class="n"><span class="fill rv c-gold" id="j5-dr"><span class="amt">7,675</span></span></td><td class="n"></td></tr>
+<tr><td class="d"><span class="gi"></span></td><td class="acct cr"><span class="gi">Allowance for Doubtful Accounts</span></td><td class="n"></td><td class="n"><span class="fill rv c-gold" id="j5-cr"><span class="amt">7,675</span></span></td></tr>
+</tbody>
+</table></div>
+    </section>
+
+    <section class="panel bs" aria-label="Balance sheet presentation">
+      <h2>December 31, 20X1</h2>
+      <div class="tbl"><table class="bs-t" aria-label="Accounts receivable on the balance sheet">
+        <colgroup><col><col class="w"></colgroup>
+        <tbody>
+          <tr><td>Accounts receivable</td><td class="n"><span class="fill rv" id="bs-ar"><span class="amt">147,500</span></span></td></tr>
+          <tr><td>Less: Allowance for doubtful accounts</td><td class="n"><span class="fill rv" id="bs-al"><span class="amt">(7,375)</span></span></td></tr>
+          <tr class="tot"><td><b>Net accounts receivable</b></td><td class="n"><span class="fill rv b" id="bs-net"><span class="amt">140,125</span></span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="isline rv" id="bs-is">20X1 income statement: Bad debt expense <span class="amt c-gold">7,675</span></p>
+    </section>
+  </div>
+
+  <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+</div>
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="bar-in">
+    <div class="progrow"><div class="progress" aria-hidden="true"><div id="prog"></div></div><span class="counter" id="counter"></span></div>
+    <p class="caption" id="caption" aria-live="polite"></p>
+    <div class="controls">
+      <button id="restart" type="button"><span class="lg">Start over</span><span class="sm">Restart</span></button>
+      <button id="back" type="button">Back</button>
+      <button id="next" type="button" class="primary">Next</button>
+      <button id="all" type="button"><span class="lg">Show solution</span><span class="sm">Solution</span></button>
+    </div>
+  </div>
+</div>
+<script>
+window.WALK_STEPS = [
+ {
+  "caption": "Moondoor Games starts 20X1 with the balances and events above. The T-accounts and the journal start empty. Each Next posts one event to the T-accounts and drops its numbers into the journal entry. The arrow keys work too."
+ },
+ {
+  "show": [
+   "ar-beg",
+   "al-beg"
+  ],
+  "caption": "January 1, 20X1. Accounts Receivable starts with a 120,000 debit balance. The Allowance for Doubtful Accounts is a contra asset, so its normal balance is a credit: 6,000."
+ },
+ {
+  "show": [
+   "ar-1",
+   "j1"
+  ],
+  "fly": [
+   [
+    "ar-1",
+    "j1-dr"
+   ],
+   [
+    "ar-1",
+    "j1-cr"
+   ]
+  ],
+  "caption": "(1) Sales on account, 850,000. A/R goes up, so 850,000 posts to the debit side. The same 850,000 drops into the entry: debit Accounts Receivable, credit Sales Revenue."
+ },
+ {
+  "show": [
+   "ar-2",
+   "j2"
+  ],
+  "fly": [
+   [
+    "ar-2",
+    "j2-dr"
+   ],
+   [
+    "ar-2",
+    "j2-cr"
+   ]
+  ],
+  "caption": "(2) Collections, 815,000. Customers pay what they owe, so A/R goes down: 815,000 on the credit side. Debit Cash, credit Accounts Receivable."
+ },
+ {
+  "show": [
+   "al-3",
+   "ar-3",
+   "j3"
+  ],
+  "fly": [
+   [
+    "al-3",
+    "j3-dr"
+   ],
+   [
+    "ar-3",
+    "j3-cr"
+   ]
+  ],
+  "caption": "(3) Write-offs, 7,500. Debit the allowance, credit A/R. No expense here: the expense was estimated when the allowance was built. Both accounts drop by 7,500, so net A/R does not change."
+ },
+ {
+  "show": [
+   "ar-4a",
+   "al-4a",
+   "j4a"
+  ],
+  "fly": [
+   [
+    "ar-4a",
+    "j4a-dr"
+   ],
+   [
+    "al-4a",
+    "j4a-cr"
+   ]
+  ],
+  "caption": "(4a) Recovery, part one: reinstate. The customer is paying after all, so the write-off is reversed: debit A/R 1,200, credit the allowance 1,200."
+ },
+ {
+  "show": [
+   "ar-4b",
+   "j4b"
+  ],
+  "fly": [
+   [
+    "ar-4b",
+    "j4b-dr"
+   ],
+   [
+    "ar-4b",
+    "j4b-cr"
+   ]
+  ],
+  "caption": "(4b) Recovery, part two: collect. Now it is an ordinary collection: debit Cash 1,200, credit A/R 1,200. Reinstating first leaves a record that this customer did pay."
+ },
+ {
+  "show": [
+   "ar-rule",
+   "ar-end",
+   "calc-ar"
+  ],
+  "use": [
+   "ar-beg",
+   "ar-1",
+   "ar-2",
+   "ar-3",
+   "ar-4a",
+   "ar-4b"
+  ],
+  "caption": "December 31, 20X1. Ending A/R is debits minus credits: 120,000 + 850,000 + 1,200 − 815,000 − 7,500 − 1,200 = 147,500."
+ },
+ {
+  "show": [
+   "calc-req"
+  ],
+  "fly": [
+   [
+    "calc-req-r",
+    "al-end"
+   ]
+  ],
+  "use": [
+   "ar-end"
+  ],
+  "caption": "The 5% estimate sets the ending balance of the allowance, not the expense: 147,500 × 5% = 7,375. That required balance goes to the bottom of the allowance T-account as the number the adjustment must reach."
+ },
+ {
+  "show": [
+   "al-rule1",
+   "al-unadj",
+   "calc-before"
+  ],
+  "use": [
+   "al-beg",
+   "al-3",
+   "al-4a"
+  ],
+  "caption": "Before the adjustment: 6,000 + 1,200 − 7,500 = (300). Write-offs ran past what the allowance held, so it has a 300 debit balance: more accounts went bad than last year’s estimate allowed for."
+ },
+ {
+  "show": [
+   "al-5",
+   "al-rule2",
+   "calc-fill"
+  ],
+  "use": [
+   "al-unadj",
+   "al-end"
+  ],
+  "caption": "Filler #: the amount that takes the allowance from a 300 debit to the required 7,375 credit. 300 + 7,375 = 7,675. With a debit balance before adjustment, add it; with a credit balance, subtract it."
+ },
+ {
+  "show": [
+   "j5"
+  ],
+  "fly": [
+   [
+    "al-5",
+    "j5-dr"
+   ],
+   [
+    "al-5",
+    "j5-cr"
+   ]
+  ],
+  "caption": "(5) December 31 adjusting entry: debit Bad Debt Expense 7,675, credit Allowance for Doubtful Accounts 7,675. The filler # is the expense for 20X1."
+ },
+ {
+  "fly": [
+   [
+    "ar-end",
+    "bs-ar"
+   ],
+   [
+    "al-end",
+    "bs-al"
+   ]
+  ],
+  "after": [
+   "bs-net",
+   "bs-is"
+  ],
+  "caption": "Balance sheet, December 31, 20X1: A/R 147,500 less the allowance 7,375 = net A/R 140,125, the amount Moondoor expects to collect. The income statement reports bad debt expense of 7,675."
+ }
+];
+</script>
+<script>
+/* Walkthrough engine shared by the Chapter 7 pages.
+   Each step: show (written in place), fly ([from, to] pairs: a copy of the number travels from one place to the other),
+   after (written once the flights land), hide, use (outlined as the inputs of this step), caption, stagger. */
+(function () {
+  'use strict';
+  var STEPS = window.WALK_STEPS;
+  var $ = function (id) { return document.getElementById(id); };
+  var last = STEPS.length - 1;
+  var S = function (s) { return s.show || []; };
+  var U = function (s) { return s.use || []; };
+  var F = function (s) { return s.fly || []; };
+  var A = function (s) { return s.after || []; };
+  var H = function (s) { return s.hide || []; };
+  var REVEAL = [];
+  STEPS.forEach(function (s) {
+    S(s).concat(F(s).map(function (f) { return f[1]; }), A(s), H(s)).forEach(function (id) {
+      if (REVEAL.indexOf(id) < 0) REVEAL.push(id);
+    });
+  });
+  var bar = document.querySelector('.bar');
+  var k = 0, tok = 0, timers = [], ghosts = [];
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  (function check() {
+    var miss = [];
+    STEPS.forEach(function (s) {
+      var ids = S(s).concat(U(s), A(s), H(s));
+      F(s).forEach(function (f) { ids = ids.concat(f); });
+      ids.forEach(function (id) { if (!$(id) && miss.indexOf(id) < 0) miss.push(id); });
+    });
+    if (miss.length && window.console) console.warn('Walkthrough: missing ids', miss);
+  })();
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function stopMotion() {
+    tok++;
+    timers.forEach(clearTimeout); timers = [];
+    ghosts.forEach(function (g) { g.remove(); }); ghosts = [];
+  }
+  function reveal(id, how) {
+    var el = $(id); if (!el) return;
+    el.classList.remove('write', 'land');
+    el.style.animationDelay = '';
+    el.classList.add('shown');
+    if (how) { void el.offsetWidth; el.classList.add(how); }
+  }
+
+  function render(animate) {
+    stopMotion();
+    var s = STEPS[k];
+    var moving = animate && !reduced();
+    var shown = {};
+    for (var i = 1; i <= k; i++) {
+      var t = STEPS[i];
+      S(t).forEach(function (id) { shown[id] = 1; });
+      F(t).forEach(function (f) { shown[f[1]] = 1; });
+      A(t).forEach(function (id) { shown[id] = 1; });
+      H(t).forEach(function (id) { delete shown[id]; });
+    }
+    var held = {};
+    if (moving) {
+      F(s).forEach(function (f) { held[f[1]] = 1; });
+      A(s).forEach(function (id) { held[id] = 1; });
+    }
+    REVEAL.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.remove('write', 'land');
+      el.style.animationDelay = '';
+      el.classList.toggle('shown', !!shown[id] && !held[id]);
+    });
+    if (animate) {
+      S(s).forEach(function (id, j) {
+        var el = $(id); if (!el || held[id]) return;
+        if (s.stagger) el.style.animationDelay = (j * 0.16) + 's';
+        void el.offsetWidth; el.classList.add('write');
+      });
+    }
+    document.querySelectorAll('.use-on').forEach(function (el) { el.classList.remove('use-on'); });
+    U(s).forEach(function (id) { var el = $(id); if (el) el.classList.add('use-on'); });
+    $('caption').textContent = s.caption;
+    $('counter').textContent = 'Step ' + k + ' of ' + last;
+    $('prog').style.width = (k / last) * 100 + '%';
+    $('back').disabled = k === 0;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last;
+    $('all').disabled = k === last;
+  }
+
+  function pinned(el) {
+    var p = el && el.closest ? el.closest('.pin') : null;
+    return !!p && getComputedStyle(p).position === 'sticky';
+  }
+  function span(ids) {
+    var top = Infinity, bottom = -Infinity;
+    ids.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    return top === Infinity ? null : { t: top, b: bottom };
+  }
+
+  // Scroll so this step's targets (and, if they fit, its sources) sit above the caption bar. Resolves when scrolling stops.
+  function bring() {
+    var s = STEPS[k];
+    var tg = S(s).concat(F(s).map(function (f) { return f[1]; }), A(s));
+    if (!tg.length) return Promise.resolve();
+    var free = tg.filter(function (id) { return !pinned($(id)); });
+    if (free.length) tg = free;
+    var src = F(s).map(function (f) { return f[0]; }).concat(U(s)).filter(function (id) { return !pinned($(id)); });
+    var barTop = window.innerHeight - bar.offsetHeight;
+    var dy = null;
+    [tg.concat(src), tg].some(function (ids) {
+      var r = span(ids); if (!r) return false;
+      if (r.b - r.t > barTop - 24) return false;
+      dy = r.t < 12 ? r.t - 12 : (r.b > barTop - 12 ? r.b - (barTop - 12) : 0);
+      return true;
+    });
+    if (dy === null) { var r0 = span([tg[0]]); if (!r0) return Promise.resolve(); dy = r0.t - 16; }
+    if (Math.abs(dy) < 2) return Promise.resolve();
+    var smooth = !reduced();
+    window.scrollBy({ top: dy, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) return Promise.resolve();
+    return new Promise(function (res) {
+      var done = false;
+      var fin = function () { if (done) return; done = true; window.removeEventListener('scrollend', fin); res(); };
+      window.addEventListener('scrollend', fin);
+      setTimeout(fin, Math.min(950, 260 + Math.abs(dy) * 0.6));
+    });
+  }
+
+  function colorOf(el) {
+    if (!el) return null;
+    for (var i = 0; i < el.classList.length; i++) if (el.classList[i].indexOf('c-') === 0) return el.classList[i];
+    return null;
+  }
+  function chipOf(el) { return el.classList.contains('amt') ? el : (el.querySelector('.amt') || el); }
+
+  function fly(from, to, my, dur) {
+    var src = $(from), dst = $(to);
+    if (!src || !dst) { reveal(to, 'land'); return; }
+    var sa = chipOf(src), da = chipOf(dst);
+    var a = sa.getBoundingClientRect(), b = da.getBoundingClientRect();
+    var g = document.createElement('div');
+    g.className = 'ghost'; g.setAttribute('aria-hidden', 'true');
+    var c = colorOf(dst) || colorOf(src);
+    if (c) g.classList.add(c);
+    var gy = document.createElement('div'); gy.className = 'gy';
+    var chip = document.createElement('span'); chip.className = 'amt';
+    chip.textContent = (da.textContent || sa.textContent).trim();
+    gy.appendChild(chip); g.appendChild(gy); document.body.appendChild(g); ghosts.push(g);
+    var cr = chip.getBoundingClientRect();
+    var sx = window.scrollX || window.pageXOffset || 0, sy = window.scrollY || window.pageYOffset || 0;
+    var x0 = a.right - cr.width + sx, x1 = b.right - cr.width + sx;
+    var y0 = a.top + a.height / 2 - cr.height / 2 + sy, y1 = b.top + b.height / 2 - cr.height / 2 + sy;
+    var lift = Math.min(y0, y1) - 36;
+    g.style.transform = 'translateX(' + x0 + 'px)';
+    gy.style.transform = 'translateY(' + y0 + 'px)';
+    var ax = g.animate([{ transform: 'translateX(' + x0 + 'px)' }, { transform: 'translateX(' + x1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' });
+    gy.animate([
+      { transform: 'translateY(' + y0 + 'px)', easing: 'ease-out' },
+      { transform: 'translateY(' + lift + 'px)', offset: 0.3, easing: 'ease-in' },
+      { transform: 'translateY(' + y1 + 'px)' }
+    ], { duration: dur, fill: 'forwards' });
+    chip.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.14)', offset: 0.3 }, { transform: 'scale(1)' }], { duration: dur, fill: 'forwards' });
+    ax.onfinish = function () {
+      g.remove();
+      if (my !== tok) return;
+      reveal(to, 'land');
+    };
+  }
+
+  function play(my) {
+    if (reduced()) return;
+    var s = STEPS[k];
+    var lead = S(s).length ? 380 + (s.stagger ? S(s).length * 160 : 0) : 80;
+    var gap = 260, dur = 860;
+    F(s).forEach(function (f, i) {
+      later(function () { if (my === tok) fly(f[0], f[1], my, dur); }, lead + i * gap);
+    });
+    var done = F(s).length ? lead + (F(s).length - 1) * gap + dur + 80 : lead;
+    A(s).forEach(function (id, i) {
+      later(function () { if (my === tok) reveal(id, 'write'); }, done + i * 170);
+    });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+    var my = tok;
+    var p = bring();
+    if (animate) p.then(function () { if (my === tok) play(my); });
+  }
+
+  $('next').addEventListener('click', function () { go(k + 1, true); });
+  $('back').addEventListener('click', function () { go(k - 1, false); });
+  $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', function () { k = last; render(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); if (k < last) go(k + 1, true); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (k > 0) go(k - 1, false); }
+  });
+
+  var setBar = function () { document.documentElement.style.setProperty('--bar-h', bar.offsetHeight + 'px'); };
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(bar);
+  setBar();
+  render(false);
+})();
+
+</script>
+</body>
+</html>

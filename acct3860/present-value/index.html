@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Present Value Practice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Four present value problems worked two ways: with present value tables and with a BA II Plus financial calculator.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Shared look for the Chapter 7 walkthroughs. Colors are tokens; each page's legend says what the five chip colors mean there. Table text stays plain ink; color lives in the chip tint and its left bar. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #E9AE1F;          /* gold: a number used in this step (same as Chapter 6) */
+  --use-tint: #FCEFC9;
+  --loss: #C8102E;         /* cardinal */
+  --ok: #2F7D50;           /* green: a check that passed */
+  --accent: #1E1A1B;
+  --on-accent: #FCFCFB;
+  --wine: #8B1E3F;   --wine-t: #F6DEE5;
+  --gold: #C48A00;   --gold-t: #FCEBBE;
+  --green: #2F7D50;  --green-t: #DCEFE2;
+  --blue: #2463A8;   --blue-t: #DDE8F6;
+  --purple: #6B42A3; --purple-t: #EBE2F6;
+  --lcd: #2A2325;    --lcd-ink: #F4EFE6;
+  --paper: #FFFFFF;  --gridline: #ECE5E6;
+  --shadow: rgba(30, 26, 27, 0.22);
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 140px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F1BE48; --use-tint: rgba(241, 190, 72, 0.22); --loss: #FF6B7D; --ok: #62C48E;
+    --accent: #F2EEEF; --on-accent: #161314;
+    --wine: #E6849E;   --wine-t: rgba(230, 132, 158, 0.22);
+    --gold: #E9B23E;   --gold-t: rgba(233, 178, 62, 0.22);
+    --green: #62C48E;  --green-t: rgba(98, 196, 142, 0.20);
+    --blue: #83B2EF;   --blue-t: rgba(131, 178, 239, 0.22);
+    --purple: #B79AE6; --purple-t: rgba(183, 154, 230, 0.22);
+    --lcd: #0E0B0C;    --lcd-ink: #F1E6CF;
+    --paper: #1B1718;  --gridline: #2C2527;
+    --shadow: rgba(0, 0, 0, 0.55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F1BE48; --use-tint: rgba(241, 190, 72, 0.22); --loss: #FF6B7D; --ok: #62C48E;
+  --accent: #F2EEEF; --on-accent: #161314;
+  --wine: #E6849E;   --wine-t: rgba(230, 132, 158, 0.22);
+  --gold: #E9B23E;   --gold-t: rgba(233, 178, 62, 0.22);
+  --green: #62C48E;  --green-t: rgba(98, 196, 142, 0.20);
+  --blue: #83B2EF;   --blue-t: rgba(131, 178, 239, 0.22);
+  --purple: #B79AE6; --purple-t: rgba(183, 154, 230, 0.22);
+  --lcd: #0E0B0C;    --lcd-ink: #F1E6CF;
+  --paper: #1B1718;  --gridline: #2C2527;
+  --shadow: rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px calc(var(--bar-h) + 32px);
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+
+header { display: grid; gap: 6px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.co { margin: 0; font-size: 15px; color: var(--muted); }
+.problem { font-family: var(--serif); font-size: 18px; max-width: 74ch; }
+.problem p { margin: 0 0 8px; }
+.problem ol { margin: 4px 0 10px; padding-left: 1.7em; display: grid; gap: 2px; }
+.problem .req b { font-weight: 600; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 20px; height: 14px; border-radius: 3px; display: inline-block; background: var(--ct, transparent); box-shadow: inset 4px 0 0 var(--cb, var(--ink)); }
+.sw.use { background: var(--use-tint); box-shadow: none; outline: 2px solid var(--use); outline-offset: -2px; }
+.sw.ok { background: var(--ok); box-shadow: none; }
+
+/* chip colors */
+.c-wine { --cb: var(--wine); --ct: var(--wine-t); }
+.c-gold { --cb: var(--gold); --ct: var(--gold-t); }
+.c-green { --cb: var(--green); --ct: var(--green-t); }
+.c-blue { --cb: var(--blue); --ct: var(--blue-t); }
+.c-purple { --cb: var(--purple); --ct: var(--purple-t); }
+.amt {
+  display: inline-block;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding: 1px 6px 1px 9px;
+  border-radius: 4px;
+  background: var(--ct, transparent);
+  box-shadow: inset 3px 0 0 var(--cb, transparent);
+}
+.b .amt, .amt.b { font-weight: 700; }
+
+.panel { border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px 16px; min-width: 0; }
+.panel > h2, .ptitle { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 0 0 10px; line-height: 1.25; }
+.panel .sub { font-size: 14px; margin: -6px 0 10px; }
+
+/* T-accounts */
+.tset { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px 18px; }
+.t { min-width: 0; }
+.tname { text-align: center; font-weight: 700; font-size: 15px; line-height: 1.25; padding-bottom: 4px; min-height: 2.75em; display: flex; align-items: flex-end; justify-content: center; }
+.tdc { display: grid; grid-template-columns: 1fr 1fr; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 2px solid var(--ink); padding: 0 8px 2px; }
+.tdc span:last-child { text-align: right; }
+.tgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); position: relative; padding-top: 2px; }
+.tgrid::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 2px solid var(--ink); transform: translateX(-1px); }
+.tc { min-height: 34px; padding: 3px 7px; display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0; }
+.tc .amt { font-size: 15px; }
+.ent { display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; }
+.tag { font-size: 11.5px; white-space: nowrap; }
+.trule { grid-column: 1 / -1; border-top: 1.5px solid var(--ink); margin: 3px 6px; height: 0; }
+
+/* computation lines */
+.calc { display: grid; gap: 0; }
+.cl { margin: 0; padding: 8px 0; border-top: 1px solid var(--rule); display: grid; gap: 2px; }
+.cl:first-of-type { border-top: 0; padding-top: 0; }
+.cl .k { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
+.cl .x { font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; }
+.math { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* tables */
+.tbl { overflow-x: auto; padding: 4px; margin: -4px; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th, td { border-bottom: 1px solid var(--rule); padding: 6px 8px; vertical-align: middle; text-align: left; }
+thead th { background: var(--surface); font-size: 14px; font-weight: 700; border-bottom: 2px solid var(--ink); line-height: 1.25; }
+thead th small { display: block; font-weight: 400; font-size: 12px; }
+th.n, td.n { text-align: right; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.je td { height: 38px; font-size: 15px; }
+.je td.acct.cr { padding-left: 30px; }
+.je tbody tr:first-child td { border-top: 1.5px solid var(--muted); }
+.je tbody:first-of-type tr:first-child td { border-top: 0; }
+.je td.d { font-size: 14px; white-space: nowrap; }
+
+/* reveal states */
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.gi { display: inline-block; }
+.rvg:not(.shown) .gi { visibility: hidden; }
+.write { animation: write 0.5s ease-out both; }
+.rvg.write .gi { animation: write 0.5s ease-out both; }
+.rvg.write { animation: none; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); opacity: 0.4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.land { animation: land 0.5s ease-out both; }
+@keyframes land { 0% { transform: scale(1.22); } 55% { transform: scale(0.95); } 100% { transform: scale(1); } }
+.fill { display: inline-block; }
+.use-on { background-color: var(--use-tint) !important; outline: 2px solid var(--use) !important; outline-offset: 2px; border-radius: 4px; }
+td.use-on, th.use-on { outline-offset: -3px; }
+
+/* the flying number */
+.ghost { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; will-change: transform; }
+.ghost .gy { will-change: transform; }
+.ghost .amt {
+  font-weight: 700;
+  font-size: 16px;
+  background: var(--ct, var(--surface));
+  box-shadow: inset 3px 0 0 var(--cb, var(--ink)), 0 8px 18px var(--shadow);
+  outline: 1.5px solid var(--cb, var(--ink));
+}
+
+.copyright { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* caption bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  background: var(--bg);
+  border-top: 2px solid var(--ink);
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.bar-in { max-width: 1120px; margin: 0 auto; display: grid; gap: 10px; }
+.caption { font-size: 18px; min-height: 2.9em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.progrow { display: flex; align-items: center; gap: 12px; }
+.counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress { flex: 1; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+button .sm { display: none; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+
+@media (max-width: 560px) {
+  body { font-size: 16px; padding-block: 20px calc(var(--bar-h) + 24px); }
+  .problem { font-size: 17px; }
+  .caption { font-size: 15px; line-height: 1.4; min-height: 2.8em; }
+  .bar { padding-top: 10px; }
+  .bar-in { gap: 8px; }
+  .controls { flex-wrap: nowrap; gap: 6px; }
+  button { padding: 7px 10px; font-size: 14px; flex: 1 1 auto; }
+  button .lg { display: none; } button .sm { display: inline; }
+  .tc { padding: 3px 5px; min-height: 30px; }
+  .amt { padding: 1px 4px 1px 7px; }
+  th, td { padding: 5px 5px; }
+  .je td { font-size: 14px; height: 36px; }
+  .je td.acct.cr { padding-left: 18px; }
+  .je td.d { font-size: 12.5px; }
+  thead th { font-size: 13px; }
+  .hide-sm { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write, .rvg.write .gi, .land { animation: none !important; }
+  .progress > div { transition: none; }
+}
+
+/* graph-paper work area, like the grids in the notes */
+.graph {
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--gridline) 1px, transparent 1px), linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border: 1px solid var(--rule); border-radius: 6px; padding: 18px 16px;
+}
+.ok { color: var(--ok); font-weight: 700; }
+.loss { color: var(--loss); }
+
+/* page */
+
+.work { display: grid; grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr); gap: 20px 24px; align-items: start; }
+@media (min-width: 901px) and (min-height: 700px) {
+  .tabsp.pin { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+}
+.right { display: grid; gap: 20px; min-width: 0; }
+.tt { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; margin: 14px 0 6px; }
+.tt:first-of-type { margin-top: 0; }
+.ft col.f0 { width: 12%; }
+.ft th, .ft td { padding: 4px 6px; height: 31px; }
+.ft td.n { font-size: 14.5px; }
+.ft tbody th { font-weight: 700; text-align: center; }
+.ft thead th:first-child { text-align: center; }
+.stmt { font-family: var(--serif); font-size: 17px; margin: 0 0 12px; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 20px; }
+.half { min-width: 0; }
+.half h3 { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; }
+.tline { margin: 0 0 8px; display: grid; gap: 2px; }
+.tline .k { font-size: 13px; font-weight: 700; }
+.tline .x { font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; }
+.keys { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 0 0 10px; }
+.kin { display: inline-flex; align-items: center; gap: 4px; }
+.v { font-family: var(--mono); font-size: 15px; }
+.key {
+  display: inline-block; min-width: 2.7em; text-align: center;
+  font-family: var(--sans); font-weight: 700; font-size: 12.5px; line-height: 1.2;
+  padding: 4px 7px 5px; border-radius: 6px; border: 1px solid var(--rule);
+  background: var(--ct, var(--surface)); box-shadow: inset 0 -3px 0 var(--cb, var(--rule));
+}
+.lcd { font-family: var(--mono); background: var(--lcd); color: var(--lcd-ink); border-radius: 6px; padding: 8px 12px; text-align: right; font-size: 18px; font-variant-numeric: tabular-nums; }
+.lcd .lab { font-size: 14px; }
+.lcd .amt { background: transparent; box-shadow: none; padding: 0; font-weight: 700; }
+.diff { margin: 12px 0 0; font-size: 14px; }
+.sl { margin: 0; padding: 8px 0; border-top: 1px solid var(--rule); display: grid; gap: 6px; }
+.sl:first-of-type { border-top: 0; padding-top: 0; }
+.sl .k { font-size: 14px; font-weight: 700; }
+.sl .keys { margin: 0; }
+.setup .note { margin: 8px 0 0; font-size: 14px; }
+.sumt col.s1 { width: 37%; }
+.sumt tbody th { font-weight: 400; }
+@media (max-width: 900px) { .work { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .two { grid-template-columns: minmax(0, 1fr); }
+  .panel { padding: 12px 10px 14px; }
+  .sumt { font-size: 14px; }
+  .sumt col.s1 { width: 34%; }
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Notes receivable · Present value</div>
+    <h1>Present Value: Tables and Calculator</h1>
+    <p class="co">Harvelle’s Roadhouse</p>
+  </header>
+
+  <section class="problem" aria-label="Problem">
+    <p>Harvelle’s Roadhouse wants to know what four future amounts are worth today. Find each present value two ways: with the present value tables, whose factors are rounded to five decimals, and with a financial calculator.</p>
+  </section>
+
+  <div class="legend" aria-label="Color key"><span><i class="sw c-blue"></i>N: number of periods</span><span><i class="sw c-purple"></i>I/Y: market rate</span><span><i class="sw c-green"></i>PMT: payment each period</span><span><i class="sw c-wine"></i>FV: single sum at the end</span><span><i class="sw c-gold"></i>PV: the answer</span><span><i class="sw use"></i>Used in this step</span></div>
+
+  <div class="work">
+    <section class="panel tabsp pin" aria-label="Present value tables">
+      <h2>Present value tables (excerpt)</h2>
+      <h3 class="tt">Present value of $1</h3>
+      <div class="tbl"><table class="ft" aria-label="Present value of 1"><colgroup><col class="f0"><col><col><col><col></colgroup><thead><tr><th>n</th><th class="n">6%</th><th class="n">8%</th><th class="n">9%</th><th class="n">10%</th></tr></thead><tbody><tr><th scope="row">1</th><td class="n" id="pv1-1-6"><span class="amt">0.94340</span></td><td class="n" id="pv1-1-8"><span class="amt">0.92593</span></td><td class="n" id="pv1-1-9"><span class="amt">0.91743</span></td><td class="n" id="pv1-1-10"><span class="amt">0.90909</span></td></tr><tr><th scope="row">2</th><td class="n" id="pv1-2-6"><span class="amt">0.89000</span></td><td class="n" id="pv1-2-8"><span class="amt">0.85734</span></td><td class="n" id="pv1-2-9"><span class="amt">0.84168</span></td><td class="n" id="pv1-2-10"><span class="amt">0.82645</span></td></tr><tr><th scope="row">3</th><td class="n" id="pv1-3-6"><span class="amt">0.83962</span></td><td class="n" id="pv1-3-8"><span class="amt">0.79383</span></td><td class="n" id="pv1-3-9"><span class="amt">0.77218</span></td><td class="n" id="pv1-3-10"><span class="amt">0.75131</span></td></tr><tr><th scope="row">4</th><td class="n" id="pv1-4-6"><span class="amt">0.79209</span></td><td class="n" id="pv1-4-8"><span class="amt">0.73503</span></td><td class="n" id="pv1-4-9"><span class="amt">0.70843</span></td><td class="n" id="pv1-4-10"><span class="amt">0.68301</span></td></tr><tr><th scope="row">5</th><td class="n" id="pv1-5-6"><span class="amt">0.74726</span></td><td class="n" id="pv1-5-8"><span class="amt">0.68058</span></td><td class="n" id="pv1-5-9"><span class="amt">0.64993</span></td><td class="n" id="pv1-5-10"><span class="amt">0.62092</span></td></tr></tbody></table></div>
+      <h3 class="tt">Present value of an ordinary annuity of $1</h3>
+      <div class="tbl"><table class="ft" aria-label="Present value of an ordinary annuity of 1"><colgroup><col class="f0"><col><col><col><col></colgroup><thead><tr><th>n</th><th class="n">6%</th><th class="n">8%</th><th class="n">9%</th><th class="n">10%</th></tr></thead><tbody><tr><th scope="row">1</th><td class="n" id="pva-1-6"><span class="amt">0.94340</span></td><td class="n" id="pva-1-8"><span class="amt">0.92593</span></td><td class="n" id="pva-1-9"><span class="amt">0.91743</span></td><td class="n" id="pva-1-10"><span class="amt">0.90909</span></td></tr><tr><th scope="row">2</th><td class="n" id="pva-2-6"><span class="amt">1.83339</span></td><td class="n" id="pva-2-8"><span class="amt">1.78326</span></td><td class="n" id="pva-2-9"><span class="amt">1.75911</span></td><td class="n" id="pva-2-10"><span class="amt">1.73554</span></td></tr><tr><th scope="row">3</th><td class="n" id="pva-3-6"><span class="amt">2.67301</span></td><td class="n" id="pva-3-8"><span class="amt">2.57710</span></td><td class="n" id="pva-3-9"><span class="amt">2.53129</span></td><td class="n" id="pva-3-10"><span class="amt">2.48685</span></td></tr><tr><th scope="row">4</th><td class="n" id="pva-4-6"><span class="amt">3.46511</span></td><td class="n" id="pva-4-8"><span class="amt">3.31213</span></td><td class="n" id="pva-4-9"><span class="amt">3.23972</span></td><td class="n" id="pva-4-10"><span class="amt">3.16987</span></td></tr><tr><th scope="row">5</th><td class="n" id="pva-5-6"><span class="amt">4.21236</span></td><td class="n" id="pva-5-8"><span class="amt">3.99271</span></td><td class="n" id="pva-5-9"><span class="amt">3.88965</span></td><td class="n" id="pva-5-10"><span class="amt">3.79079</span></td></tr></tbody></table></div>
+    </section>
+    <div class="right">
+    <section class="panel setup" aria-label="Calculator setup">
+      <h2>Calculator setup</h2>
+      <p class="sl rv" id="setup-1"><span class="k">Once: payments per year = 1</span><span class="keys"><span class="key">2nd</span><span class="key">I/Y</span><span class="v">1</span><span class="key">ENTER</span><span class="key">2nd</span><span class="key">CPT</span></span></p>
+      <p class="sl rv" id="setup-2"><span class="k">Before each problem: clear the TVM keys</span><span class="keys"><span class="key">2nd</span><span class="key">FV</span></span></p>
+      <p class="note">Keys shown are for the TI BA II Plus. Other financial calculators use the same five inputs: N, I/Y, PV, PMT and FV.</p>
+    </section>
+    <section class="panel prob" id="p1card" aria-label="Problem 1">
+      <h2>1. A single sum</h2>
+      <p class="stmt">A customer bought Harvelle’s old walk-in cooler and will pay $25,000 four years from today. The market rate is 6%. What is the payment worth today?</p>
+      <div class="two">
+        <div class="half"><h3>With the tables</h3><p class="tline rv" id="p1-t"><span class="k">PV of $1, n = 4, i = 6%</span><span class="x"><span class="amt c-wine">25,000</span> × <span class="fill rv" id="p1-f"><span class="amt">0.79209</span></span> = <span class="fill rv c-gold b" id="p1-r"><span class="amt">19,802.25</span></span></span></p></div>
+        <div class="half"><h3>With a BA II Plus</h3><div class="keys"><span class="kin rv" id="p1-k1"><span class="v">4</span><span class="key c-blue">N</span></span><span class="kin rv" id="p1-k2"><span class="v">6</span><span class="key c-purple">I/Y</span></span><span class="kin rv" id="p1-k3"><span class="v">0</span><span class="key c-green">PMT</span></span><span class="kin rv" id="p1-k4"><span class="v">25,000</span><span class="key c-wine">FV</span></span><span class="kin rv" id="p1-k5"><span class="key">CPT</span><span class="key c-gold">PV</span></span></div><div class="lcd rv" id="p1-d"><span class="lab">PV =</span> <span class="amt">−19,802.34</span></div></div>
+      </div>
+      <p class="diff rv" id="p1-diff">Tables 19,802.25; calculator 19,802.34; difference 0.09.</p>
+    </section><section class="panel prob" id="p2card" aria-label="Problem 2">
+      <h2>2. An ordinary annuity</h2>
+      <p class="stmt">Harvelle’s rents its back lot to a food truck for $8,000 a year, received at the end of each year for five years. The market rate is 10%. What are the rent payments worth today?</p>
+      <div class="two">
+        <div class="half"><h3>With the tables</h3><p class="tline rv" id="p2-t"><span class="k">PV of an ordinary annuity of $1, n = 5, i = 10%</span><span class="x"><span class="amt c-green">8,000</span> × <span class="fill rv" id="p2-f"><span class="amt">3.79079</span></span> = <span class="fill rv c-gold b" id="p2-r"><span class="amt">30,326.32</span></span></span></p></div>
+        <div class="half"><h3>With a BA II Plus</h3><div class="keys"><span class="kin rv" id="p2-k1"><span class="v">5</span><span class="key c-blue">N</span></span><span class="kin rv" id="p2-k2"><span class="v">10</span><span class="key c-purple">I/Y</span></span><span class="kin rv" id="p2-k3"><span class="v">8,000</span><span class="key c-green">PMT</span></span><span class="kin rv" id="p2-k4"><span class="v">0</span><span class="key c-wine">FV</span></span><span class="kin rv" id="p2-k5"><span class="key">CPT</span><span class="key c-gold">PV</span></span></div><div class="lcd rv" id="p2-d"><span class="lab">PV =</span> <span class="amt">−30,326.29</span></div></div>
+      </div>
+      <p class="diff rv" id="p2-diff">Tables 30,326.32; calculator 30,326.29; difference 0.03.</p>
+    </section><section class="panel prob" id="p3card" aria-label="Problem 3">
+      <h2>3. An interest-bearing note</h2>
+      <p class="stmt">Harvelle’s lends cash to a local bakery and receives a $50,000, three-year note with an 8% stated rate; interest is received at the end of each year. The market rate is 10%. How much cash does Harvelle’s lend?</p>
+      <div class="two">
+        <div class="half"><h3>With the tables</h3><p class="tline rv" id="p3-t1"><span class="k">Face: PV of $1, n = 3, i = 10%</span><span class="x"><span class="amt c-wine">50,000</span> × <span class="fill rv" id="p3-f1"><span class="amt">0.75131</span></span> = <span class="fill rv" id="p3-r1"><span class="amt">37,565.50</span></span></span></p><p class="tline rv" id="p3-t2"><span class="k">Interest: PV of an ordinary annuity of $1, n = 3, i = 10%</span><span class="x"><span class="amt c-green">4,000</span> × <span class="fill rv" id="p3-f2"><span class="amt">2.48685</span></span> = <span class="fill rv" id="p3-r2"><span class="amt">9,947.40</span></span></span></p><p class="tline rv" id="p3-t3"><span class="k">Cash lent</span><span class="x">37,565.50 + 9,947.40 = <span class="fill rv c-gold b" id="p3-r"><span class="amt">47,512.90</span></span></span></p></div>
+        <div class="half"><h3>With a BA II Plus</h3><div class="keys"><span class="kin rv" id="p3-k1"><span class="v">3</span><span class="key c-blue">N</span></span><span class="kin rv" id="p3-k2"><span class="v">10</span><span class="key c-purple">I/Y</span></span><span class="kin rv" id="p3-k3"><span class="v">4,000</span><span class="key c-green">PMT</span></span><span class="kin rv" id="p3-k4"><span class="v">50,000</span><span class="key c-wine">FV</span></span><span class="kin rv" id="p3-k5"><span class="key">CPT</span><span class="key c-gold">PV</span></span></div><div class="lcd rv" id="p3-d"><span class="lab">PV =</span> <span class="amt">−47,513.15</span></div></div>
+      </div>
+      <p class="diff rv" id="p3-diff">Tables 47,512.90; calculator 47,513.15; difference 0.25.</p>
+    </section><section class="panel prob" id="p4card" aria-label="Problem 4">
+      <h2>4. A zero-interest-bearing note</h2>
+      <p class="stmt">Harvelle’s lends cash to a jukebox repair shop and receives a $40,000, three-year, zero-interest-bearing note. The market rate is 9%. How much cash does Harvelle’s lend?</p>
+      <div class="two">
+        <div class="half"><h3>With the tables</h3><p class="tline rv" id="p4-t"><span class="k">PV of $1, n = 3, i = 9%</span><span class="x"><span class="amt c-wine">40,000</span> × <span class="fill rv" id="p4-f"><span class="amt">0.77218</span></span> = <span class="fill rv c-gold b" id="p4-r"><span class="amt">30,887.20</span></span></span></p></div>
+        <div class="half"><h3>With a BA II Plus</h3><div class="keys"><span class="kin rv" id="p4-k1"><span class="v">3</span><span class="key c-blue">N</span></span><span class="kin rv" id="p4-k2"><span class="v">9</span><span class="key c-purple">I/Y</span></span><span class="kin rv" id="p4-k3"><span class="v">0</span><span class="key c-green">PMT</span></span><span class="kin rv" id="p4-k4"><span class="v">40,000</span><span class="key c-wine">FV</span></span><span class="kin rv" id="p4-k5"><span class="key">CPT</span><span class="key c-gold">PV</span></span></div><div class="lcd rv" id="p4-d"><span class="lab">PV =</span> <span class="amt">−30,887.34</span></div></div>
+      </div>
+      <p class="diff rv" id="p4-diff">Tables 30,887.20; calculator 30,887.34; difference 0.14.</p>
+    </section>
+    <section class="panel sump" aria-label="Summary">
+      <h2>Tables or calculator?</h2>
+      <div class="tbl"><table class="sumt" aria-label="Table and calculator answers compared"><colgroup><col class="s1"><col><col><col></colgroup>
+        <thead><tr><th>Problem</th><th class="n">Tables</th><th class="n">Calculator</th><th class="n">Difference</th></tr></thead>
+        <tbody class="rvg" id="sum"><tr><th scope="row"><span class="gi">1. Single sum</span></th><td class="n"><span class="gi">19,802.25</span></td><td class="n"><span class="gi">19,802.34</span></td><td class="n"><span class="gi">0.09</span></td></tr><tr><th scope="row"><span class="gi">2. Ordinary annuity</span></th><td class="n"><span class="gi">30,326.32</span></td><td class="n"><span class="gi">30,326.29</span></td><td class="n"><span class="gi">0.03</span></td></tr><tr><th scope="row"><span class="gi">3. Interest-bearing note</span></th><td class="n"><span class="gi">47,512.90</span></td><td class="n"><span class="gi">47,513.15</span></td><td class="n"><span class="gi">0.25</span></td></tr><tr><th scope="row"><span class="gi">4. Zero-interest note</span></th><td class="n"><span class="gi">30,887.20</span></td><td class="n"><span class="gi">30,887.34</span></td><td class="n"><span class="gi">0.14</span></td></tr></tbody></table></div>
+    </section>
+    </div>
+  </div>
+
+  <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+</div>
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="bar-in">
+    <div class="progrow"><div class="progress" aria-hidden="true"><div id="prog"></div></div><span class="counter" id="counter"></span></div>
+    <p class="caption" id="caption" aria-live="polite"></p>
+    <div class="controls">
+      <button id="restart" type="button"><span class="lg">Start over</span><span class="sm">Restart</span></button>
+      <button id="back" type="button">Back</button>
+      <button id="next" type="button" class="primary">Next</button>
+      <button id="all" type="button"><span class="lg">Show solution</span><span class="sm">Solution</span></button>
+    </div>
+  </div>
+</div>
+<script>
+window.WALK_STEPS = [
+ {
+  "caption": "Harvelle’s Roadhouse wants to know what four future amounts are worth today. Each one is priced two ways: with the present value tables (factors rounded to five decimals) and with a financial calculator. Expect the answers to differ by a few cents."
+ },
+ {
+  "show": [
+   "setup-1",
+   "setup-2"
+  ],
+  "caption": "BA II Plus setup. Payments per year: [2nd] [I/Y], type 1, [ENTER], then [2nd] [CPT] to quit. Before every problem, [2nd] [FV] clears the TVM keys so old values do not ride along into the next answer."
+ },
+ {
+  "show": [
+   "p1-t"
+  ],
+  "fly": [
+   [
+    "pv1-4-6",
+    "p1-f"
+   ]
+  ],
+  "after": [
+   "p1-r"
+  ],
+  "use": [
+   "pv1-4-6"
+  ],
+  "caption": "1. A single sum four years out: PV of $1 table, row n = 4, column 6%: 0.79209. 25,000 × 0.79209 = 19,802.25."
+ },
+ {
+  "show": [
+   "p1-k1",
+   "p1-k2",
+   "p1-k3",
+   "p1-k4",
+   "p1-k5"
+  ],
+  "stagger": true,
+  "after": [
+   "p1-d",
+   "p1-diff"
+  ],
+  "caption": "Calculator: 4 [N], 6 [I/Y], 0 [PMT], 25,000 [FV], then [CPT] [PV]: −19,802.34. The minus sign means cash going out today in exchange for 25,000 later. The table answer is 0.09 lower because 0.79209 is rounded."
+ },
+ {
+  "show": [
+   "p2-t"
+  ],
+  "fly": [
+   [
+    "pva-5-10",
+    "p2-f"
+   ]
+  ],
+  "after": [
+   "p2-r"
+  ],
+  "use": [
+   "pva-5-10"
+  ],
+  "caption": "2. Equal payments at the end of each year: PV of an ordinary annuity table, n = 5, 10%: 3.79079. 8,000 × 3.79079 = 30,326.32."
+ },
+ {
+  "show": [
+   "p2-k1",
+   "p2-k2",
+   "p2-k3",
+   "p2-k4",
+   "p2-k5"
+  ],
+  "stagger": true,
+  "after": [
+   "p2-d",
+   "p2-diff"
+  ],
+  "caption": "Calculator: 5 [N], 10 [I/Y], 8,000 [PMT], 0 [FV], [CPT] [PV]: −30,326.29. This time the table answer is 0.03 higher."
+ },
+ {
+  "show": [
+   "p3-t1",
+   "p3-t2"
+  ],
+  "fly": [
+   [
+    "pv1-3-10",
+    "p3-f1"
+   ],
+   [
+    "pva-3-10",
+    "p3-f2"
+   ]
+  ],
+  "after": [
+   "p3-r1",
+   "p3-r2",
+   "p3-t3",
+   "p3-r"
+  ],
+  "use": [
+   "pv1-3-10",
+   "pva-3-10"
+  ],
+  "caption": "3. The note pays both: interest of 50,000 × 8% = 4,000 a year and 50,000 at maturity. Price each piece at the 10% market rate: 50,000 × 0.75131 = 37,565.50; 4,000 × 2.48685 = 9,947.40; 37,565.50 + 9,947.40 = 47,512.90."
+ },
+ {
+  "show": [
+   "p3-k1",
+   "p3-k2",
+   "p3-k3",
+   "p3-k4",
+   "p3-k5"
+  ],
+  "stagger": true,
+  "after": [
+   "p3-d",
+   "p3-diff"
+  ],
+  "caption": "Calculator: enter both PMT and FV, and one [CPT] [PV] prices the whole note: −47,513.15. The price is below face because the 8% stated rate is less than the 10% market rate: a discount."
+ },
+ {
+  "show": [
+   "p4-t"
+  ],
+  "fly": [
+   [
+    "pv1-3-9",
+    "p4-f"
+   ]
+  ],
+  "after": [
+   "p4-r"
+  ],
+  "use": [
+   "pv1-3-9"
+  ],
+  "caption": "4. A zero-interest-bearing note is a single sum: PV of $1, n = 3, 9%: 0.77218. 40,000 × 0.77218 = 30,887.20."
+ },
+ {
+  "show": [
+   "p4-k1",
+   "p4-k2",
+   "p4-k3",
+   "p4-k4",
+   "p4-k5"
+  ],
+  "stagger": true,
+  "after": [
+   "p4-d",
+   "p4-diff"
+  ],
+  "caption": "Calculator: 3 [N], 9 [I/Y], 0 [PMT], 40,000 [FV], [CPT] [PV]: −30,887.34. PMT is 0 because a zero-interest-bearing note pays nothing until maturity."
+ },
+ {
+  "show": [
+   "sum"
+  ],
+  "caption": "All four side by side. Each gap is a few cents, caused by rounding the table factors to five decimals."
+ }
+];
+</script>
+<script>
+/* Walkthrough engine shared by the Chapter 7 pages.
+   Each step: show (written in place), fly ([from, to] pairs: a copy of the number travels from one place to the other),
+   after (written once the flights land), hide, use (outlined as the inputs of this step), caption, stagger. */
+(function () {
+  'use strict';
+  var STEPS = window.WALK_STEPS;
+  var $ = function (id) { return document.getElementById(id); };
+  var last = STEPS.length - 1;
+  var S = function (s) { return s.show || []; };
+  var U = function (s) { return s.use || []; };
+  var F = function (s) { return s.fly || []; };
+  var A = function (s) { return s.after || []; };
+  var H = function (s) { return s.hide || []; };
+  var REVEAL = [];
+  STEPS.forEach(function (s) {
+    S(s).concat(F(s).map(function (f) { return f[1]; }), A(s), H(s)).forEach(function (id) {
+      if (REVEAL.indexOf(id) < 0) REVEAL.push(id);
+    });
+  });
+  var bar = document.querySelector('.bar');
+  var k = 0, tok = 0, timers = [], ghosts = [];
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  (function check() {
+    var miss = [];
+    STEPS.forEach(function (s) {
+      var ids = S(s).concat(U(s), A(s), H(s));
+      F(s).forEach(function (f) { ids = ids.concat(f); });
+      ids.forEach(function (id) { if (!$(id) && miss.indexOf(id) < 0) miss.push(id); });
+    });
+    if (miss.length && window.console) console.warn('Walkthrough: missing ids', miss);
+  })();
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function stopMotion() {
+    tok++;
+    timers.forEach(clearTimeout); timers = [];
+    ghosts.forEach(function (g) { g.remove(); }); ghosts = [];
+  }
+  function reveal(id, how) {
+    var el = $(id); if (!el) return;
+    el.classList.remove('write', 'land');
+    el.style.animationDelay = '';
+    el.classList.add('shown');
+    if (how) { void el.offsetWidth; el.classList.add(how); }
+  }
+
+  function render(animate) {
+    stopMotion();
+    var s = STEPS[k];
+    var moving = animate && !reduced();
+    var shown = {};
+    for (var i = 1; i <= k; i++) {
+      var t = STEPS[i];
+      S(t).forEach(function (id) { shown[id] = 1; });
+      F(t).forEach(function (f) { shown[f[1]] = 1; });
+      A(t).forEach(function (id) { shown[id] = 1; });
+      H(t).forEach(function (id) { delete shown[id]; });
+    }
+    var held = {};
+    if (moving) {
+      F(s).forEach(function (f) { held[f[1]] = 1; });
+      A(s).forEach(function (id) { held[id] = 1; });
+    }
+    REVEAL.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.remove('write', 'land');
+      el.style.animationDelay = '';
+      el.classList.toggle('shown', !!shown[id] && !held[id]);
+    });
+    if (animate) {
+      S(s).forEach(function (id, j) {
+        var el = $(id); if (!el || held[id]) return;
+        if (s.stagger) el.style.animationDelay = (j * 0.16) + 's';
+        void el.offsetWidth; el.classList.add('write');
+      });
+    }
+    document.querySelectorAll('.use-on').forEach(function (el) { el.classList.remove('use-on'); });
+    U(s).forEach(function (id) { var el = $(id); if (el) el.classList.add('use-on'); });
+    $('caption').textContent = s.caption;
+    $('counter').textContent = 'Step ' + k + ' of ' + last;
+    $('prog').style.width = (k / last) * 100 + '%';
+    $('back').disabled = k === 0;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last;
+    $('all').disabled = k === last;
+  }
+
+  function pinned(el) {
+    var p = el && el.closest ? el.closest('.pin') : null;
+    return !!p && getComputedStyle(p).position === 'sticky';
+  }
+  function span(ids) {
+    var top = Infinity, bottom = -Infinity;
+    ids.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    return top === Infinity ? null : { t: top, b: bottom };
+  }
+
+  // Scroll so this step's targets (and, if they fit, its sources) sit above the caption bar. Resolves when scrolling stops.
+  function bring() {
+    var s = STEPS[k];
+    var tg = S(s).concat(F(s).map(function (f) { return f[1]; }), A(s));
+    if (!tg.length) return Promise.resolve();
+    var free = tg.filter(function (id) { return !pinned($(id)); });
+    if (free.length) tg = free;
+    var src = F(s).map(function (f) { return f[0]; }).concat(U(s)).filter(function (id) { return !pinned($(id)); });
+    var barTop = window.innerHeight - bar.offsetHeight;
+    var dy = null;
+    [tg.concat(src), tg].some(function (ids) {
+      var r = span(ids); if (!r) return false;
+      if (r.b - r.t > barTop - 24) return false;
+      dy = r.t < 12 ? r.t - 12 : (r.b > barTop - 12 ? r.b - (barTop - 12) : 0);
+      return true;
+    });
+    if (dy === null) { var r0 = span([tg[0]]); if (!r0) return Promise.resolve(); dy = r0.t - 16; }
+    if (Math.abs(dy) < 2) return Promise.resolve();
+    var smooth = !reduced();
+    window.scrollBy({ top: dy, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) return Promise.resolve();
+    return new Promise(function (res) {
+      var done = false;
+      var fin = function () { if (done) return; done = true; window.removeEventListener('scrollend', fin); res(); };
+      window.addEventListener('scrollend', fin);
+      setTimeout(fin, Math.min(950, 260 + Math.abs(dy) * 0.6));
+    });
+  }
+
+  function colorOf(el) {
+    if (!el) return null;
+    for (var i = 0; i < el.classList.length; i++) if (el.classList[i].indexOf('c-') === 0) return el.classList[i];
+    return null;
+  }
+  function chipOf(el) { return el.classList.contains('amt') ? el : (el.querySelector('.amt') || el); }
+
+  function fly(from, to, my, dur) {
+    var src = $(from), dst = $(to);
+    if (!src || !dst) { reveal(to, 'land'); return; }
+    var sa = chipOf(src), da = chipOf(dst);
+    var a = sa.getBoundingClientRect(), b = da.getBoundingClientRect();
+    var g = document.createElement('div');
+    g.className = 'ghost'; g.setAttribute('aria-hidden', 'true');
+    var c = colorOf(dst) || colorOf(src);
+    if (c) g.classList.add(c);
+    var gy = document.createElement('div'); gy.className = 'gy';
+    var chip = document.createElement('span'); chip.className = 'amt';
+    chip.textContent = (da.textContent || sa.textContent).trim();
+    gy.appendChild(chip); g.appendChild(gy); document.body.appendChild(g); ghosts.push(g);
+    var cr = chip.getBoundingClientRect();
+    var sx = window.scrollX || window.pageXOffset || 0, sy = window.scrollY || window.pageYOffset || 0;
+    var x0 = a.right - cr.width + sx, x1 = b.right - cr.width + sx;
+    var y0 = a.top + a.height / 2 - cr.height / 2 + sy, y1 = b.top + b.height / 2 - cr.height / 2 + sy;
+    var lift = Math.min(y0, y1) - 36;
+    g.style.transform = 'translateX(' + x0 + 'px)';
+    gy.style.transform = 'translateY(' + y0 + 'px)';
+    var ax = g.animate([{ transform: 'translateX(' + x0 + 'px)' }, { transform: 'translateX(' + x1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' });
+    gy.animate([
+      { transform: 'translateY(' + y0 + 'px)', easing: 'ease-out' },
+      { transform: 'translateY(' + lift + 'px)', offset: 0.3, easing: 'ease-in' },
+      { transform: 'translateY(' + y1 + 'px)' }
+    ], { duration: dur, fill: 'forwards' });
+    chip.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.14)', offset: 0.3 }, { transform: 'scale(1)' }], { duration: dur, fill: 'forwards' });
+    ax.onfinish = function () {
+      g.remove();
+      if (my !== tok) return;
+      reveal(to, 'land');
+    };
+  }
+
+  function play(my) {
+    if (reduced()) return;
+    var s = STEPS[k];
+    var lead = S(s).length ? 380 + (s.stagger ? S(s).length * 160 : 0) : 80;
+    var gap = 260, dur = 860;
+    F(s).forEach(function (f, i) {
+      later(function () { if (my === tok) fly(f[0], f[1], my, dur); }, lead + i * gap);
+    });
+    var done = F(s).length ? lead + (F(s).length - 1) * gap + dur + 80 : lead;
+    A(s).forEach(function (id, i) {
+      later(function () { if (my === tok) reveal(id, 'write'); }, done + i * 170);
+    });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+    var my = tok;
+    var p = bring();
+    if (animate) p.then(function () { if (my === tok) play(my); });
+  }
+
+  $('next').addEventListener('click', function () { go(k + 1, true); });
+  $('back').addEventListener('click', function () { go(k - 1, false); });
+  $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', function () { k = last; render(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); if (k < last) go(k + 1, true); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (k > 0) go(k - 1, false); }
+  });
+
+  var setBar = function () { document.documentElement.style.setProperty('--bar-h', bar.offsetHeight + 'px'); };
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(bar);
+  setBar();
+  render(false);
+})();
+
+</script>
+</body>
+</html>
