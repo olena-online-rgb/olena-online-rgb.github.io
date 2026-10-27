@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Interest Accrual Walkthrough</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Step-by-step walkthrough of interest accrual on a 6% note receivable: the timeline, the journal entries with notes, and what happens if the accrual is skipped.">
+<!-- GoatCounter script line goes here -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Patrick+Hand&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Shared look for the Chapter 7 and 8 walkthroughs. Layout: problem full width, then the journal, then the graph-paper timeline, then requirement 2; a fixed caption bar at the bottom. Handwriting face only for the annotations, the way they are written in the notes. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #1E1A1B;
+  --use-tint: #ECE7E8;
+  --ok: #2F7D50;
+  --accent: #1E1A1B;
+  --on-accent: #FCFCFB;
+  --wine: #C8102E;   --wine-t: #FADCE0; --wine-x: #6E0A1A;
+  --gold: #F2B200;   --gold-t: #FFF0C7; --gold-x: #6B4E00;
+  --green: #2F7D50;  --green-t: #DCEFE2; --green-x: #1B4D30;
+  --blue: #2463A8;   --blue-t: #DDE8F6; --blue-x: #143D6B;
+  --purple: #A0329C; --purple-t: #F7DDF5; --purple-x: #5E1A5B;
+  --head: #FFF0C7;
+  --paper: #FFFFFF;  --gridline: #ECE5E6;
+  --shadow: rgba(30, 26, 27, 0.22);
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --hand: "Patrick Hand", "Comic Neue", "Segoe Print", "Bradley Hand", cursive;
+  --bar-h: 140px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12); --ok: #62C48E;
+    --accent: #F2EEEF; --on-accent: #161314;
+    --wine: #F2788A;   --wine-t: rgba(242, 120, 138, 0.24); --wine-x: #F2EEEF;
+    --gold: #F5C842;   --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+    --green: #62C48E;  --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+    --blue: #83B2EF;   --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+    --purple: #D77FD2; --purple-t: rgba(215, 127, 210, 0.24); --purple-x: #F2EEEF;
+    --head: rgba(245, 200, 66, 0.16);
+    --paper: #1B1718;  --gridline: #2C2527;
+    --shadow: rgba(0, 0, 0, 0.55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12); --ok: #62C48E;
+  --accent: #F2EEEF; --on-accent: #161314;
+  --wine: #F2788A;   --wine-t: rgba(242, 120, 138, 0.24); --wine-x: #F2EEEF;
+  --gold: #F5C842;   --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+  --green: #62C48E;  --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+  --blue: #83B2EF;   --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+  --purple: #D77FD2; --purple-t: rgba(215, 127, 210, 0.24); --purple-x: #F2EEEF;
+  --head: rgba(245, 200, 66, 0.16);
+  --paper: #1B1718;  --gridline: #2C2527;
+  --shadow: rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px calc(var(--bar-h) + 32px);
+}
+.wrap { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+
+header { display: grid; gap: 4px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.co { margin: 0; font-size: 15px; color: var(--muted); }
+.problem { font-family: var(--serif); font-size: 18px; }
+.problem p { margin: 0 0 4px; }
+.problem ol { margin: 2px 0 0; padding-left: 1.7em; display: grid; gap: 4px; }
+.problem .req { margin: 6px 0 0; }
+.problem .req b { font-weight: 600; }
+.rate { display: inline-block; font-family: var(--hand); color: var(--wine); font-size: 21px; line-height: 1.2; margin-left: 8px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 20px; height: 14px; border-radius: 3px; display: inline-block; background: var(--ct, transparent); box-shadow: inset 4px 0 0 var(--cb, var(--ink)); }
+.sw.use { background: var(--use-tint); box-shadow: none; outline: 2px solid var(--use); outline-offset: -2px; }
+.legend .handkey { font-family: var(--hand); color: var(--wine); font-size: 18px; line-height: 1; }
+
+.c-wine { --cb: var(--wine); --ct: var(--wine-t); --cx: var(--wine-x); }
+.c-gold { --cb: var(--gold); --ct: var(--gold-t); --cx: var(--gold-x); }
+.c-green { --cb: var(--green); --ct: var(--green-t); --cx: var(--green-x); }
+.c-blue { --cb: var(--blue); --ct: var(--blue-t); --cx: var(--blue-x); }
+.c-purple { --cb: var(--purple); --ct: var(--purple-t); --cx: var(--purple-x); }
+.amt {
+  display: inline-block;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding: 1px 6px 1px 9px;
+  border-radius: 4px;
+  background: var(--ct, transparent);
+  box-shadow: inset 3px 0 0 var(--cb, transparent);
+  color: var(--cx, inherit);
+}
+
+.panel { border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px 16px; min-width: 0; }
+.panel > h2 { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 0 0 10px; line-height: 1.25; }
+.panel h3 { font-family: var(--serif); font-size: 17px; font-weight: 600; margin: 18px 0 8px; }
+
+/* journal */
+.tbl { overflow-x: auto; padding: 4px; margin: -4px; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th, td { border-bottom: 1px solid var(--rule); padding: 6px 8px; vertical-align: middle; text-align: left; }
+thead th { background: var(--head); font-size: 14px; font-weight: 700; border-bottom: 2px solid var(--ink); line-height: 1.25; }
+th.n, td.n { text-align: right; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.je col.cd { width: 13%; } .je col.ca { width: 57%; } .je col.cn { width: 15%; }
+.je td { height: 40px; font-size: 15.5px; }
+.je td.acct.cr { padding-left: 34px; }
+.je td.d { font-size: 14px; white-space: nowrap; }
+.je tbody + tbody tr:first-child td { border-top: 1.5px solid var(--muted); }
+.je td.comp { font-family: var(--mono); font-size: 14px; padding-left: 34px; font-variant-numeric: tabular-nums; }
+.je td.annrow { padding-left: 14px; }
+.ann { font-family: var(--hand); color: var(--wine); font-size: 19px; line-height: 1.15; margin-left: 12px; }
+.annrow .ann { margin-left: 0; }
+.ringwrap { position: relative; display: inline-block; }
+.ring { position: absolute; inset: -5px -11px; border: 2.5px solid var(--gold); border-radius: 50%; pointer-events: none; }
+.jtbl { position: relative; }
+.jtbl .je td.acct { padding-right: 16px; }
+.link { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.link .ln { fill: none; stroke: var(--wine); stroke-width: 2; stroke-linejoin: round; }
+.link .hd { fill: var(--wine); }
+
+/* reveal states */
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.write { animation: write 0.5s ease-out both; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); opacity: 0.4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.land { animation: land 0.5s ease-out both; }
+@keyframes land { 0% { transform: scale(1.22); } 55% { transform: scale(0.95); } 100% { transform: scale(1); } }
+.fill { display: inline-block; }
+.use-on { outline: 2px solid var(--use) !important; outline-offset: 2px; border-radius: 4px; }
+
+.ghost { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; will-change: transform; }
+.ghost .gy { will-change: transform; }
+.ghost .amt {
+  font-weight: 700;
+  font-size: 16px;
+  background: var(--ct, var(--surface));
+  box-shadow: inset 3px 0 0 var(--cb, var(--ink)), 0 8px 18px var(--shadow);
+  outline: 1.5px solid var(--cb, var(--ink));
+}
+
+/* graph-paper timeline */
+.graph {
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--gridline) 1px, transparent 1px), linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border: 1px solid var(--rule); border-radius: 6px; padding: 12px 8px;
+  overflow-x: auto;
+}
+.tl { display: block; width: 100%; min-width: 640px; height: auto; }
+.tl text { font-family: var(--hand); font-size: 22px; fill: var(--ink); }
+.tl text.sm { font-size: 20px; }
+
+/* journal and timeline side by side on wide screens; stacked (journal first) on narrow ones */
+.work { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px 24px; align-items: start; }
+@media (min-width: 1100px) {
+  .work { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+  .tl { min-width: 0; }
+}
+@media (min-width: 1100px) and (min-height: 760px) { .graph.pin { position: sticky; top: 16px; } }
+.tl .t-b { fill: var(--blue); }
+.tl .t-g { fill: var(--green); }
+.tl .t-r { fill: var(--wine); }
+.tl .ax { stroke: var(--ink); stroke-width: 2; fill: none; stroke-linecap: round; }
+.tl .dot { fill: var(--ink); }
+.tl .br-b { stroke: var(--blue); stroke-width: 2.2; fill: none; stroke-linecap: round; }
+.tl .br-g { stroke: var(--green); stroke-width: 2.2; fill: none; stroke-linecap: round; }
+.tl .hd-g { fill: var(--green); }
+.tl .write, .tl .land { animation: tlfade 0.5s ease-out both; }
+@keyframes tlfade { from { opacity: 0; } to { opacity: 1; } }
+
+/* requirement 2 */
+.eff col.e1 { width: 46%; } .eff col.e2 { width: 27%; }
+.eff tbody th { font-weight: 400; font-size: 15px; line-height: 1.25; }
+.eff td, .eff tbody th { height: 42px; }
+.eff td.n { font-size: 15px; }
+.eff tr.res th, .eff tr.res td { font-weight: 700; border-top: 1.5px solid var(--ink); }
+.eff tr.res td { font-family: var(--sans); font-size: 15px; }
+.offset { margin: 10px 0 0; font-size: 15px; }
+
+.copyright { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* caption bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  background: var(--bg);
+  border-top: 2px solid var(--ink);
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.bar-in { max-width: 1320px; margin: 0 auto; display: grid; gap: 10px; }
+.caption { font-size: 18px; min-height: 2.9em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.progrow { display: flex; align-items: center; gap: 12px; }
+.counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress { flex: 1; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+button .sm { display: none; }
+
+@media (max-width: 560px) {
+  body { font-size: 16px; padding-block: 20px calc(var(--bar-h) + 24px); }
+  .problem { font-size: 17px; }
+  .rate { font-size: 20px; }
+  .caption { font-size: 15px; line-height: 1.4; min-height: 2.8em; }
+  .bar { padding-top: 10px; }
+  .bar-in { gap: 8px; }
+  .controls { flex-wrap: nowrap; gap: 6px; }
+  button { padding: 7px 10px; font-size: 14px; flex: 1 1 auto; }
+  button .lg { display: none; } button .sm { display: inline; }
+  .panel { padding: 12px 10px 14px; }
+  th, td { padding: 5px 5px; }
+  .amt { padding: 1px 4px 1px 7px; }
+  .je col.cd { width: 17%; } .je col.ca { width: 45%; } .je col.cn { width: 19%; }
+  .je td { font-size: 14px; height: 38px; }
+  .je td.acct.cr, .je td.comp { padding-left: 16px; }
+  .je td.d { font-size: 12.5px; }
+  .je td.comp { font-size: 12.5px; }
+  .ann { display: block; margin-left: 0; font-size: 17px; }
+  .eff col.e1 { width: 40%; } .eff col.e2 { width: 30%; }
+  .eff tbody th, .eff td.n, .eff tr.res td { font-size: 13.5px; }
+  thead th { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write, .land { animation: none !important; }
+  .progress > div { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Receivables · Notes receivable</div>
+    <h1>Interest Accrual on a Note</h1>
+    <p class="co">Esquire Company · 6% note · June 30, 20X1 to March 31, 20X2</p>
+  </header>
+
+  <section class="problem" aria-label="Problem">
+    <p>On June 30, 20X1, the Esquire Company sold some merchandise to a customer for <span id="p-amt">$30,000</span>. In payment, Esquire agreed to accept a <span id="p-rate">6%</span> note requiring the payment of interest and principal on March 31, 20X2. The 6% rate is appropriate in this situation.<span class="rate rv" id="rn">* All rates are annual unless stated otherwise!</span></p>
+    <p class="req"><b>Required:</b></p>
+    <ol>
+      <li>Prepare journal entries to record the sale of merchandise (omit any entry that might be required for the cost of the goods sold), the December 31, 20X1 interest accrual, and the March 31, 20X2 collection.</li>
+      <li>If the December 31 adjusting entry for the interest accrual is not prepared, by how much will income before income taxes be over- or understated in 20X1 and 20X2?</li>
+    </ol>
+  </section>
+
+  <div class="legend" aria-label="Color key">
+    <span><i class="sw c-blue"></i>Interest earned in 20X1 (6 months)</span>
+    <span><i class="sw c-green"></i>Interest earned in 20X2 (3 months)</span>
+    <span><i class="sw c-wine"></i>Cash collected 3/31/20X2</span>
+    <span><i class="sw c-purple"></i>Interest revenue if the accrual is skipped</span>
+    <span><i class="sw use"></i>Used in this step</span>
+  </div>
+
+  <div class="work">
+  <section class="panel" aria-label="Requirement 1: journal entries">
+    <h2>Requirement 1: Journal entries</h2>
+    <div class="tbl jtbl"><table class="je" aria-label="General journal">
+      <colgroup><col class="cd"><col class="ca"><col class="cn"><col class="cn"></colgroup>
+      <thead><tr><th>Date</th><th>General Journal</th><th class="n">Debit</th><th class="n">Credit</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="d"><span class="rv" id="j1-d">6/30/X1</span></td>
+          <td class="acct"><span class="rv" id="j1-a1">Notes Receivable</span></td>
+          <td class="n"><span class="fill rv" id="j1-dr"><span class="amt">30,000</span></span></td>
+          <td class="n"></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="acct cr"><span class="rv" id="j1-a2">Sales Revenue</span></td>
+          <td class="n"></td>
+          <td class="n"><span class="fill rv" id="j1-cr"><span class="amt">30,000</span></span></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td class="d"><span class="rv" id="j2-d">12/31/X1</span></td>
+          <td class="acct"><span class="ringwrap"><span class="rv" id="j2-a1">Interest Receivable</span><span class="ring rv" id="j2-ring" aria-hidden="true"></span></span></td>
+          <td class="n"><span class="fill rv c-blue" id="j2-dr"><span class="amt">900</span></span></td>
+          <td class="n"></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="acct cr"><span class="rv" id="j2-a2">Interest Revenue</span></td>
+          <td class="n"></td>
+          <td class="n"><span class="fill rv c-blue" id="j2-cr"><span class="amt">900</span></span></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="comp"><span class="rv" id="j2-c">30,000 × 6/12 × 0.06 = 900</span></td>
+          <td class="n"></td><td class="n"></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="annrow"><span class="ann rv" id="n2">Accrual of 6 months of interest</span></td>
+          <td class="n"></td><td class="n"></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td class="d"><span class="rv" id="j3-d">3/31/X2</span></td>
+          <td class="acct"><span class="rv" id="j3-a1">Cash</span><span class="ann rv" id="n3a">← collection of N/R + all interest</span></td>
+          <td class="n"><span class="fill rv c-wine" id="j3-dr"><span class="amt">31,350</span></span></td>
+          <td class="n"></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="acct cr"><span class="rv" id="j3-a2">Interest Receivable</span></td>
+          <td class="n"></td>
+          <td class="n"><span class="fill rv c-blue" id="j3-cr1"><span class="amt">900</span></span></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="acct cr"><span class="rv" id="j3-a3">Interest Revenue</span><span class="ann rv" id="n3c">revenue recorded 3/31</span></td>
+          <td class="n"></td>
+          <td class="n"><span class="fill rv c-green" id="j3-cr2"><span class="amt">450</span></span></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="acct cr"><span class="rv" id="j3-a4">Notes Receivable</span><span class="ann rv" id="n3d">removed from books (collected)</span></td>
+          <td class="n"></td>
+          <td class="n"><span class="fill rv" id="j3-cr3"><span class="amt">30,000</span></span></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="comp"><span class="rv" id="j3-c1">30,000 × 3/12 × 0.06 = 450</span></td>
+          <td class="n"></td><td class="n"></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="comp"><span class="rv" id="j3-c2">30,000 + 900 + 450 = 31,350</span></td>
+          <td class="n"></td><td class="n"></td>
+        </tr>
+      </tbody>
+    </table><svg class="link rv" id="ln-ir" aria-hidden="true"><path class="ln"/><path class="hd"/></svg></div>
+  </section>
+
+  <section class="graph pin" aria-label="Timeline">
+    <svg class="tl" viewBox="0 0 880 390" role="img" aria-label="Timeline from 6/30/20X1 to 3/31/20X2: 6 months to the fiscal year end, then 3 months to the due date">
+      <g class="rv" id="tl-axis">
+        <path class="ax" d="M40 170 H800"/>
+        <path class="ax" d="M70 162 V178 M146 164 V176 M222 164 V176 M298 164 V176 M374 164 V176 M450 164 V176 M526 162 V178 M602 164 V176 M678 164 V176 M754 162 V178"/>
+        <circle class="dot" cx="526" cy="170" r="5.5"/>
+        <text x="70" y="204" text-anchor="middle">6/30/20X1</text>
+        <text x="526" y="204" text-anchor="middle">12/31/20X1</text>
+        <text x="754" y="204" text-anchor="middle">3/31/20X2</text>
+        <text x="526" y="150" text-anchor="middle">FYE</text>
+      </g>
+      <g class="rv" id="tl-due">
+        <text class="t-g sm" x="754" y="86" text-anchor="middle">interest + principal due</text>
+        <text class="t-g sm" x="754" y="108" text-anchor="middle">9 months after sale</text>
+        <path class="br-g" d="M754 118 V148"/>
+        <path class="hd-g" d="M754 158 L747 146 L761 146 Z"/>
+      </g>
+      <g class="rv" id="tl-blue">
+        <path class="br-b" d="M74 216 Q74 228 86 228 H285 Q297 228 297 240 Q297 228 309 228 H508 Q520 228 520 216"/>
+        <text class="t-b" x="297" y="266" text-anchor="middle">6 months</text>
+        <text class="t-b" x="297" y="300" text-anchor="middle">interest revenue</text>
+        <text class="t-b" x="297" y="326" text-anchor="middle">= 30,000 × 6/12 × 0.06 = <tspan id="g-900">900</tspan></text>
+      </g>
+      <g class="rv" id="tl-green">
+        <path class="br-g" d="M532 216 Q532 228 544 228 H629 Q641 228 641 240 Q641 228 653 228 H738 Q750 228 750 216"/>
+        <text class="t-g" x="641" y="266" text-anchor="middle">3 months</text>
+        <text class="t-g" x="641" y="300" text-anchor="middle">Interest revenue</text>
+        <text class="t-g" x="641" y="326" text-anchor="middle">= 30,000 × 3/12 × 0.06 = <tspan id="g-450">450</tspan></text>
+      </g>
+      <g class="rv" id="tl-cash">
+        <text class="t-r" x="40" y="372">Cash received = 30,000 + 900 + 450 = <tspan id="g-cash">31,350</tspan></text>
+      </g>
+    </svg>
+  </section>
+  </div>
+
+  <section class="panel" aria-label="Requirement 2">
+    <h2>Requirement 2: If the December 31 accrual is skipped</h2>
+    <div class="tbl"><table class="je" aria-label="The March 31, 20X2 entry without the accrual">
+      <colgroup><col class="cd"><col class="ca"><col class="cn"><col class="cn"></colgroup>
+      <thead><tr><th>Date</th><th>General Journal (no accrual on 12/31/X1)</th><th class="n">Debit</th><th class="n">Credit</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="d"><span class="rv" id="k-d">3/31/X2</span></td>
+          <td class="acct"><span class="rv" id="k-a1">Cash</span></td>
+          <td class="n"><span class="fill rv c-wine" id="k-dr"><span class="amt">31,350</span></span></td>
+          <td class="n"></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="acct cr"><span class="rv" id="k-a2">Interest Revenue</span><span class="ann rv" id="n4">all 9 months of interest, in 20X2</span></td>
+          <td class="n"></td>
+          <td class="n"><span class="fill rv c-purple" id="k-cr1"><span class="amt">1,350</span></span></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="acct cr"><span class="rv" id="k-a3">Notes Receivable</span></td>
+          <td class="n"></td>
+          <td class="n"><span class="fill rv" id="k-cr2"><span class="amt">30,000</span></span></td>
+        </tr>
+        <tr>
+          <td class="d"></td>
+          <td class="comp"><span class="rv" id="k-c">30,000 × 9/12 × 0.06 = 1,350</span></td>
+          <td class="n"></td><td class="n"></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Effect on income before income taxes</h3>
+    <div class="tbl"><table class="eff" aria-label="Effect of skipping the accrual">
+      <colgroup><col class="e1"><col class="e2"><col class="e2"></colgroup>
+      <thead><tr><th></th><th class="n">20X1</th><th class="n">20X2</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Interest revenue, with the accrual</th><td class="n"><span class="rv" id="e1a"><span class="amt c-blue">900</span></span></td><td class="n"><span class="rv" id="e2a"><span class="amt c-green">450</span></span></td></tr>
+        <tr><th scope="row">Interest revenue, accrual skipped</th><td class="n"><span class="rv" id="e1b"><span class="amt c-purple">0</span></span></td><td class="n"><span class="rv" id="e2b"><span class="amt c-purple">1,350</span></span></td></tr>
+        <tr class="res"><th scope="row">Income before income taxes is</th><td class="n"><span class="rv" id="e1c">understated by $900</span></td><td class="n"><span class="rv" id="e2c">overstated by $900</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="offset rv" id="e-off">Over the two years the errors offset: interest revenue totals 1,350 either way (900 + 450 = 0 + 1,350).</p>
+  </section>
+
+  <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+</div>
+
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="bar-in">
+    <div class="progrow"><div class="progress" aria-hidden="true"><div id="prog"></div></div><span class="counter" id="counter"></span></div>
+    <p class="caption" id="caption" aria-live="polite"></p>
+    <div class="controls">
+      <button id="restart" type="button"><span class="lg">Start over</span><span class="sm">Restart</span></button>
+      <button id="back" type="button">Back</button>
+      <button id="next" type="button" class="primary">Next</button>
+      <button id="all" type="button"><span class="lg">Show solution</span><span class="sm">Solution</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.WALK_STEPS = [
+ { "caption": "Esquire takes a 6% note for a $30,000 sale on 6/30/20X1 and collects it with interest on 3/31/20X2. First the timeline, then the journal entries, then requirement 2. Each click adds one piece." },
+ { "show": ["rn"], "use": ["p-rate"], "caption": "The note says 6%. All rates are annual unless stated otherwise, so interest for part of a year uses months / 12." },
+ { "show": ["tl-axis"], "caption": "The timeline: the sale and the note on 6/30/20X1, the fiscal year end (FYE) on 12/31/20X1, and the due date on 3/31/20X2. Each tick is one month." },
+ { "show": ["tl-due"], "caption": "On 3/31/20X2 the customer pays the principal and all the interest, 9 months after the sale." },
+ { "show": ["tl-blue"], "use": ["p-amt", "p-rate"], "caption": "6/30 to 12/31 is 6 months of 20X1. Interest earned in 20X1 = 30,000 × 6/12 × 0.06 = 900. None of it is collected by year end." },
+ { "show": ["tl-green"], "use": ["p-amt", "p-rate"], "caption": "1/1 to 3/31/20X2 is 3 months of 20X2. Interest earned in 20X2 = 30,000 × 3/12 × 0.06 = 450." },
+ { "show": ["tl-cash"], "caption": "Cash received on 3/31/20X2 = the principal plus all 9 months of interest = 30,000 + 900 + 450 = 31,350." },
+ { "show": ["j1-d", "j1-a1", "j1-a2"], "fly": [["p-amt", "j1-dr"], ["p-amt", "j1-cr"]], "stagger": true, "caption": "6/30/20X1: the customer pays with a note instead of cash. Debit Notes Receivable 30,000; credit Sales Revenue 30,000. The cost of goods sold entry is omitted, as the problem says." },
+ { "show": ["j2-d", "j2-a1", "j2-a2", "j2-c"], "fly": [["g-900", "j2-dr"], ["g-900", "j2-cr"]], "stagger": true, "caption": "12/31/20X1 adjusting entry: 900 of interest is earned in 20X1 but not yet collected. Debit Interest Receivable 900; credit Interest Revenue 900." },
+ { "show": ["n2", "j2-ring"], "caption": "This is the accrual of 6 months of interest. Interest Receivable is a separate account from Notes Receivable. It holds the 900 until the interest is collected." },
+ { "show": ["j3-d", "j3-a1", "j3-a2", "j3-a3", "j3-a4", "j3-c1", "j3-c2"], "fly": [["g-cash", "j3-dr"], ["j2-dr", "j3-cr1"], ["g-450", "j3-cr2"], ["j1-dr", "j3-cr3"]], "stagger": true, "caption": "3/31/20X2: the note is collected. Cash 31,350 comes in. The 900 accrued last year clears Interest Receivable, the 450 earned in 20X2 is new Interest Revenue, and Notes Receivable 30,000 comes off the books." },
+ { "show": ["n3a", "ln-ir", "n3c", "n3d"], "stagger": true, "caption": "The red line ties this Interest Receivable to the 900 accrued on 12/31/20X1. That 900 was already revenue in 20X1, so it is not recorded as revenue again. Debits 31,350 = credits 900 + 450 + 30,000." },
+ { "show": ["k-d", "k-a1", "k-a2", "k-a3", "k-c", "n4"], "fly": [["g-cash", "k-dr"], ["j1-dr", "k-cr2"]], "after": ["k-cr1"], "stagger": true, "caption": "Requirement 2: suppose the 12/31/20X1 accrual is skipped. Nothing is recorded in 20X1. On 3/31/20X2 all 9 months of interest, 30,000 × 9/12 × 0.06 = 1,350, is recorded as revenue." },
+ { "show": ["e1a", "e1b", "e1c"], "use": ["j2-cr"], "stagger": true, "caption": "20X1: interest revenue is 0 instead of 900, so income before income taxes is understated by $900." },
+ { "show": ["e2a", "e2b", "e2c", "e-off"], "use": ["j3-cr2", "k-cr1"], "stagger": true, "caption": "20X2: interest revenue is 1,350 instead of 450, so income before income taxes is overstated by $900. Over the two years the errors offset." }
+];
+</script>
+<script>
+/* Walkthrough engine shared by the Chapter 7 and 8 pages.
+   Each step: show (written in place), fly ([from, to] pairs: a copy of the number travels from one place to the other),
+   after (written once the flights land), hide, use (outlined as the inputs of this step), caption, stagger. */
+(function () {
+  'use strict';
+  var STEPS = window.WALK_STEPS;
+  var $ = function (id) { return document.getElementById(id); };
+  var last = STEPS.length - 1;
+  var S = function (s) { return s.show || []; };
+  var U = function (s) { return s.use || []; };
+  var F = function (s) { return s.fly || []; };
+  var A = function (s) { return s.after || []; };
+  var H = function (s) { return s.hide || []; };
+  var REVEAL = [];
+  STEPS.forEach(function (s) {
+    S(s).concat(F(s).map(function (f) { return f[1]; }), A(s), H(s)).forEach(function (id) {
+      if (REVEAL.indexOf(id) < 0) REVEAL.push(id);
+    });
+  });
+  var bar = document.querySelector('.bar');
+  var k = 0, tok = 0, timers = [], ghosts = [];
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  (function check() {
+    var miss = [];
+    STEPS.forEach(function (s) {
+      var ids = S(s).concat(U(s), A(s), H(s));
+      F(s).forEach(function (f) { ids = ids.concat(f); });
+      ids.forEach(function (id) { if (!$(id) && miss.indexOf(id) < 0) miss.push(id); });
+    });
+    if (miss.length && window.console) console.warn('Walkthrough: missing ids', miss);
+  })();
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function stopMotion() {
+    tok++;
+    timers.forEach(clearTimeout); timers = [];
+    ghosts.forEach(function (g) { g.remove(); }); ghosts = [];
+  }
+  function reveal(id, how) {
+    var el = $(id); if (!el) return;
+    el.classList.remove('write', 'land');
+    el.style.animationDelay = '';
+    el.classList.add('shown');
+    if (how) { void el.offsetWidth; el.classList.add(how); }
+  }
+
+  function render(animate) {
+    stopMotion();
+    var s = STEPS[k];
+    var moving = animate && !reduced();
+    var shown = {};
+    for (var i = 1; i <= k; i++) {
+      var t = STEPS[i];
+      S(t).forEach(function (id) { shown[id] = 1; });
+      F(t).forEach(function (f) { shown[f[1]] = 1; });
+      A(t).forEach(function (id) { shown[id] = 1; });
+      H(t).forEach(function (id) { delete shown[id]; });
+    }
+    var held = {};
+    if (moving) {
+      F(s).forEach(function (f) { held[f[1]] = 1; });
+      A(s).forEach(function (id) { held[id] = 1; });
+    }
+    REVEAL.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.remove('write', 'land');
+      el.style.animationDelay = '';
+      el.classList.toggle('shown', !!shown[id] && !held[id]);
+    });
+    if (animate) {
+      S(s).forEach(function (id, j) {
+        var el = $(id); if (!el || held[id]) return;
+        if (s.stagger) el.style.animationDelay = (j * 0.16) + 's';
+        void el.offsetWidth; el.classList.add('write');
+      });
+    }
+    document.querySelectorAll('.use-on').forEach(function (el) { el.classList.remove('use-on'); });
+    U(s).forEach(function (id) { var el = $(id); if (el) el.classList.add('use-on'); });
+    $('caption').textContent = s.caption;
+    $('counter').textContent = 'Step ' + k + ' of ' + last;
+    $('prog').style.width = (k / last) * 100 + '%';
+    $('back').disabled = k === 0;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last;
+    $('all').disabled = k === last;
+  }
+
+  function pinned(el) {
+    var p = el && el.closest ? el.closest('.pin') : null;
+    return !!p && getComputedStyle(p).position === 'sticky';
+  }
+  function span(ids) {
+    var top = Infinity, bottom = -Infinity;
+    ids.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    return top === Infinity ? null : { t: top, b: bottom };
+  }
+
+  function bring() {
+    var s = STEPS[k];
+    var tg = S(s).concat(F(s).map(function (f) { return f[1]; }), A(s));
+    if (!tg.length) return Promise.resolve();
+    var free = tg.filter(function (id) { return !pinned($(id)); });
+    if (free.length) tg = free;
+    var src = F(s).map(function (f) { return f[0]; }).concat(U(s)).filter(function (id) { return !pinned($(id)); });
+    var barTop = window.innerHeight - bar.offsetHeight;
+    var dy = null;
+    [tg.concat(src), tg].some(function (ids) {
+      var r = span(ids); if (!r) return false;
+      if (r.b - r.t > barTop - 24) return false;
+      dy = r.t < 12 ? r.t - 12 : (r.b > barTop - 12 ? r.b - (barTop - 12) : 0);
+      return true;
+    });
+    if (dy === null) { var r0 = span([tg[0]]); if (!r0) return Promise.resolve(); dy = r0.t - 16; }
+    if (Math.abs(dy) < 2) return Promise.resolve();
+    var smooth = !reduced();
+    window.scrollBy({ top: dy, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) return Promise.resolve();
+    return new Promise(function (res) {
+      var done = false;
+      var fin = function () { if (done) return; done = true; window.removeEventListener('scrollend', fin); res(); };
+      window.addEventListener('scrollend', fin);
+      setTimeout(fin, Math.min(950, 260 + Math.abs(dy) * 0.6));
+    });
+  }
+
+  function colorOf(el) {
+    if (!el) return null;
+    for (var i = 0; i < el.classList.length; i++) if (el.classList[i].indexOf('c-') === 0) return el.classList[i];
+    return null;
+  }
+  function chipOf(el) { return el.classList.contains('amt') ? el : (el.querySelector('.amt') || el); }
+
+  function fly(from, to, my, dur) {
+    var src = $(from), dst = $(to);
+    if (!src || !dst) { reveal(to, 'land'); return; }
+    var sa = chipOf(src), da = chipOf(dst);
+    var a = sa.getBoundingClientRect(), b = da.getBoundingClientRect();
+    var g = document.createElement('div');
+    g.className = 'ghost'; g.setAttribute('aria-hidden', 'true');
+    var c = colorOf(dst) || colorOf(src);
+    if (c) g.classList.add(c);
+    var gy = document.createElement('div'); gy.className = 'gy';
+    var chip = document.createElement('span'); chip.className = 'amt';
+    chip.textContent = (da.textContent || sa.textContent).trim();
+    gy.appendChild(chip); g.appendChild(gy); document.body.appendChild(g); ghosts.push(g);
+    var cr = chip.getBoundingClientRect();
+    var sx = window.scrollX || window.pageXOffset || 0, sy = window.scrollY || window.pageYOffset || 0;
+    var x0 = a.right - cr.width + sx, x1 = b.right - cr.width + sx;
+    var y0 = a.top + a.height / 2 - cr.height / 2 + sy, y1 = b.top + b.height / 2 - cr.height / 2 + sy;
+    var lift = Math.min(y0, y1) - 36;
+    g.style.transform = 'translateX(' + x0 + 'px)';
+    gy.style.transform = 'translateY(' + y0 + 'px)';
+    var ax = g.animate([{ transform: 'translateX(' + x0 + 'px)' }, { transform: 'translateX(' + x1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' });
+    gy.animate([
+      { transform: 'translateY(' + y0 + 'px)', easing: 'ease-out' },
+      { transform: 'translateY(' + lift + 'px)', offset: 0.3, easing: 'ease-in' },
+      { transform: 'translateY(' + y1 + 'px)' }
+    ], { duration: dur, fill: 'forwards' });
+    chip.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.14)', offset: 0.3 }, { transform: 'scale(1)' }], { duration: dur, fill: 'forwards' });
+    ax.onfinish = function () {
+      g.remove();
+      if (my !== tok) return;
+      reveal(to, 'land');
+    };
+  }
+
+  function play(my) {
+    if (reduced()) return;
+    var s = STEPS[k];
+    var lead = S(s).length ? 380 + (s.stagger ? S(s).length * 160 : 0) : 80;
+    var gap = 260, dur = 860;
+    F(s).forEach(function (f, i) {
+      later(function () { if (my === tok) fly(f[0], f[1], my, dur); }, lead + i * gap);
+    });
+    var done = F(s).length ? lead + (F(s).length - 1) * gap + dur + 80 : lead;
+    A(s).forEach(function (id, i) {
+      later(function () { if (my === tok) reveal(id, 'write'); }, done + i * 170);
+    });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+    var my = tok;
+    var p = bring();
+    if (animate) p.then(function () { if (my === tok) play(my); });
+  }
+
+  $('next').addEventListener('click', function () { go(k + 1, true); });
+  $('back').addEventListener('click', function () { go(k - 1, false); });
+  $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', function () { k = last; render(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); if (k < last) go(k + 1, true); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (k > 0) go(k - 1, false); }
+  });
+
+  var setBar = function () { document.documentElement.style.setProperty('--bar-h', bar.offsetHeight + 'px'); };
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(bar);
+  setBar();
+  render(false);
+})();
+</script>
+<script>
+/* Red line from Interest Receivable on 12/31/X1 to Interest Receivable on 3/31/X2. Straight segments only. */
+(function () {
+  function draw() {
+    var svg = document.getElementById('ln-ir'); if (!svg) return;
+    var w = svg.parentNode, ring = document.getElementById('j2-ring'), a = document.getElementById('j2-a1'), b = document.getElementById('j3-a2');
+    if (!ring || !a || !b) return;
+    var wr = w.getBoundingClientRect(), rr = ring.getBoundingClientRect(), ar = a.getBoundingClientRect(), br = b.getBoundingClientRect(), cell = a.closest('td').getBoundingClientRect();
+    var ox = -wr.left + w.scrollLeft, oy = -wr.top + w.scrollTop;
+    var x0 = rr.right + ox + 3, y0 = ar.top + ar.height / 2 + oy;
+    var X = Math.max(cell.right + ox - 6, x0 + 14);
+    var y1 = br.top + br.height / 2 + oy, xe = br.right + ox + 6, h = 6;
+    svg.setAttribute('width', w.scrollWidth); svg.setAttribute('height', w.scrollHeight);
+    svg.querySelector('.ln').setAttribute('d', 'M' + x0 + ' ' + y0 + ' H' + X + ' V' + y1 + ' H' + (xe + h));
+    svg.querySelector('.hd').setAttribute('d', 'M' + xe + ' ' + y1 + ' L' + (xe + h + 2) + ' ' + (y1 - h) + ' L' + (xe + h + 2) + ' ' + (y1 + h) + ' Z');
+  }
+  window.addEventListener('resize', draw);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+  if ('ResizeObserver' in window) new ResizeObserver(draw).observe(document.querySelector('.jtbl table'));
+  draw();
+})();
+</script>
+</body>
+</html>
