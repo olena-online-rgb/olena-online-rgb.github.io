@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cost Flow Assumptions Walkthrough</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Step-by-step walkthrough of periodic and perpetual FIFO, LIFO and average cost, with the problem and the solution side by side.">
+<!-- GoatCounter script line goes here -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Shared look for the Chapter 7 and 8 walkthroughs.
+   Layout: problem on the left (stays in view), solution on the right as written equations, steps under the problem.
+   Color: a number keeps one color from the line where it is computed to the line where it is used. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #1E1A1B;
+  --use-tint: #ECE7E8;
+  --accent: #1E1A1B;
+  --on-accent: #FCFCFB;
+  --red: #C8102E;    --red-t: #FADCE0;   --red-x: #6E0A1A;
+  --gold: #F2B200;   --gold-t: #FFF0C7;  --gold-x: #6B4E00;
+  --green: #2F7D50;  --green-t: #DCEFE2; --green-x: #1B4D30;
+  --blue: #2463A8;   --blue-t: #DDE8F6;  --blue-x: #143D6B;
+  --orchid: #A0329C; --orchid-t: #F2D3F0; --orchid-x: #5E1A5B;
+  --orange: #D2601A; --orange-t: #FBD9C2; --orange-x: #7A3409;
+  --teal: #0E7C86;   --teal-t: #D3EEF0;  --teal-x: #084A50;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 0px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+    --accent: #F2EEEF; --on-accent: #161314;
+    --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+    --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+    --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+    --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+    --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+    --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+    --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+  --accent: #F2EEEF; --on-accent: #161314;
+  --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+  --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+  --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+  --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+  --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+  --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+  --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 22px 28px;
+}
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 18px; }
+.problem .tbl { max-width: 600px; }
+
+header { display: grid; gap: 4px; }
+.eyebrow { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(24px, 3vw, 32px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.co { margin: 0; font-size: 14.5px; color: var(--muted); }
+
+/* two columns: problem left, solution right */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start; }
+.pin { display: grid; gap: 14px; min-width: 0; padding: 2px; }
+.solution { display: grid; gap: 20px; min-width: 0; }
+
+/* problem */
+.problem { display: grid; gap: 10px; font-family: var(--serif); font-size: 16.5px; border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; background: var(--bg); }
+.problem p { margin: 0; }
+.ptitle { font-family: var(--sans); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.req ol { margin: 4px 0 0; padding-left: 0; list-style: none; display: grid; gap: 1px; font-size: 15px; }
+.req li { color: var(--muted); }
+.req li.cur { color: var(--ink); font-weight: 600; }
+
+.tbl { overflow-x: auto; padding: 3px; margin: -3px; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th, td { padding: 5px 8px; vertical-align: middle; text-align: left; border: 0; }
+thead th { font-size: 13px; font-weight: 700; border-bottom: 1.5px solid var(--ink); line-height: 1.2; vertical-align: bottom; }
+th.n, td.n { text-align: right; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.tx { font-family: var(--sans); }
+.tx col.d { width: 17%; } .tx col.t { width: 41%; } .tx col.q { width: 20%; } .tx col.p { width: 22%; }
+.tx td { font-size: 15px; height: 32px; }
+/* perpetual: a red line under a sale row fixes the point in time (only rows above it are on hand) */
+.tx tr.cut td { border-bottom: 3px solid var(--red); }
+/* selling prices are crossed out once the work starts: they are not used for cost of goods sold or ending inventory */
+.xp { position: relative; display: inline-block; }
+.tinted .xp { color: var(--muted); }
+.tinted .xp::after {
+  content: ""; position: absolute; inset: -1px -3px;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 0.75px), var(--ink) calc(50% - 0.75px), var(--ink) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+    linear-gradient(to bottom right, transparent calc(50% - 0.75px), var(--ink) calc(50% - 0.75px), var(--ink) calc(50% + 0.75px), transparent calc(50% + 0.75px));
+}
+/* perpetual: numbered arrows show which purchases a sale takes its cost from, and in what order */
+.tbl { position: relative; }
+svg.arrows { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.arw path { fill: none; stroke: var(--red); stroke-width: 2; stroke-linecap: round; }
+.arw path.head { fill: var(--red); stroke: none; }
+.arw circle { fill: var(--bg); stroke: var(--red); stroke-width: 1.5; }
+.arw text { fill: var(--red); font: 700 11px var(--sans); text-anchor: middle; dominant-baseline: central; }
+
+.key { font-size: 13.5px; color: var(--muted); margin: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 18px; height: 13px; border-radius: 3px; display: inline-block; background: var(--use-tint); outline: 2px solid var(--use); outline-offset: -2px; }
+
+/* chips: a number keeps its color from where it is computed to where it is used */
+.c-red { --ct: var(--red-t); --cx: var(--red-x); }
+.c-gold { --ct: var(--gold-t); --cx: var(--gold-x); }
+.c-green { --ct: var(--green-t); --cx: var(--green-x); }
+.c-blue { --ct: var(--blue-t); --cx: var(--blue-x); }
+.c-orchid { --ct: var(--orchid-t); --cx: var(--orchid-x); }
+.c-orange { --ct: var(--orange-t); --cx: var(--orange-x); }
+.c-teal { --ct: var(--teal-t); --cx: var(--teal-x); }
+/* fractions, written the way they are on paper */
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.35; margin: 2px 2px; }
+.frac > span { padding: 1px 4px; }
+.frac > span:first-child { border-bottom: 1.5px solid currentColor; }
+td.tint { transition: background-color 0.4s, color 0.4s; }
+.tinted td.tint { background: var(--ct); color: var(--cx); font-weight: 700; }
+.tinted td.tint.use-on { background-color: var(--ct); }
+.amt {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--ct, transparent);
+  color: var(--cx, inherit);
+  font-weight: 700;
+}
+.final { border-bottom: 3px double var(--ink); padding-bottom: 1px; font-weight: 700; }
+
+/* worked lines */
+.card { border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px 16px; display: grid; gap: 14px; min-width: 0; }
+.card h2 { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 0; line-height: 1.25; }
+.card .sub { margin: -8px 0 0; font-size: 14.5px; color: var(--muted); }
+.eq { display: grid; gap: 2px; padding: 6px 8px; border-radius: 6px; min-width: 0; }
+.eq .lbl { font-weight: 700; }
+.eq .m { padding-left: 22px; font-variant-numeric: tabular-nums; font-size: 16.5px; line-height: 1.6; }
+.eq .m.words { color: var(--muted); font-size: 15.5px; }
+.eq + .eq { border-top: 1px solid var(--rule); border-top-left-radius: 0; border-top-right-radius: 0; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1.5px solid var(--ink); margin-bottom: -20px; }
+.tab {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1.5px solid var(--rule); border-bottom: 0;
+  border-radius: 6px 6px 0 0; padding: 7px 14px; cursor: pointer;
+}
+.tab:hover { border-color: var(--muted); }
+.tab[aria-selected="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); cursor: default; }
+.card.tabbed { border-top: 0; border-radius: 0 0 8px 8px; }
+[hidden] { display: none !important; }
+
+/* reveal states */
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.write { animation: write 0.5s ease-out both; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); opacity: 0.4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.land { animation: land 0.5s ease-out both; }
+@keyframes land { 0% { transform: scale(1.25); } 55% { transform: scale(0.95); } 100% { transform: scale(1); } }
+.ghost { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; will-change: transform; }
+.ghost > div { will-change: transform; }
+.eq .m .rv { display: inline-block; }
+.gchip { display: inline-block; font-weight: 700; font-size: 16.5px; padding: 0 5px; border-radius: 4px; background: var(--ct, var(--surface)); color: var(--cx, var(--ink)); outline: 1.5px solid var(--ink); }
+.eq .m.chk { font-size: 15.5px; margin-top: 4px; }
+.note { color: var(--red); }
+.use-on { outline: 2px solid var(--use) !important; outline-offset: 2px; border-radius: 4px; background-color: var(--use-tint); }
+td.use-on { outline-offset: -3px; }
+.amt.use-on { background-color: var(--ct); }
+
+/* steps */
+.bar { border: 1.5px solid var(--ink); border-radius: 8px; padding: 12px 14px; background: var(--bg); display: grid; gap: 10px; }
+.caption { font-size: 16.5px; min-height: 4.4em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button.ctl {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button.ctl:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button.ctl:disabled { opacity: 0.45; cursor: default; }
+button.ctl.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.progrow { display: flex; align-items: center; gap: 12px; }
+.counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress { flex: 1; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+button .sm { display: none; }
+
+.copyright { padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* one column; steps fixed at the bottom */
+@media all {
+  body { padding-block: 18px calc(var(--bar-h) + 24px); }
+  .bar > * { width: 100%; max-width: 860px; margin-inline: auto; }
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    border: 0; border-top: 2px solid var(--ink); border-radius: 0;
+    padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
+  .caption { min-height: 3em; font-size: 15.5px; }
+}
+/* wide screens: problem on the left, held in view; work setup and parts on the right */
+@media (min-width: 1060px) {
+  .wrap { max-width: 1240px; }
+  .layout { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 24px; }
+  .bar > * { max-width: 1240px; }
+}
+@media (min-width: 1060px) and (min-height: 640px) {
+  .pin { position: sticky; top: 12px; }
+}
+@media (max-width: 560px) {
+  .problem { font-size: 16px; padding: 12px; }
+  .card { padding: 12px 10px 14px; }
+  .eq .m { padding-left: 12px; font-size: 15.5px; }
+  th, td { padding: 4px 5px; }
+  thead th { font-size: 12px; }
+  .tx td { font-size: 14px; }
+  .controls { flex-wrap: nowrap; gap: 6px; }
+  button.ctl { padding: 7px 10px; font-size: 14px; flex: 1 1 auto; }
+  button .lg { display: none; } button .sm { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write, .land { animation: none !important; }
+  .progress > div { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Cost Flow Assumptions</h1>
+  </header>
+
+  <div class="layout">
+    <aside class="pin" aria-label="Problem and steps">
+      <section class="problem" aria-label="Problem">
+        <p>Evening Star Company is a multiproduct firm with a fiscal year ending December 31. Presented below is information concerning one of its products, the Lantern, for 20X1.</p>
+        <div class="tbl"><table class="tx" aria-label="Lantern transactions in 20X1">
+          <colgroup><col class="d"><col class="t"><col class="q"><col class="p"></colgroup>
+          <thead><tr><th>Date</th><th>Transaction</th><th class="n">Quantity</th><th class="n">Price/Cost</th></tr></thead>
+          <tbody>
+            <tr><td>1/1</td><td>Beginning inventory</td><td class="n tint c-gold" id="t-q1">800</td><td class="n tint c-gold" id="t-c1">$20</td></tr>
+            <tr><td>3/5</td><td>Purchase</td><td class="n tint c-green" id="t-q2">1,200</td><td class="n tint c-green" id="t-c2">$25</td></tr>
+            <tr id="r-418"><td>4/18</td><td>Sale</td><td class="n" id="t-q3">1,500</td><td class="n"><span class="xp">$40</span></td></tr>
+            <tr><td>7/9</td><td>Purchase</td><td class="n tint c-blue" id="t-q4">2,000</td><td class="n tint c-blue" id="t-c4">$30</td></tr>
+            <tr id="r-1022"><td>10/22</td><td>Sale</td><td class="n" id="t-q5">1,800</td><td class="n"><span class="xp">$45</span></td></tr>
+          </tbody>
+        </table><svg class="arrows" id="arrows" aria-hidden="true"><g id="arrow-g"></g></svg></div>
+        <div class="req">
+          <p><b>Required:</b> compute cost of goods sold and ending inventory, assuming Evening Star uses:</p>
+          <ol>
+            <li class="cur" id="req-a">(a) Periodic system, FIFO cost flow.</li>
+            <li id="req-b">(b) Perpetual system, FIFO cost flow.</li>
+            <li id="req-c">(c) Periodic system, LIFO cost flow.</li>
+            <li id="req-d">(d) Perpetual system, LIFO cost flow.</li>
+            <li id="req-e">(e) Periodic system, weighted average cost flow.</li>
+            <li id="req-f">(f) Perpetual system, moving average cost flow.</li>
+          </ol>
+        </div>
+      </section>
+
+      <p class="key"><span>Matching colors show where a number comes from and where it is used.</span><span><i class="sw"></i>Used in this step</span></p>
+
+      <div class="bar" role="region" aria-label="Walkthrough controls">
+        <div class="progrow"><div class="progress" aria-hidden="true"><div id="prog"></div></div><span class="counter" id="counter"></span></div>
+        <p class="caption" id="caption" aria-live="polite"></p>
+        <div class="controls">
+          <button class="ctl" id="restart" type="button"><span class="lg">Start over</span><span class="sm">Restart</span></button>
+          <button class="ctl" id="back" type="button">Back</button>
+          <button class="ctl primary" id="next" type="button">Next</button>
+          <button class="ctl" id="all" type="button"><span class="lg">Show solution</span><span class="sm">Solution</span></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="solution">
+      <section class="card" aria-label="Work setup">
+        <h2>Work setup</h2>
+        <div class="eq rv" id="w1">
+          <div class="lbl">Cost of goods available for sale</div>
+          <div class="m">= <span class="amt c-gold">800 units × $20</span> + <span class="amt c-green">1,200 units × $25</span> + <span class="amt c-blue" id="w1-c">2,000 units × $30</span></div>
+          <div class="m">= <span class="amt c-gold">$16,000</span> + <span class="amt c-green">$30,000</span> + <span class="amt c-blue">$60,000</span> = <span class="amt c-red" id="w-cogas">$106,000</span></div>
+        </div>
+        <div class="eq rv" id="w2">
+          <div class="lbl">Units available for sale</div>
+          <div class="m">= <span class="amt c-gold">800</span> + <span class="amt c-green">1,200</span> + <span class="amt c-blue">2,000</span> = <b id="w-uav">4,000 units</b></div>
+        </div>
+        <div class="eq rv" id="w3">
+          <div class="lbl">Units sold</div>
+          <div class="m">= 1,500 + 1,800 = <b id="w-us">3,300 units</b></div>
+        </div>
+        <div class="eq rv" id="w4">
+          <div class="lbl">Units in ending inventory</div>
+          <div class="m">= <b class="rv" id="w4-a">4,000</b> − <b class="rv" id="w4-b">3,300</b> = <span class="amt c-orchid rv" id="w-uei">700 units</span></div>
+        </div>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="Parts of the problem">
+        <button class="tab" role="tab" id="tab-a" data-part="a" aria-selected="true" aria-controls="pan-a" type="button">(a) Periodic FIFO</button>
+        <button class="tab" role="tab" id="tab-b" data-part="b" aria-selected="false" aria-controls="pan-b" tabindex="-1" type="button">(b) Perpetual FIFO</button>
+        <button class="tab" role="tab" id="tab-c" data-part="c" aria-selected="false" aria-controls="pan-c" tabindex="-1" type="button">(c) Periodic LIFO</button>
+        <button class="tab" role="tab" id="tab-d" data-part="d" aria-selected="false" aria-controls="pan-d" tabindex="-1" type="button">(d) Perpetual LIFO</button>
+        <button class="tab" role="tab" id="tab-e" data-part="e" aria-selected="false" aria-controls="pan-e" tabindex="-1" type="button">(e) Weighted average</button>
+        <button class="tab" role="tab" id="tab-f" data-part="f" aria-selected="false" aria-controls="pan-f" tabindex="-1" type="button">(f) Moving average</button>
+      </div>
+      <section class="card tabbed" id="pan-a" role="tabpanel" aria-labelledby="tab-a">
+        <div class="eq rv" id="a1">
+          <div class="lbl">Ending inventory</div>
+          <div class="m words">= Units in ending inventory × Cost of the latest purchase (7/9)</div>
+          <div class="m" id="a1-calc">= <span class="amt c-orchid" id="a1-u">700 units</span> × <span class="amt c-blue" id="a1-c">$30</span> = <span class="final"><span class="amt c-orange" id="a-ei">$21,000</span></span></div>
+          <div class="m chk rv" id="a1-note"><b class="note">Note:</b> Since <span class="amt c-orchid">700 units</span> &lt; <span class="amt c-blue">2,000 units</span> bought on 7/9, all 700 units in ending inventory come from the 7/9 purchase.</div>
+        </div>
+        <div class="eq rv" id="a2">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">= Cost of goods available for sale − Ending inventory</div>
+          <div class="m">= <span class="amt c-red rv" id="a2-g">$106,000</span> − <span class="amt c-orange rv" id="a2-e">$21,000</span> = <span class="final rv" id="a-cogs">$85,000</span></div>
+        </div>
+      </section>
+      <section class="card tabbed" id="pan-b" role="tabpanel" aria-labelledby="tab-b" hidden>
+        <div class="eq rv" id="b1">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">= Units sold, oldest layers first</div>
+          <div class="m">= <span class="amt c-gold">800 units × $20</span> + <span class="amt c-green">1,200 units × $25</span> + <span class="amt c-blue">1,300 units × $30</span></div>
+          <div class="m">= <span class="amt c-gold">$16,000</span> + <span class="amt c-green">$30,000</span> + <span class="amt c-blue">$39,000</span> = <span class="final" id="b-cogs">$85,000</span></div>
+          <div class="m chk rv" id="b1-note"><b class="note">Note:</b> <b class="rv" id="b1-u">3,300</b> − <span class="amt c-gold">800</span> − <span class="amt c-green">1,200</span> = <span class="amt c-blue">1,300 units</span> sold from the 7/9 purchase.</div>
+        </div>
+        <div class="eq rv" id="b2">
+          <div class="lbl">Ending inventory</div>
+          <div class="m words">= Cost of goods available for sale − Cost of goods sold</div>
+          <div class="m">= <span class="amt c-red rv" id="b2-g">$106,000</span> − <b class="rv" id="b2-c">$85,000</b> = <span class="final rv" id="b-ei">$21,000</span></div>
+        </div>
+        <div class="eq rv" id="b3">
+          <div class="lbl">Same answers as periodic FIFO (a)</div>
+          <div class="m chk"><b class="note">Note:</b> FIFO always sells the oldest units first, so costing each sale on its date sends out the same units as costing all 3,300 at year-end. Periodic FIFO (a) can be solved this way too, if that is more convenient.</div>
+        </div>
+      </section>
+      <section class="card tabbed" id="pan-c" role="tabpanel" aria-labelledby="tab-c" hidden>
+        <div class="eq rv" id="c1">
+          <div class="lbl">Ending inventory</div>
+          <div class="m words">= Units in ending inventory × Cost of beginning inventory (1/1)</div>
+          <div class="m">= <span class="amt c-orchid">700 units</span> × <span class="amt c-gold">$20</span> = <span class="final"><span class="amt c-orange" id="c-ei">$14,000</span></span></div>
+          <div class="m chk rv" id="c1-note"><b class="note">Note:</b> Since <span class="amt c-orchid">700 units</span> &lt; <span class="amt c-gold">800 units</span> in 1/1 inventory, all 700 units left at year-end cost $20 each.</div>
+        </div>
+        <div class="eq rv" id="c2">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">= Cost of goods available for sale − Ending inventory</div>
+          <div class="m">= <span class="amt c-red rv" id="c2-g">$106,000</span> − <span class="amt c-orange rv" id="c2-e">$14,000</span> = <span class="final rv" id="c-cogs">$92,000</span></div>
+        </div>
+        <div class="eq rv" id="c3">
+          <div class="lbl">Or, cost of goods sold directly</div>
+          <div class="m words">= Units sold, newest layers first</div>
+          <div class="m">= <span class="amt c-blue">2,000 units × $30</span> + <span class="amt c-green">1,200 units × $25</span> + <span class="amt c-gold">100 units × $20</span></div>
+          <div class="m">= <span class="amt c-blue">$60,000</span> + <span class="amt c-green">$30,000</span> + <span class="amt c-gold">$2,000</span> = <span class="final">$92,000</span></div>
+          <div class="m chk rv" id="c3-note"><b class="note">Note:</b> <b class="rv" id="c3-u">3,300</b> − <span class="amt c-blue">2,000</span> − <span class="amt c-green">1,200</span> = <span class="amt c-gold">100 units</span> sold from 1/1 inventory.</div>
+        </div>
+      </section>
+      <section class="card tabbed" id="pan-d" role="tabpanel" aria-labelledby="tab-d" hidden>
+        <div class="eq rv" id="d1">
+          <div class="lbl">Cost of the 4/18 sale (1,500 units)</div>
+          <div class="m words">= Newest units on hand on 4/18 first</div>
+          <div class="m">= <span class="amt c-green">1,200 units × $25</span> + <span class="amt c-gold">300 units × $20</span></div>
+          <div class="m">= <span class="amt c-green">$30,000</span> + <span class="amt c-gold">$6,000</span> = <b id="d-s1">$36,000</b></div>
+          <div class="m chk rv" id="d1-note"><b class="note">Note:</b> On 4/18, the 7/9 purchase has not happened yet, so the newest units on hand are the <span class="amt c-green">1,200 units</span> bought on 3/5. 1,500 − 1,200 = <span class="amt c-gold">300 units</span> come from 1/1 inventory.</div>
+        </div>
+        <div class="eq rv" id="d2">
+          <div class="lbl">Cost of the 10/22 sale (1,800 units)</div>
+          <div class="m words">= Newest units on hand on 10/22 first</div>
+          <div class="m">= <span class="amt c-blue">1,800 units × $30</span> = <b id="d-s2">$54,000</b></div>
+          <div class="m chk rv" id="d2-note"><b class="note">Note:</b> Since 1,800 units &lt; <span class="amt c-blue">2,000 units</span> bought on 7/9, all 1,800 units sold on 10/22 come from the 7/9 purchase.</div>
+        </div>
+        <div class="eq rv" id="d3">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">= Cost of the 4/18 sale + Cost of the 10/22 sale</div>
+          <div class="m">= <b class="rv" id="d3-a">$36,000</b> + <b class="rv" id="d3-b">$54,000</b> = <span class="final rv" id="d-cogs">$90,000</span></div>
+        </div>
+        <div class="eq rv" id="d4">
+          <div class="lbl">Ending inventory</div>
+          <div class="m words">= Cost of goods available for sale − Cost of goods sold</div>
+          <div class="m">= <span class="amt c-red rv" id="d4-g">$106,000</span> − <b class="rv" id="d4-c">$90,000</b> = <span class="final rv" id="d-ei">$16,000</span></div>
+        </div>
+      </section>
+      <section class="card tabbed" id="pan-e" role="tabpanel" aria-labelledby="tab-e" hidden>
+        <div class="eq rv" id="e1">
+          <div class="lbl">Cost per unit (weighted average)</div>
+          <div class="m words">= Cost of goods available for sale ÷ Units available for sale</div>
+          <div class="m">= <span class="frac"><span><span class="amt c-red rv" id="e1-g">$106,000</span></span><span><b class="rv" id="e1-u">4,000 units</b></span></span> = <span class="amt c-teal rv" id="e-cpu">$26.50</span></div>
+        </div>
+        <div class="eq rv" id="e2">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">= Units sold × Cost per unit</div>
+          <div class="m">= <b class="rv" id="e2-u">3,300 units</b> × <span class="amt c-teal rv" id="e2-c">$26.50</span> = <span class="final rv" id="e-cogs">$87,450</span></div>
+        </div>
+        <div class="eq rv" id="e3">
+          <div class="lbl">Or, ending inventory first</div>
+          <div class="m words">Ending inventory = Units in ending inventory × Cost per unit</div>
+          <div class="m">= <span class="amt c-orchid rv" id="e3-u">700 units</span> × <span class="amt c-teal rv" id="e3-c">$26.50</span> = <span class="final rv" id="e-ei-f"><span class="amt c-orange" id="e-ei">$18,550</span></span></div>
+          <div class="rv" id="e3b">
+            <div class="m words">Cost of goods sold = Cost of goods available for sale − Ending inventory</div>
+            <div class="m">= <span class="amt c-red rv" id="e3-g">$106,000</span> − <span class="amt c-orange rv" id="e3-e">$18,550</span> = <span class="final rv" id="e3-cogs">$87,450</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="card tabbed" id="pan-f" role="tabpanel" aria-labelledby="tab-f" hidden>
+        <div class="eq rv" id="f1">
+          <div class="lbl">Cost of goods available for sale, before the 4/18 sale</div>
+          <div class="m">= <span class="amt c-gold">800 units × $20</span> + <span class="amt c-green">1,200 units × $25</span></div>
+          <div class="m">= <span class="amt c-gold">$16,000</span> + <span class="amt c-green">$30,000</span> = <b id="f1-g">$46,000</b></div>
+          <div class="m">Units on hand = <span class="amt c-gold">800</span> + <span class="amt c-green">1,200</span> = <b id="f1-u">2,000 units</b></div>
+        </div>
+        <div class="eq rv" id="f2">
+          <div class="lbl">Average cost per unit on 4/18</div>
+          <div class="m">= <span class="frac"><span><b class="rv" id="f2-g">$46,000</b></span><span><b class="rv" id="f2-u">2,000 units</b></span></span> = <span class="amt c-teal rv" id="f-c1">$23.00</span></div>
+        </div>
+        <div class="eq rv" id="f3">
+          <div class="lbl">Cost of the 4/18 sale</div>
+          <div class="m">= 1,500 units × <span class="amt c-teal rv" id="f3-c">$23.00</span> = <b class="rv" id="f-s1">$34,500</b></div>
+          <div class="m chk rv" id="f3-note"><b class="note">Note:</b> <b class="rv" id="f3n-a">2,000</b> − 1,500 = <b id="f3-left">500 units</b> left after the 4/18 sale, still at <span class="amt c-teal">$23.00</span> each.</div>
+        </div>
+        <div class="eq rv" id="f4">
+          <div class="lbl">Cost of goods available for sale, before the 10/22 sale</div>
+          <div class="m">= <span class="amt c-teal">500 units × $23.00</span> + <span class="amt c-blue">2,000 units × $30</span></div>
+          <div class="m">= <span class="amt c-teal">$11,500</span> + <span class="amt c-blue">$60,000</span> = <b id="f4-g">$71,500</b></div>
+          <div class="m">Units on hand = <span class="amt c-teal">500</span> + <span class="amt c-blue">2,000</span> = <b id="f4-u">2,500 units</b></div>
+        </div>
+        <div class="eq rv" id="f5">
+          <div class="lbl">Average cost per unit on 10/22</div>
+          <div class="m">= <span class="frac"><span><b class="rv" id="f5-g">$71,500</b></span><span><b class="rv" id="f5-u">2,500 units</b></span></span> = <span class="amt c-teal rv" id="f-c2">$28.60</span></div>
+        </div>
+        <div class="eq rv" id="f6">
+          <div class="lbl">Cost of the 10/22 sale</div>
+          <div class="m">= 1,800 units × <span class="amt c-teal rv" id="f6-c">$28.60</span> = <b class="rv" id="f-s2">$51,480</b></div>
+        </div>
+        <div class="eq rv" id="f7">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">= Cost of the 4/18 sale + Cost of the 10/22 sale</div>
+          <div class="m">= <b class="rv" id="f7-a">$34,500</b> + <b class="rv" id="f7-b">$51,480</b> = <span class="final rv" id="f-cogs">$85,980</span></div>
+        </div>
+        <div class="eq rv" id="f8">
+          <div class="lbl">Ending inventory</div>
+          <div class="m words">= Units in ending inventory × Latest average cost per unit</div>
+          <div class="m">= <span class="amt c-orchid rv" id="f8-u">700 units</span> × <span class="amt c-teal rv" id="f8-c">$28.60</span> = <span class="final rv" id="f-ei">$20,020</span></div>
+        </div>
+      </section>
+
+      <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+    </main>
+  </div>
+</div>
+
+<script>
+/* One walkthrough per tab. "pre" lines are already written when the tab opens; "tint" turns the table colors on from the start. */
+var SETUP_LINES = ["w1", "w2", "w3", "w4", "w4-a", "w4-b", "w-uei"];
+window.WALK_TABS = {};
+window.WALK_TABS.a = { steps: [
+ { caption: "Evening Star’s unit cost rose during 20X1: $20, then $25, then $30. First, the work setup: four numbers that every part of the problem uses. Click Next for a step-by-step walkthrough." },
+ { show: ["w1"], tint: true, use: ["t-q1", "t-c1", "t-q2", "t-c2", "t-q4", "t-c4"],
+   caption: "Cost of goods available for sale: every unit on hand during the year at its own cost. 800 × $20 + 1,200 × $25 + 2,000 × $30 = $106,000. The sale prices ($40 and $45) are crossed out: selling prices are not used for cost of goods sold or ending inventory." },
+ { show: ["w2"], use: ["t-q1", "t-q2", "t-q4"],
+   caption: "Units available for sale: beginning inventory plus both purchases. 800 + 1,200 + 2,000 = 4,000 units." },
+ { show: ["w3"], use: ["t-q3", "t-q5"],
+   caption: "Units sold: the two sales. 1,500 + 1,800 = 3,300 units." },
+ { show: ["w4"], fly: [["w-uav", "w4-a"], ["w-us", "w4-b"]], after: ["w-uei"], use: ["w-uav", "w-us"],
+   caption: "Units in ending inventory: units available minus units sold. 4,000 − 3,300 = 700 units." },
+ { show: ["a1"], use: ["w-uei", "t-c4"],
+   caption: "(a) Periodic FIFO. FIFO sells the oldest units first, so the units left at year-end are the newest ones, from the latest purchase (7/9) at $30. Ending inventory = 700 units × $30 = $21,000." },
+ { show: ["a1-note"], use: ["w-uei", "t-q4"],
+   caption: "Why only $30: the 7/9 purchase was 2,000 units. 700 < 2,000, so all 700 units come from that one purchase, and no earlier layer is needed." },
+ { show: ["a2"], fly: [["w-cogas", "a2-g"], ["a-ei", "a2-e"]], after: ["a-cogs"], use: ["w-cogas", "a-ei"],
+   caption: "Cost of goods sold = cost of goods available for sale − ending inventory = $106,000 − $21,000 = $85,000." }
+] };
+window.WALK_TABS.b = { pre: SETUP_LINES, tint: true, steps: [
+ { caption: "(b) Perpetual FIFO starts from the same work setup. In a perpetual system, cost of goods sold is recorded at each sale. Click Next for a step-by-step walkthrough." },
+ { show: ["b1"], use: ["t-q1", "t-c1", "t-q2", "t-c2", "t-c4"],
+   caption: "(b) Perpetual FIFO. FIFO sells the oldest units first: all 800 units from 1/1 inventory, then all 1,200 units from the 3/5 purchase, then the rest from the 7/9 purchase. 800 × $20 + 1,200 × $25 + 1,300 × $30 = $85,000." },
+ { show: ["b1-note"], fly: [["w-us", "b1-u"]], use: ["w-us", "t-q1", "t-q2"],
+   caption: "Where the 1,300 comes from: 3,300 units sold − 800 − 1,200 = 1,300 units, taken from the 7/9 purchase at $30." },
+ { show: ["b2"], fly: [["w-cogas", "b2-g"], ["b-cogs", "b2-c"]], after: ["b-ei"], use: ["w-cogas", "b-cogs"],
+   caption: "Ending inventory = cost of goods available for sale − cost of goods sold = $106,000 − $85,000 = $21,000." },
+ { show: ["b3"],
+   caption: "Same answers as periodic FIFO (a): $85,000 and $21,000. FIFO sends out the oldest units whether each sale is costed on its date or all at year-end. Periodic FIFO can be solved this way too." }
+] };
+window.WALK_TABS.c = { pre: SETUP_LINES, tint: true, steps: [
+ { caption: "(c) Periodic LIFO starts from the same work setup. In a periodic system, the dates of the sales do not matter: ending inventory is figured once, at year-end. Click Next for a step-by-step walkthrough." },
+ { show: ["c1"], use: ["w-uei", "t-c1"],
+   caption: "(c) Periodic LIFO. LIFO sells the newest units first, so the units left at year-end are the oldest ones, from beginning inventory (1/1) at $20. Ending inventory = 700 units × $20 = $14,000." },
+ { show: ["c1-note"], use: ["w-uei", "t-q1"],
+   caption: "Why only $20: 1/1 inventory was 800 units. 700 < 800, so all 700 units left at year-end cost $20, and no later layer is needed." },
+ { show: ["c2"], fly: [["w-cogas", "c2-g"], ["c-ei", "c2-e"]], after: ["c-cogs"], use: ["w-cogas", "c-ei"],
+   caption: "Cost of goods sold = cost of goods available for sale − ending inventory = $106,000 − $14,000 = $92,000." },
+ { show: ["c3"], use: ["t-q4", "t-c4", "t-q2", "t-c2", "t-c1"],
+   caption: "Or, cost of goods sold directly. LIFO sells the newest units first: all 2,000 units from the 7/9 purchase, then all 1,200 units from the 3/5 purchase, then the last 100 from 1/1 inventory. 2,000 × $30 + 1,200 × $25 + 100 × $20 = $92,000, the same answer." },
+ { show: ["c3-note"], fly: [["w-us", "c3-u"]], use: ["w-us", "t-q4", "t-q2"],
+   caption: "Where the 100 comes from: 3,300 units sold − 2,000 − 1,200 = 100 units, taken from 1/1 inventory at $20." }
+] };
+window.WALK_TABS.d = { pre: SETUP_LINES, tint: true, steps: [
+ { caption: "(d) Perpetual LIFO starts from the same work setup. In a perpetual system, each sale is costed on its own date, using only the units on hand that day. Click Next for a step-by-step walkthrough." },
+ { show: ["d1"], cut: ["r-418"], arrows: [["t-q3", "t-q2", 1], ["t-q3", "t-q1", 2]], use: ["t-q3", "t-q2", "t-c2", "t-c1"],
+   caption: "(d) Perpetual LIFO, the 4/18 sale. LIFO sells the newest units on hand first: arrow 1, the 1,200 units bought on 3/5 at $25; then arrow 2, 300 units from 1/1 inventory at $20. 1,200 × $25 + 300 × $20 = $36,000." },
+ { show: ["d1-note"], use: ["t-q4", "t-q2", "t-q3"],
+   caption: "Why not $30: the 7/9 purchase comes after the 4/18 sale, so those units are not on hand yet. 1,500 − 1,200 = 300 units come from 1/1 inventory." },
+ { show: ["d2"], cut: ["r-1022"], arrows: [["t-q5", "t-q4", 3]], use: ["t-q5", "t-q4", "t-c4"],
+   caption: "The 10/22 sale. Arrow 3: the newest units on hand are the 2,000 bought on 7/9 at $30. 1,800 × $30 = $54,000." },
+ { show: ["d2-note"], use: ["t-q5", "t-q4"],
+   caption: "Why only $30: 1,800 < 2,000, so all 1,800 units sold on 10/22 come from the 7/9 purchase, and no earlier layer is needed." },
+ { show: ["d3"], fly: [["d-s1", "d3-a"], ["d-s2", "d3-b"]], after: ["d-cogs"], use: ["d-s1", "d-s2"],
+   caption: "Cost of goods sold = cost of the 4/18 sale + cost of the 10/22 sale = $36,000 + $54,000 = $90,000." },
+ { show: ["d4"], fly: [["w-cogas", "d4-g"], ["d-cogs", "d4-c"]], after: ["d-ei"], use: ["w-cogas", "d-cogs"],
+   caption: "Ending inventory = cost of goods available for sale − cost of goods sold = $106,000 − $90,000 = $16,000. Periodic LIFO (c) gave $92,000: under LIFO, the sale dates matter." }
+] };
+window.WALK_TABS.e = { pre: SETUP_LINES, tint: true, steps: [
+ { caption: "(e) Periodic weighted average starts from the same work setup. One average cost for the whole year, figured once at year-end, so the dates of the sales do not matter. Click Next for a step-by-step walkthrough." },
+ { show: ["e1"], fly: [["w-cogas", "e1-g"], ["w-uav", "e1-u"]], after: ["e-cpu"], use: ["w-cogas", "w-uav"],
+   caption: "Cost per unit = cost of goods available for sale ÷ units available for sale = $106,000 ÷ 4,000 units = $26.50. Every unit, sold or left, carries this one average cost." },
+ { show: ["e2"], fly: [["w-us", "e2-u"], ["e-cpu", "e2-c"]], after: ["e-cogs"], use: ["w-us", "e-cpu"],
+   caption: "Cost of goods sold = units sold × cost per unit = 3,300 units × $26.50 = $87,450." },
+ { show: ["e3"], fly: [["w-uei", "e3-u"], ["e-cpu", "e3-c"]], after: ["e-ei-f"], use: ["w-uei", "e-cpu"],
+   caption: "Or, ending inventory first: units in ending inventory × cost per unit = 700 units × $26.50 = $18,550." },
+ { show: ["e3b"], fly: [["w-cogas", "e3-g"], ["e-ei", "e3-e"]], after: ["e3-cogs"], use: ["w-cogas", "e-ei"],
+   caption: "Then cost of goods sold = cost of goods available for sale − ending inventory = $106,000 − $18,550 = $87,450, the same answer." }
+] };
+window.WALK_TABS.f = { pre: SETUP_LINES, tint: true, steps: [
+ { caption: "(f) Perpetual moving average starts from the same work setup. Before each sale, a new average cost is figured from the units on hand that day. Click Next for a step-by-step walkthrough." },
+ { show: ["f1"], cut: ["r-418"], use: ["t-q1", "t-c1", "t-q2", "t-c2"],
+   caption: "Before the 4/18 sale, the units on hand are 1/1 inventory and the 3/5 purchase. Their cost: 800 × $20 + 1,200 × $25 = $46,000, for 800 + 1,200 = 2,000 units." },
+ { show: ["f2"], fly: [["f1-g", "f2-g"], ["f1-u", "f2-u"]], after: ["f-c1"], use: ["f1-g", "f1-u"],
+   caption: "Average cost per unit on 4/18 = $46,000 ÷ 2,000 units = $23.00." },
+ { show: ["f3"], fly: [["f-c1", "f3-c"]], after: ["f-s1"], use: ["t-q3", "f-c1"],
+   caption: "Cost of the 4/18 sale = 1,500 units × $23.00 = $34,500." },
+ { show: ["f3-note"], fly: [["f1-u", "f3n-a"]], use: ["f1-u", "t-q3"],
+   caption: "Units left after the 4/18 sale: 2,000 − 1,500 = 500 units, still at the $23.00 average." },
+ { show: ["f4"], cut: ["r-1022"], use: ["f3-left", "f-c1", "t-q4", "t-c4"],
+   caption: "Before the 10/22 sale, the units on hand are the 500 units left at $23.00 and the 7/9 purchase. Their cost: 500 × $23.00 + 2,000 × $30 = $71,500, for 500 + 2,000 = 2,500 units." },
+ { show: ["f5"], fly: [["f4-g", "f5-g"], ["f4-u", "f5-u"]], after: ["f-c2"], use: ["f4-g", "f4-u"],
+   caption: "Average cost per unit on 10/22 = $71,500 ÷ 2,500 units = $28.60." },
+ { show: ["f6"], fly: [["f-c2", "f6-c"]], after: ["f-s2"], use: ["t-q5", "f-c2"],
+   caption: "Cost of the 10/22 sale = 1,800 units × $28.60 = $51,480." },
+ { show: ["f7"], fly: [["f-s1", "f7-a"], ["f-s2", "f7-b"]], after: ["f-cogs"], use: ["f-s1", "f-s2"],
+   caption: "Cost of goods sold = cost of the 4/18 sale + cost of the 10/22 sale = $34,500 + $51,480 = $85,980." },
+ { show: ["f8"], fly: [["w-uei", "f8-u"], ["f-c2", "f8-c"]], after: ["f-ei"], use: ["w-uei", "f-c2"],
+   caption: "Ending inventory = units in ending inventory × the latest average cost = 700 units × $28.60 = $20,020." }
+] };
+</script>
+<script>
+/* Walkthrough engine shared by the Chapter 7 and 8 pages.
+   Each step: show (written in place), fly ([from, to]: a copy of the number drops from where it was computed),
+   after (written once the numbers land), use (outlined as the inputs of this step), caption. */
+(function () {
+  'use strict';
+  var TABS = window.WALK_TABS;
+  var PARTS = Object.keys(TABS);
+  var $ = function (id) { return document.getElementById(id); };
+  var S = function (s) { return s.show || []; };
+  var U = function (s) { return s.use || []; };
+  var F = function (s) { return s.fly || []; };
+  var A = function (s) { return s.after || []; };
+  var REVEAL = [];
+  var addReveal = function (id) { if (REVEAL.indexOf(id) < 0) REVEAL.push(id); };
+  PARTS.forEach(function (p) {
+    (TABS[p].pre || []).forEach(addReveal);
+    TABS[p].steps.forEach(function (s) {
+      S(s).concat(F(s).map(function (f) { return f[1]; }), A(s)).forEach(addReveal);
+    });
+  });
+  var bar = document.querySelector('.bar');
+  var part = PARTS[0], pos = {};
+  PARTS.forEach(function (p) { pos[p] = 0; });
+  var TAB = TABS[part], STEPS = TAB.steps, last = STEPS.length - 1;
+  var k = 0, tok = 0, timers = [], ghosts = [];
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  (function check() {
+    var miss = [];
+    PARTS.forEach(function (p) {
+      var ids = (TABS[p].pre || []).slice();
+      TABS[p].steps.forEach(function (s) {
+        ids = ids.concat(S(s), U(s), A(s));
+        F(s).forEach(function (f) { ids = ids.concat(f); });
+      });
+      ids.forEach(function (id) { if (!$(id) && miss.indexOf(id) < 0) miss.push(id); });
+    });
+    if (miss.length && window.console) console.warn('Walkthrough: missing ids', miss);
+  })();
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function stopMotion() {
+    tok++;
+    timers.forEach(clearTimeout); timers = [];
+    ghosts.forEach(function (g) { g.remove(); }); ghosts = [];
+  }
+  function reveal(id, how) {
+    var el = $(id); if (!el) return;
+    el.classList.remove('write', 'land');
+    el.classList.add('shown');
+    if (how) { void el.offsetWidth; el.classList.add(how); }
+  }
+
+  function render(animate) {
+    stopMotion();
+    var s = STEPS[k];
+    var moving = animate && !reduced();
+    var shown = {};
+    var tinted = !!TAB.tint;
+    (TAB.pre || []).forEach(function (id) { shown[id] = 1; });
+    for (var i = 1; i <= k; i++) {
+      if (STEPS[i].tint) tinted = true;
+      S(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+      F(STEPS[i]).forEach(function (f) { shown[f[1]] = 1; });
+      A(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+    }
+    document.body.classList.toggle('tinted', tinted);
+    var cuts = {};
+    for (var j = 1; j <= k; j++) (STEPS[j].cut || []).forEach(function (id) { cuts[id] = 1; });
+    document.querySelectorAll('tr[id^="r-"]').forEach(function (tr) { tr.classList.toggle('cut', !!cuts[tr.id]); });
+    drawArrows(moving);
+    var held = {};
+    if (moving) {
+      F(s).forEach(function (f) { held[f[1]] = 1; });
+      A(s).forEach(function (id) { held[id] = 1; });
+    }
+    REVEAL.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.remove('write', 'land');
+      el.classList.toggle('shown', !!shown[id] && !held[id]);
+    });
+    if (moving) {
+      S(s).forEach(function (id) { var el = $(id); if (!el) return; void el.offsetWidth; el.classList.add('write'); });
+    }
+    document.querySelectorAll('.use-on').forEach(function (el) { el.classList.remove('use-on'); });
+    U(s).forEach(function (id) { var el = $(id); if (el) el.classList.add('use-on'); });
+    $('caption').textContent = s.caption;
+    $('counter').textContent = 'Step ' + k + ' of ' + last;
+    $('prog').style.width = (k / last) * 100 + '%';
+    $('back').disabled = k === 0;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last;
+    $('all').disabled = k === last;
+  }
+
+  // Arrows in the table: from a sale's quantity to each layer it takes cost from, numbered in order.
+  // Arrows from an earlier sale stay, faded; the current sale's arrows draw in.
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function svgEl(tag, attrs, parent) {
+    var el = document.createElementNS(SVGNS, tag);
+    for (var a in attrs) el.setAttribute(a, attrs[a]);
+    if (parent) parent.appendChild(el);
+    return el;
+  }
+  function textBox(id) {
+    var el = $(id); if (!el) return null;
+    var r = document.createRange(); r.selectNodeContents(el);
+    var b = r.getBoundingClientRect();
+    return b.width ? b : el.getBoundingClientRect();
+  }
+  function drawArrows(animate) {
+    var svg = $('arrows'), g = $('arrow-g');
+    if (!svg || !g) return;
+    while (g.firstChild) g.removeChild(g.firstChild);
+    var lastAt = 0, list = [];
+    for (var i = 1; i <= k; i++) if (STEPS[i].arrows) lastAt = i;
+    for (var j = 1; j <= k; j++) (STEPS[j].arrows || []).forEach(function (a, n) { list.push({ a: a, step: j, n: n }); });
+    if (!list.length) return;
+    var o = svg.getBoundingClientRect();
+    list.forEach(function (it) {
+      var p0 = textBox(it.a[0]), p1 = textBox(it.a[1]);
+      if (!p0 || !p1) return;
+      var same = list.filter(function (o2) { return o2.step === it.step && o2.a[0] === it.a[0]; }).length;
+      var x0 = p0.left - o.left - 5, y0 = (p0.top + p0.bottom) / 2 - o.top + (same > 1 ? (it.n - (same - 1) / 2) * -6 : 0);
+      var x1 = p1.left - o.left - 4, y1 = (p1.top + p1.bottom) / 2 - o.top;
+      var rows = Math.max(1, Math.round(Math.abs(y1 - y0) / ((p0.bottom - p0.top) * 1.6 || 32)));
+      var bx = o.width < 450 ? 22 + 30 * (rows - 1) : 30 + 44 * (rows - 1);
+      var grp = svgEl('g', { 'class': 'arw' + (it.step < lastAt ? ' past' : '') }, g);
+      var line = svgEl('path', { d: 'M' + x0 + ',' + y0 + ' C' + (x0 - bx) + ',' + y0 + ' ' + (x1 - bx) + ',' + y1 + ' ' + (x1 - 7) + ',' + y1 }, grp);
+      var head = svgEl('path', { 'class': 'head', d: 'M' + x1 + ',' + y1 + ' L' + (x1 - 8) + ',' + (y1 - 4.5) + ' L' + (x1 - 8) + ',' + (y1 + 4.5) + ' Z' }, grp);
+      var cx = Math.min(x0, x1) - 0.75 * bx, cy = (y0 + y1) / 2;
+      var tag = svgEl('g', {}, grp);
+      svgEl('circle', { cx: cx, cy: cy, r: 8 }, tag);
+      svgEl('text', { x: cx, y: cy }, tag).textContent = String(it.a[2]);
+      if (animate && it.step === k && line.getTotalLength) {
+        var len = line.getTotalLength(), delay = it.n * 650;
+        line.style.strokeDasharray = len;
+        line.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 600, delay: delay, easing: 'ease-out', fill: 'backwards' });
+        [head, tag].forEach(function (el) { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: delay + 550, fill: 'backwards' }); });
+      }
+    });
+  }
+  window.addEventListener('resize', function () { drawArrows(false); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { drawArrows(false); });
+
+  function barFixed() { return getComputedStyle(bar).position === 'fixed'; }
+  function span(ids) {
+    var top = Infinity, bottom = -Infinity;
+    ids.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    return top === Infinity ? null : { t: top, b: bottom };
+  }
+
+  // Scroll so this step's line (and, if they fit, its inputs) are in view. Resolves when scrolling stops.
+  function bring() {
+    var s = STEPS[k];
+    var tg = S(s).concat(F(s).map(function (f) { return f[1]; }), A(s));
+    if (!tg.length) return Promise.resolve();
+    var src = F(s).map(function (f) { return f[0]; }).concat(U(s));
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    var dy = null;
+    [tg.concat(src), tg].some(function (ids) {
+      var r = span(ids); if (!r) return false;
+      if (r.b - r.t > bottomEdge - 24) return false;
+      dy = r.t < 12 ? r.t - 12 : (r.b > bottomEdge - 12 ? r.b - (bottomEdge - 12) : 0);
+      return true;
+    });
+    if (dy === null) { var r0 = span([tg[0]]); if (!r0) return Promise.resolve(); dy = r0.t - 16; }
+    if (Math.abs(dy) < 2) return Promise.resolve();
+    var smooth = !reduced();
+    window.scrollBy({ top: dy, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) return Promise.resolve();
+    return new Promise(function (res) {
+      var done = false;
+      var fin = function () { if (done) return; done = true; window.removeEventListener('scrollend', fin); res(); };
+      window.addEventListener('scrollend', fin);
+      setTimeout(fin, Math.min(950, 260 + Math.abs(dy) * 0.6));
+    });
+  }
+
+  // A copy of the number drops from the line that computed it into its place in this line.
+  function fly(from, to, my, dur) {
+    var src = $(from), dst = $(to);
+    if (!src || !dst) { reveal(to, 'land'); return; }
+    var a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+    var g = document.createElement('div');
+    g.className = 'ghost'; g.setAttribute('aria-hidden', 'true');
+    var gy = document.createElement('div');
+    var chip = document.createElement('span'); chip.className = 'gchip';
+    for (var ci = 0; ci < dst.classList.length; ci++) if (dst.classList[ci].indexOf('c-') === 0) chip.classList.add(dst.classList[ci]);
+    chip.textContent = dst.textContent.trim();
+    gy.appendChild(chip); g.appendChild(gy); document.body.appendChild(g); ghosts.push(g);
+    var sx = window.scrollX || 0, sy = window.scrollY || 0;
+    var x0 = a.left + sx, x1 = b.left + sx;
+    var y0 = a.top + sy, y1 = b.top + sy;
+    g.style.transform = 'translateX(' + x0 + 'px)';
+    gy.style.transform = 'translateY(' + y0 + 'px)';
+    var ax = g.animate([{ transform: 'translateX(' + x0 + 'px)' }, { transform: 'translateX(' + x1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' });
+    gy.animate([{ transform: 'translateY(' + y0 + 'px)' }, { transform: 'translateY(' + y1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.5,0,.6,1)', fill: 'forwards' });
+    ax.onfinish = function () {
+      g.remove();
+      if (my !== tok) return;
+      reveal(to, 'land');
+    };
+  }
+
+  function play(my) {
+    var s = STEPS[k];
+    var lead = S(s).length ? 450 : 80, gap = 320, dur = 800;
+    F(s).forEach(function (f, i) {
+      later(function () { if (my === tok) fly(f[0], f[1], my, dur); }, lead + i * gap);
+    });
+    var done = F(s).length ? lead + (F(s).length - 1) * gap + dur + 120 : lead;
+    A(s).forEach(function (id, i) {
+      later(function () { if (my === tok) reveal(id, 'write'); }, done + i * 170);
+    });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+    var my = tok;
+    var p = bring();
+    if (animate && !reduced()) p.then(function () { if (my === tok) play(my); });
+  }
+
+  // Tabs: each part keeps its own place in its walkthrough.
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab[data-part]'));
+  function setTab(p, focus) {
+    if (!TABS[p] || p === part) return;
+    stopMotion();
+    pos[part] = k;
+    part = p; TAB = TABS[p]; STEPS = TAB.steps; last = STEPS.length - 1; k = pos[p];
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-part') === p;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      var pan = $(t.getAttribute('aria-controls'));
+      if (pan) pan.hidden = !on;
+      var req = $('req-' + t.getAttribute('data-part'));
+      if (req) req.classList.toggle('cur', on);
+      if (on && focus) t.focus();
+    });
+    render(false);
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { setTab(t.getAttribute('data-part'), false); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); e.stopPropagation();
+      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      setTab(n.getAttribute('data-part'), true);
+    });
+  });
+
+  $('next').addEventListener('click', function () { go(k + 1, true); });
+  $('back').addEventListener('click', function () { go(k - 1, false); });
+  $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', function () { k = last; render(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('[role="tablist"]')) return;
+    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); if (k < last) go(k + 1, true); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (k > 0) go(k - 1, false); }
+  });
+
+  var setBar = function () {
+    document.documentElement.style.setProperty('--bar-h', (barFixed() ? bar.offsetHeight : 0) + 'px');
+  };
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(bar);
+  setBar();
+  render(false);
+})();
+</script>
+</body>
+</html>
