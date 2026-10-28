@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inventory Equation Walkthrough</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Step-by-step walkthrough of the expanded inventory equation: find missing amounts across three years.">
+<!-- GoatCounter script line goes here -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Shared look for the Chapter 7 and 8 walkthroughs.
+   Layout: problem on the left (stays in view), solution on the right as written equations, steps at the bottom.
+   Color: a number keeps one color from the table to the line where it is used. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #1E1A1B;
+  --use-tint: #ECE7E8;
+  --accent: #1E1A1B;
+  --on-accent: #FCFCFB;
+  --ok: #2F7D50;
+  --red: #C8102E;    --red-t: #FADCE0;   --red-x: #6E0A1A;
+  --gold: #F2B200;   --gold-t: #FFF0C7;  --gold-x: #6B4E00;
+  --green: #2F7D50;  --green-t: #DCEFE2; --green-x: #1B4D30;
+  --blue: #2463A8;   --blue-t: #DDE8F6;  --blue-x: #143D6B;
+  --orchid: #A0329C; --orchid-t: #F2D3F0; --orchid-x: #5E1A5B;
+  --orange: #D2601A; --orange-t: #FBD9C2; --orange-x: #7A3409;
+  --teal: #0E7C86;   --teal-t: #D3EEF0;  --teal-x: #084A50;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 0px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+    --accent: #F2EEEF; --on-accent: #161314; --ok: #62C48E;
+    --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+    --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+    --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+    --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+    --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+    --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+    --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+  --accent: #F2EEEF; --on-accent: #161314; --ok: #62C48E;
+  --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+  --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+  --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+  --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+  --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+  --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+  --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px calc(var(--bar-h) + 24px);
+}
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 18px; }
+header { display: grid; gap: 4px; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(24px, 3vw, 32px); line-height: 1.15; margin: 0; text-wrap: balance; }
+
+/* two columns: problem left, solution right */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start; }
+.pin { display: grid; gap: 14px; min-width: 0; padding: 2px; }
+.solution { display: grid; gap: 20px; min-width: 0; }
+
+/* problem */
+.problem { display: grid; gap: 10px; font-family: var(--serif); font-size: 16.5px; border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; background: var(--bg); }
+.problem p { margin: 0; }
+.problem .eqn { font-family: var(--sans); font-size: 15px; font-weight: 700; background: var(--surface); border-left: 4px solid var(--ink); padding: 8px 12px; border-radius: 4px; }
+
+.tbl { overflow-x: auto; padding: 3px; margin: -3px; position: relative; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th, td { padding: 5px 8px; vertical-align: middle; text-align: left; border: 0; }
+thead th { font-size: 13.5px; font-weight: 700; border-bottom: 1.5px solid var(--ink); line-height: 1.2; vertical-align: bottom; }
+th.n, td.n { text-align: right; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* the data table */
+.dat { font-family: var(--sans); }
+.dat col.c1 { width: 40%; } .dat col.c2 { width: 20%; }
+.dat thead th.n { border-radius: 4px 4px 0 0; transition: background-color 0.3s, color 0.3s; }
+.dat thead th.cur { background: var(--accent); color: var(--on-accent); }
+.dat tbody th { font-weight: 400; font-size: 14.5px; line-height: 1.25; }
+.dat tbody th, .dat tbody td { height: 36px; border-bottom: 1px solid var(--rule); }
+.dat td.n { font-size: 15px; }
+/* step one: red lines under net sales and freight-in; the rows between them are the inventory equation */
+.dat tr.cut > th, .dat tr.cut > td { border-bottom: 3px solid var(--red); }
+.dat td.blank { background: var(--surface); }
+.dat td.blank:has(.fill.shown) { background: transparent; }
+.fill, .xm { display: inline-block; }
+.fill.shown { font-weight: 700; }
+.swap { display: inline-grid; justify-items: end; }
+.swap > * { grid-area: 1 / 1; }
+/* the unknown being solved for */
+.xm, .xv { color: var(--red); font-weight: 700; font-family: var(--sans); }
+/* colors come in one step at a time: a cell in the year being worked takes its color from the step that first uses it */
+.dat td.tint { transition: background-color 0.4s, color 0.4s; }
+.dat td.tint.lit, .dat td.tint.lit.blank:has(.fill.shown) { background: var(--ct); color: var(--cx); font-weight: 700; }
+.dat td.tint.lit.blank:not(:has(.fill.shown)) { background: var(--surface); }
+
+/* carry arrows: ending inventory of one year is beginning inventory of the next */
+.carry { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.carry .ln { fill: none; stroke: var(--red); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.carry .hd { fill: var(--red); stroke: none; }
+.carry.write { animation: none; }
+.carry.write .ln { stroke-dasharray: 1; animation: draw 0.7s ease-in-out both; }
+.carry.write .hd { animation: headin 0.18s ease-out 0.66s both; }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes headin { from { opacity: 0; } to { opacity: 1; } }
+
+.key { font-size: 13.5px; color: var(--muted); margin: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 18px; height: 13px; border-radius: 3px; display: inline-block; background: var(--use-tint); outline: 2px solid var(--use); outline-offset: -2px; }
+.sw-arr { width: 22px; height: 12px; }
+.sw-arr path { fill: none; stroke: var(--red); stroke-width: 2; }
+.sw-arr path.h { fill: var(--red); stroke: none; }
+
+/* chips: a number keeps its color from the table to where it is used */
+.c-red { --ct: var(--red-t); --cx: var(--red-x); }
+.c-gold { --ct: var(--gold-t); --cx: var(--gold-x); }
+.c-green { --ct: var(--green-t); --cx: var(--green-x); }
+.c-blue { --ct: var(--blue-t); --cx: var(--blue-x); }
+.c-orchid { --ct: var(--orchid-t); --cx: var(--orchid-x); }
+.c-orange { --ct: var(--orange-t); --cx: var(--orange-x); }
+.c-teal { --ct: var(--teal-t); --cx: var(--teal-x); }
+.amt {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--ct, transparent);
+  color: var(--cx, inherit);
+  font-weight: 700;
+}
+.final { border-bottom: 3px double var(--ink); padding-bottom: 1px; font-weight: 700; }
+.ok { color: var(--ok); font-weight: 700; }
+
+/* worked lines */
+.card { border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px 16px; display: grid; gap: 14px; min-width: 0; }
+.eq { display: grid; gap: 2px; padding: 6px 8px; border-radius: 6px; min-width: 0; }
+.eq .lbl { font-weight: 700; }
+.eq .m { padding-left: 22px; font-variant-numeric: tabular-nums; font-size: 16.5px; line-height: 1.6; }
+.eq .m.words { color: var(--muted); font-size: 15.5px; }
+.eq .m.chk { font-size: 15.5px; margin-top: 4px; }
+.eq + .eq { border-top: 1px solid var(--rule); border-top-left-radius: 0; border-top-right-radius: 0; }
+.note { color: var(--red); }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1.5px solid var(--ink); margin-bottom: -20px; }
+.tab {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1.5px solid var(--rule); border-bottom: 0;
+  border-radius: 6px 6px 0 0; padding: 7px 18px; cursor: pointer;
+}
+.tab:hover { border-color: var(--muted); }
+.tab[aria-selected="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); cursor: default; }
+.card.tabbed { border-top: 0; border-radius: 0 0 8px 8px; }
+[hidden] { display: none !important; }
+
+/* reveal states */
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.write { animation: write 0.5s ease-out both; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); opacity: 0.4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.land { animation: land 0.5s ease-out both; }
+@keyframes land { 0% { transform: scale(1.25); } 55% { transform: scale(0.95); } 100% { transform: scale(1); } }
+.ghost { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; will-change: transform; }
+.ghost > div { will-change: transform; }
+.gchip { display: inline-block; font-family: var(--mono); font-weight: 700; font-size: 15px; padding: 0 5px; border-radius: 4px; background: var(--ct, var(--surface)); color: var(--cx, var(--ink)); outline: 1.5px solid var(--ink); }
+.use-on { outline: 2px solid var(--use) !important; outline-offset: 2px; border-radius: 4px; background-color: var(--use-tint); }
+td.use-on { outline-offset: -3px; }
+
+/* steps */
+.bar { background: var(--bg); display: grid; gap: 10px; }
+.caption { font-size: 15.5px; min-height: 3em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button.ctl {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button.ctl:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button.ctl:disabled { opacity: 0.45; cursor: default; }
+button.ctl.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.progrow { display: flex; align-items: center; gap: 12px; }
+.counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress { flex: 1; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+button .sm { display: none; }
+.bar > * { width: 100%; max-width: 860px; margin-inline: auto; }
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  border-top: 2px solid var(--ink);
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+
+.copyright { padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* wide screens: problem on the left, held in view; the years on the right */
+@media (min-width: 1060px) {
+  .wrap { max-width: 1240px; }
+  .layout { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 24px; }
+  .bar > * { max-width: 1240px; }
+}
+@media (min-width: 1060px) and (min-height: 640px) {
+  .pin { position: sticky; top: 12px; }
+}
+@media (max-width: 560px) {
+  .problem { font-size: 16px; padding: 12px 10px; }
+  .problem .eqn { font-size: 14px; }
+  .card { padding: 12px 10px 14px; }
+  .eq .m { padding-left: 12px; font-size: 15.5px; }
+  th, td { padding: 4px 5px; }
+  .dat col.c1 { width: 34%; } .dat col.c2 { width: 22%; }
+  .dat tbody th { font-size: 13px; }
+  .dat td.n { font-size: 13px; }
+  .gchip { font-size: 13px; }
+  .controls { flex-wrap: nowrap; gap: 6px; }
+  button.ctl { padding: 7px 10px; font-size: 14px; flex: 1 1 auto; }
+  button .lg { display: none; } button .sm { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write, .land, .carry.write .ln, .carry.write .hd { animation: none !important; }
+  .progress > div, .dat thead th.n, .dat td.tint { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Inventory Equation: Missing Amounts</h1>
+  </header>
+
+  <div class="layout">
+    <aside class="pin" aria-label="Problem">
+      <section class="problem" aria-label="Problem">
+        <p>Fill in the missing amounts using the expanded inventory equation.</p>
+        <div class="tbl"><table class="dat" aria-label="Income statement and inventory data, 20X1 to 20X3">
+          <colgroup><col class="c1"><col class="c2"><col class="c2"><col class="c2"></colgroup>
+          <thead><tr><th></th><th class="n" id="h-1">20X1</th><th class="n" id="h-2">20X2</th><th class="n" id="h-3">20X3</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Sales revenue</th>
+              <td class="n" id="t1-sr">$290,000</td>
+              <td class="n blank" id="t2-sr"><span class="swap"><span class="xm rv" id="t2-sr-x">X</span><span class="fill rv" id="t2-sr-v">$360,000</span></span></td>
+              <td class="n" id="t3-sr">$410,000</td></tr>
+            <tr><th scope="row">Sales returns and allowances</th>
+              <td class="n" id="t1-ret">6,000</td>
+              <td class="n" id="t2-ret">13,000</td>
+              <td class="n blank" id="t3-ret"><span class="swap"><span class="xm rv" id="t3-ret-x">Y</span><span class="fill rv" id="t3-ret-v">10,000</span></span></td></tr>
+            <tr id="r-ns"><th scope="row">Net sales</th>
+              <td class="n blank tint c-orchid y1" id="t1-ns"><span class="swap"><span class="xm rv" id="t1-ns-x">X</span><span class="fill rv c-orchid" id="t1-ns-v">284,000</span></span></td>
+              <td class="n tint c-orchid y2" id="t2-ns">347,000</td>
+              <td class="n blank tint c-orchid y3" id="t3-ns"><span class="swap"><span class="xm rv" id="t3-ns-x">X</span><span class="fill rv c-orchid" id="t3-ns-v">400,000</span></span></td></tr>
+            <tr><th scope="row">Beginning inventory</th>
+              <td class="n tint c-gold y1" id="t1-bi">20,000</td>
+              <td class="n tint c-gold y2" id="t2-bi">32,000</td>
+              <td class="n blank tint c-gold y3" id="t3-bi"><span class="fill rv" id="t3-bi-v">37,000</span></td></tr>
+            <tr><th scope="row">Ending inventory</th>
+              <td class="n blank tint c-blue y1" id="t1-ei"><span class="fill rv c-blue" id="t1-ei-v">32,000</span></td>
+              <td class="n blank tint c-blue y2" id="t2-ei"><span class="swap"><span class="xm rv" id="t2-ei-x">Z</span><span class="fill rv c-blue" id="t2-ei-v">37,000</span></span></td>
+              <td class="n blank tint c-blue y3" id="t3-ei"><span class="swap"><span class="xm rv" id="t3-ei-x">Z</span><span class="fill rv c-blue" id="t3-ei-v">34,000</span></span></td></tr>
+            <tr><th scope="row">Purchases</th>
+              <td class="n blank tint c-green y1" id="t1-pu"><span class="swap"><span class="xm rv" id="t1-pu-x">Y</span><span class="fill rv c-green" id="t1-pu-v">247,000</span></span></td>
+              <td class="n tint c-green y2" id="t2-pu">260,000</td>
+              <td class="n tint c-green y3" id="t3-pu">298,000</td></tr>
+            <tr><th scope="row">Purchase returns and allowances</th>
+              <td class="n tint c-teal y1" id="t1-pr">5,000</td>
+              <td class="n tint c-teal y2" id="t2-pr">8,000</td>
+              <td class="n tint c-teal y3" id="t3-pr">10,000</td></tr>
+            <tr id="r-fr"><th scope="row">Freight-in</th>
+              <td class="n tint c-orange y1" id="t1-fr">8,000</td>
+              <td class="n tint c-orange y2" id="t2-fr">9,000</td>
+              <td class="n tint c-orange y3" id="t3-fr">12,000</td></tr>
+            <tr><th scope="row">Cost of goods sold</th>
+              <td class="n tint c-red y1" id="t1-cogs">238,000</td>
+              <td class="n blank tint c-red y2" id="t2-cogs"><span class="swap"><span class="xm rv" id="t2-cogs-x">Y</span><span class="fill rv c-red" id="t2-cogs-v">256,000</span></span></td>
+              <td class="n tint c-red y3" id="t3-cogs">303,000</td></tr>
+            <tr><th scope="row">Gross profit on sales</th>
+              <td class="n" id="t1-gp">46,000</td>
+              <td class="n" id="t2-gp">91,000</td>
+              <td class="n" id="t3-gp">97,000</td></tr>
+          </tbody>
+        </table><svg class="carry rv" id="arr1" aria-hidden="true"><path class="ln" pathLength="1"/><path class="hd"/></svg><svg class="carry rv" id="arr2" aria-hidden="true"><path class="ln" pathLength="1"/><path class="hd"/></svg></div>
+        <p class="eqn">Beginning inventory + Purchases + Freight-in − Purchase returns and allowances − Cost of goods sold = Ending inventory</p>
+      </section>
+
+      <p class="key"><span>Matching colors show where a number comes from and where it is used.</span><span><i class="sw"></i>Used in this step</span><span><svg class="sw-arr" viewBox="0 0 22 12" aria-hidden="true"><path d="M1 6 H15"/><path class="h" d="M21 6 L14 1.5 L14 10.5 Z"/></svg>Ending inventory of one year = beginning inventory of the next</span></p>
+    </aside>
+
+    <main class="solution">
+      <div class="tabs" role="tablist" aria-label="Years">
+        <button class="tab" role="tab" id="tab-1" data-part="1" aria-selected="true" aria-controls="pan-1" type="button">20X1</button>
+        <button class="tab" role="tab" id="tab-2" data-part="2" aria-selected="false" aria-controls="pan-2" tabindex="-1" type="button">20X2</button>
+        <button class="tab" role="tab" id="tab-3" data-part="3" aria-selected="false" aria-controls="pan-3" tabindex="-1" type="button">20X3</button>
+      </div>
+
+      <section class="card tabbed" id="pan-1" role="tabpanel" aria-labelledby="tab-1">
+        <div class="eq rv" id="x1a">
+          <div class="lbl">Net sales</div>
+          <div class="m words">Sales revenue − Sales returns and allowances = Net sales</div>
+          <div class="m words rv" id="x1a-2">Net sales = Sales revenue − Sales returns and allowances</div>
+          <div class="m rv" id="x1a-3"><b class="xv">X</b> = 290,000 − 6,000 = <span class="final"><span class="amt c-orchid" id="x1-ns">284,000</span></span></div>
+        </div>
+        <div class="eq rv" id="x1b">
+          <div class="lbl">Check: gross profit</div>
+          <div class="m words">Net sales − Cost of goods sold = Gross profit</div>
+          <div class="m"><span class="amt c-orchid">284,000</span> − <span class="amt c-red">238,000</span> = 46,000 <span class="ok" aria-label="checks">✓</span> the same as the table</div>
+        </div>
+        <div class="eq rv" id="x1c">
+          <div class="lbl">Ending inventory</div>
+          <div class="m words">Ending inventory, 20X1 = Beginning inventory, 20X2 (given)</div>
+          <div class="m">= <span class="final"><span class="amt c-blue">32,000</span></span></div>
+          <div class="m chk"><b class="note">Note:</b> The inventory on hand at December 31, 20X1 is the inventory on hand at January 1, 20X2.</div>
+        </div>
+        <div class="eq rv" id="x1d">
+          <div class="lbl">Purchases</div>
+          <div class="m words">Beginning inventory + Purchases + Freight-in − Purchase returns and allowances − Cost of goods sold = Ending inventory</div>
+          <div class="m words rv" id="x1d-2">Purchases = Ending inventory + Cost of goods sold + Purchase returns and allowances − Freight-in − Beginning inventory</div>
+          <div class="m rv" id="x1d-3"><b class="xv">Y</b> = <span class="amt c-blue">32,000</span> + <span class="amt c-red">238,000</span> + <span class="amt c-teal">5,000</span> − <span class="amt c-orange">8,000</span> − <span class="amt c-gold">20,000</span> = <span class="final"><span class="amt c-green" id="x1-pu">247,000</span></span></div>
+        </div>
+      </section>
+
+      <section class="card tabbed" id="pan-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+        <div class="eq rv" id="x2a">
+          <div class="lbl">Sales revenue</div>
+          <div class="m words">Sales revenue − Sales returns and allowances = Net sales</div>
+          <div class="m words rv" id="x2a-2">Sales revenue = Net sales + Sales returns and allowances</div>
+          <div class="m rv" id="x2a-3"><b class="xv">X</b> = <span class="amt c-orchid">347,000</span> + 13,000 = <span class="final" id="x2-sr">360,000</span></div>
+        </div>
+        <div class="eq rv" id="x2b">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">Net sales − Cost of goods sold = Gross profit</div>
+          <div class="m words rv" id="x2b-2">Cost of goods sold = Net sales − Gross profit</div>
+          <div class="m rv" id="x2b-3"><b class="xv">Y</b> = <span class="amt c-orchid">347,000</span> − 91,000 = <span class="final"><span class="amt c-red" id="x2-cogs">256,000</span></span></div>
+        </div>
+        <div class="eq rv" id="x2c">
+          <div class="lbl">Ending inventory</div>
+          <div class="m words">Beginning inventory + Purchases + Freight-in − Purchase returns and allowances − Cost of goods sold = Ending inventory</div>
+          <div class="m words rv" id="x2c-2">Ending inventory = Beginning inventory + Purchases + Freight-in − Purchase returns and allowances − Cost of goods sold</div>
+          <div class="m rv" id="x2c-3"><b class="xv">Z</b> = <span class="amt c-gold">32,000</span> + <span class="amt c-green">260,000</span> + <span class="amt c-orange">9,000</span> − <span class="amt c-teal">8,000</span> − <span class="amt c-red">256,000</span> = <span class="final"><span class="amt c-blue" id="x2-ei">37,000</span></span></div>
+        </div>
+        <div class="eq rv" id="x2e">
+          <div class="lbl">Beginning inventory of 20X3</div>
+          <div class="m words">Beginning inventory, 20X3 = Ending inventory, 20X2</div>
+          <div class="m">= <span class="final"><span class="amt c-blue">37,000</span></span></div>
+          <div class="m chk"><b class="note">Note:</b> The inventory on hand at December 31, 20X2 is the inventory on hand at January 1, 20X3.</div>
+        </div>
+      </section>
+
+      <section class="card tabbed" id="pan-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+        <div class="eq rv" id="x3a">
+          <div class="lbl">Net sales</div>
+          <div class="m words">Net sales − Cost of goods sold = Gross profit</div>
+          <div class="m words rv" id="x3a-2">Net sales = Cost of goods sold + Gross profit</div>
+          <div class="m rv" id="x3a-3"><b class="xv">X</b> = <span class="amt c-red">303,000</span> + 97,000 = <span class="final"><span class="amt c-orchid" id="x3-ns">400,000</span></span></div>
+        </div>
+        <div class="eq rv" id="x3b">
+          <div class="lbl">Sales returns and allowances</div>
+          <div class="m words">Sales revenue − Sales returns and allowances = Net sales</div>
+          <div class="m words rv" id="x3b-2">Sales returns and allowances = Sales revenue − Net sales</div>
+          <div class="m rv" id="x3b-3"><b class="xv">Y</b> = 410,000 − <span class="amt c-orchid">400,000</span> = <span class="final" id="x3-ret">10,000</span></div>
+        </div>
+        <div class="eq rv" id="x3c">
+          <div class="lbl">Ending inventory</div>
+          <div class="m words">Beginning inventory + Purchases + Freight-in − Purchase returns and allowances − Cost of goods sold = Ending inventory</div>
+          <div class="m words rv" id="x3c-2">Ending inventory = Beginning inventory + Purchases + Freight-in − Purchase returns and allowances − Cost of goods sold</div>
+          <div class="m rv" id="x3c-3"><b class="xv">Z</b> = <span class="amt c-gold">37,000</span> + <span class="amt c-green">298,000</span> + <span class="amt c-orange">12,000</span> − <span class="amt c-teal">10,000</span> − <span class="amt c-red">303,000</span> = <span class="final"><span class="amt c-blue" id="x3-ei">34,000</span></span></div>
+        </div>
+      </section>
+
+      <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+    </main>
+  </div>
+</div>
+
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="progrow"><div class="progress" aria-hidden="true"><div id="prog"></div></div><span class="counter" id="counter"></span></div>
+  <p class="caption" id="caption" aria-live="polite"></p>
+  <div class="controls">
+    <button class="ctl" id="restart" type="button"><span class="lg">Start over</span><span class="sm">Restart</span></button>
+    <button class="ctl" id="back" type="button">Back</button>
+    <button class="ctl primary" id="next" type="button">Next</button>
+    <button class="ctl" id="all" type="button"><span class="lg">Show solution</span><span class="sm">Solution</span></button>
+  </div>
+</div>
+
+<script>
+/* One walkthrough per year. "pre": already filled when the tab opens. "cut": red lines already drawn.
+   Step fields: show (written in place), fly ([from, to]: one number moves), after (written once it lands),
+   hide (removed when the number lands), cut (red line under these rows), use (outlined inputs),
+   lead (ms to wait before the number moves, while an arrow draws), caption.
+   Each blank that is solved for gets its own letter in its year (X, then Y, then Z), red in the table while it is worked;
+   the letter stays in the lines, and the number found goes into the table. A carry needs no letter. */
+var CUTS = ["r-ns", "r-fr"];
+var DONE_1 = ["t1-ns-v", "t1-ei-v", "t1-pu-v", "arr1"];
+var DONE_2 = DONE_1.concat(["t2-sr-v", "t2-cogs-v", "t2-ei-v", "t3-bi-v", "arr2"]);
+window.WALK_TABS = {};
+window.WALK_TABS["1"] = { steps: [
+ { caption: "20X1 has three blanks: net sales, ending inventory and purchases. Net sales and purchases are solved for, so each gets its own letter, X and Y. Ending inventory is carried back from 20X2, so it needs no letter. Click Next for a step-by-step walkthrough." },
+ { cut: CUTS,
+   caption: "Red lines under net sales and under freight-in. The rows between the lines (beginning inventory, ending inventory, purchases, purchase returns and allowances, freight-in) belong to the inventory equation. The rows above and below the lines belong to the gross profit equation. Cost of goods sold is used in both." },
+ { show: ["x1a", "t1-ns-x"], use: ["t1-sr", "t1-ret", "t1-ns"],
+   caption: "Net sales is the unknown, X. Start from the relationship: sales revenue − sales returns and allowances = net sales." },
+ { show: ["x1a-2"], use: ["t1-sr", "t1-ret", "t1-ns"],
+   caption: "Rearrange it so that what you are finding is on the left: net sales = sales revenue − sales returns and allowances." },
+ { show: ["x1a-3"], fly: [["x1-ns", "t1-ns-v"]], hide: ["t1-ns-x"], use: ["t1-sr", "t1-ret"],
+   caption: "The numbers go in the same order: X = 290,000 − 6,000 = 284,000. X stays in the line, and 284,000 goes into the table." },
+ { show: ["x1b"], use: ["t1-ns", "t1-cogs", "t1-gp"],
+   caption: "Check with the gross profit given: net sales − cost of goods sold = gross profit, 284,000 − 238,000 = 46,000, the same as the table." },
+ { show: ["arr1", "x1c"], lead: 950, fly: [["t2-bi", "t1-ei-v"]], use: ["t2-bi"],
+   caption: "20X1 ending inventory comes from 20X2 beginning inventory, which is given: 32,000. The inventory on hand at December 31, 20X1 is the inventory on hand at January 1, 20X2, so the arrow runs back from 20X2 to 20X1." },
+ { show: ["x1d", "t1-pu-x"], use: ["t1-bi", "t1-pu", "t1-fr", "t1-pr", "t1-cogs", "t1-ei"],
+   caption: "Purchases is the second unknown in 20X1, so it is Y. Start from the inventory equation: beginning inventory + purchases + freight-in − purchase returns and allowances − cost of goods sold = ending inventory." },
+ { show: ["x1d-2"], use: ["t1-bi", "t1-pu", "t1-fr", "t1-pr", "t1-cogs", "t1-ei"],
+   caption: "Rearrange it so that purchases is on the left: purchases = ending inventory + cost of goods sold + purchase returns and allowances − freight-in − beginning inventory." },
+ { show: ["x1d-3"], fly: [["x1-pu", "t1-pu-v"]], hide: ["t1-pu-x"], use: ["t1-bi", "t1-fr", "t1-pr", "t1-cogs", "t1-ei"],
+   caption: "The numbers go in the same order: Y = 32,000 + 238,000 + 5,000 − 8,000 − 20,000 = 247,000, the 20X1 purchases. Y stays in the line, and 247,000 goes into the table. All three 20X1 blanks are filled." }
+] };
+window.WALK_TABS["2"] = { pre: DONE_1, cut: CUTS, steps: [
+ { caption: "20X2 has three blanks to solve for: sales revenue (X), cost of goods sold (Y) and ending inventory (Z). The letters start over because each year is its own set of lines. The red lines and the 20X1 amounts are already in the table. Click Next for a step-by-step walkthrough." },
+ { show: ["x2a", "t2-sr-x"], use: ["t2-sr", "t2-ret", "t2-ns"],
+   caption: "Sales revenue is the unknown, X. Start from the relationship: sales revenue − sales returns and allowances = net sales." },
+ { show: ["x2a-2"], use: ["t2-sr", "t2-ret", "t2-ns"],
+   caption: "Rearrange it so that sales revenue is on the left: sales revenue = net sales + sales returns and allowances." },
+ { show: ["x2a-3"], fly: [["x2-sr", "t2-sr-v"]], hide: ["t2-sr-x"], use: ["t2-ns", "t2-ret"],
+   caption: "The numbers go in the same order: X = 347,000 + 13,000 = 360,000. X stays in the line, and 360,000 goes into the table." },
+ { show: ["x2b", "t2-cogs-x"], use: ["t2-ns", "t2-cogs", "t2-gp"],
+   caption: "Cost of goods sold is the second unknown in 20X2, so it is Y. Start from the relationship: net sales − cost of goods sold = gross profit." },
+ { show: ["x2b-2"], use: ["t2-ns", "t2-cogs", "t2-gp"],
+   caption: "Rearrange it so that cost of goods sold is on the left: cost of goods sold = net sales − gross profit." },
+ { show: ["x2b-3"], fly: [["x2-cogs", "t2-cogs-v"]], hide: ["t2-cogs-x"], use: ["t2-ns", "t2-gp"],
+   caption: "The numbers go in the same order: Y = 347,000 − 91,000 = 256,000. Y stays in the line, and 256,000 goes into the table." },
+ { show: ["x2c", "t2-ei-x"], use: ["t2-bi", "t2-pu", "t2-fr", "t2-pr", "t2-cogs", "t2-ei"],
+   caption: "Ending inventory is the third unknown in 20X2, so it is Z. Start from the inventory equation: beginning inventory + purchases + freight-in − purchase returns and allowances − cost of goods sold = ending inventory." },
+ { show: ["x2c-2"], use: ["t2-bi", "t2-pu", "t2-fr", "t2-pr", "t2-cogs", "t2-ei"],
+   caption: "Rearrange it so that ending inventory is on the left: ending inventory = beginning inventory + purchases + freight-in − purchase returns and allowances − cost of goods sold." },
+ { show: ["x2c-3"], fly: [["x2-ei", "t2-ei-v"]], hide: ["t2-ei-x"], use: ["t2-bi", "t2-pu", "t2-fr", "t2-pr", "t2-cogs"],
+   caption: "The numbers go in the same order: Z = 32,000 + 260,000 + 9,000 − 8,000 − 256,000 = 37,000, the 20X2 ending inventory. Z stays in the line, and 37,000 goes into the table." },
+ { show: ["arr2", "x2e"], lead: 950, fly: [["t2-ei-v", "t3-bi-v"]], use: ["t2-ei"],
+   caption: "20X2 ending inventory = 20X3 beginning inventory = 37,000. This time the amount is found in 20X2 and carried forward, so the arrow runs from 20X2 to 20X3. A carry needs no letter: nothing is solved for." }
+] };
+window.WALK_TABS["3"] = { pre: DONE_2, cut: CUTS, steps: [
+ { caption: "20X3 has three blanks left to solve for: net sales (X), sales returns and allowances (Y) and ending inventory (Z). Beginning inventory, 37,000, was carried forward from 20X2. Click Next for a step-by-step walkthrough." },
+ { show: ["x3a", "t3-ns-x"], use: ["t3-ns", "t3-cogs", "t3-gp"],
+   caption: "Net sales is the unknown, X. Start from the relationship: net sales − cost of goods sold = gross profit." },
+ { show: ["x3a-2"], use: ["t3-ns", "t3-cogs", "t3-gp"],
+   caption: "Rearrange it so that net sales is on the left: net sales = cost of goods sold + gross profit." },
+ { show: ["x3a-3"], fly: [["x3-ns", "t3-ns-v"]], hide: ["t3-ns-x"], use: ["t3-cogs", "t3-gp"],
+   caption: "The numbers go in the same order: X = 303,000 + 97,000 = 400,000. X stays in the line, and 400,000 goes into the table." },
+ { show: ["x3b", "t3-ret-x"], use: ["t3-sr", "t3-ret", "t3-ns"],
+   caption: "Sales returns and allowances is the second unknown in 20X3, so it is Y. Start from the relationship: sales revenue − sales returns and allowances = net sales." },
+ { show: ["x3b-2"], use: ["t3-sr", "t3-ret", "t3-ns"],
+   caption: "Rearrange it so that sales returns and allowances is on the left: sales returns and allowances = sales revenue − net sales." },
+ { show: ["x3b-3"], fly: [["x3-ret", "t3-ret-v"]], hide: ["t3-ret-x"], use: ["t3-sr", "t3-ns"],
+   caption: "The numbers go in the same order: Y = 410,000 − 400,000 = 10,000. Y stays in the line, and 10,000 goes into the table." },
+ { show: ["x3c", "t3-ei-x"], use: ["t3-bi", "t3-pu", "t3-fr", "t3-pr", "t3-cogs", "t3-ei"],
+   caption: "Ending inventory is the third unknown in 20X3, so it is Z. Start from the inventory equation: beginning inventory + purchases + freight-in − purchase returns and allowances − cost of goods sold = ending inventory." },
+ { show: ["x3c-2"], use: ["t3-bi", "t3-pu", "t3-fr", "t3-pr", "t3-cogs", "t3-ei"],
+   caption: "Rearrange it so that ending inventory is on the left: ending inventory = beginning inventory + purchases + freight-in − purchase returns and allowances − cost of goods sold." },
+ { show: ["x3c-3"], fly: [["x3-ei", "t3-ei-v"]], hide: ["t3-ei-x"], use: ["t3-bi", "t3-pu", "t3-fr", "t3-pr", "t3-cogs"],
+   caption: "The numbers go in the same order: Z = 37,000 + 298,000 + 12,000 − 10,000 − 303,000 = 34,000, the 20X3 ending inventory. Z stays in the line, and 34,000 goes into the table. All ten blanks are filled." }
+] };
+</script>
+<script>
+/* Walkthrough engine shared by the Chapter 7 and 8 pages, with tabs. */
+(function () {
+  'use strict';
+  var TABS = window.WALK_TABS;
+  var PARTS = Object.keys(TABS);
+  var $ = function (id) { return document.getElementById(id); };
+  var S = function (s) { return s.show || []; };
+  var U = function (s) { return s.use || []; };
+  var F = function (s) { return s.fly || []; };
+  var A = function (s) { return s.after || []; };
+  var H = function (s) { return s.hide || []; };
+  var REVEAL = [];
+  var addReveal = function (id) { if (REVEAL.indexOf(id) < 0) REVEAL.push(id); };
+  PARTS.forEach(function (p) {
+    (TABS[p].pre || []).forEach(addReveal);
+    TABS[p].steps.forEach(function (s) {
+      S(s).concat(F(s).map(function (f) { return f[1]; }), A(s), H(s)).forEach(addReveal);
+    });
+  });
+  var bar = document.querySelector('.bar');
+  var part = PARTS[0], pos = {};
+  PARTS.forEach(function (p) { pos[p] = 0; });
+  var TAB = TABS[part], STEPS = TAB.steps, last = STEPS.length - 1;
+  var k = 0, tok = 0, timers = [], ghosts = [];
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  (function check() {
+    var miss = [];
+    PARTS.forEach(function (p) {
+      var ids = (TABS[p].pre || []).concat(TABS[p].cut || []);
+      TABS[p].steps.forEach(function (s) {
+        ids = ids.concat(S(s), U(s), A(s), H(s), s.cut || []);
+        F(s).forEach(function (f) { ids = ids.concat(f); });
+      });
+      ids.forEach(function (id) { if (!$(id) && miss.indexOf(id) < 0) miss.push(id); });
+    });
+    if (miss.length && window.console) console.warn('Walkthrough: missing ids', miss);
+  })();
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function stopMotion() {
+    tok++;
+    timers.forEach(clearTimeout); timers = [];
+    ghosts.forEach(function (g) { g.remove(); }); ghosts = [];
+  }
+  function reveal(id, how) {
+    var el = $(id); if (!el) return;
+    el.classList.remove('write', 'land');
+    el.classList.add('shown');
+    if (how) { void el.offsetWidth; el.classList.add(how); }
+  }
+
+  function render(animate) {
+    stopMotion();
+    var s = STEPS[k];
+    var moving = animate && !reduced();
+    var shown = {};
+    (TAB.pre || []).forEach(function (id) { shown[id] = 1; });
+    for (var i = 1; i <= k; i++) {
+      S(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+      F(STEPS[i]).forEach(function (f) { shown[f[1]] = 1; });
+      A(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+      if (i < k || !moving) H(STEPS[i]).forEach(function (id) { delete shown[id]; });
+    }
+    var cuts = {};
+    (TAB.cut || []).forEach(function (id) { cuts[id] = 1; });
+    for (var j = 1; j <= k; j++) (STEPS[j].cut || []).forEach(function (id) { cuts[id] = 1; });
+    document.querySelectorAll('tr[id^="r-"]').forEach(function (tr) { tr.classList.toggle('cut', !!cuts[tr.id]); });
+    var yr = 'y' + part, lit = {};
+    for (var q = 1; q <= k; q++) {
+      U(STEPS[q]).concat(S(STEPS[q]), F(STEPS[q]).map(function (f) { return f[1]; })).forEach(function (id) {
+        var e = $(id), td = e ? (e.tagName === 'TD' ? e : e.closest('td')) : null;
+        if (td && td.classList.contains('tint') && td.classList.contains(yr)) lit[td.id] = 1;
+      });
+    }
+    document.querySelectorAll('.dat td.tint').forEach(function (td) { td.classList.toggle('lit', !!lit[td.id]); });
+    var held = {};
+    if (moving) {
+      F(s).forEach(function (f) { held[f[1]] = 1; });
+      A(s).forEach(function (id) { held[id] = 1; });
+    }
+    REVEAL.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.remove('write', 'land');
+      el.classList.toggle('shown', !!shown[id] && !held[id]);
+    });
+    if (moving) {
+      S(s).forEach(function (id) { var el = $(id); if (!el) return; void el.offsetWidth; el.classList.add('write'); });
+    }
+    document.querySelectorAll('.use-on').forEach(function (el) { el.classList.remove('use-on'); });
+    U(s).forEach(function (id) { var el = $(id); if (el) el.classList.add('use-on'); });
+    $('caption').textContent = s.caption;
+    $('counter').textContent = 'Step ' + k + ' of ' + last;
+    $('prog').style.width = (k / last) * 100 + '%';
+    // at the end of a year, Next goes on to the next year; at the start of a year, Back goes to the end of the one before
+    var pi = PARTS.indexOf(part), nextPart = PARTS[pi + 1], prevPart = PARTS[pi - 1];
+    $('back').disabled = k === 0 && !prevPart;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last && !nextPart;
+    $('next').textContent = k === last && nextPart ? 'Next: ' + $('tab-' + nextPart).textContent : 'Next';
+    $('all').disabled = k === last;
+  }
+
+  function barFixed() { return getComputedStyle(bar).position === 'fixed'; }
+  function span(ids) {
+    var top = Infinity, bottom = -Infinity;
+    ids.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    return top === Infinity ? null : { t: top, b: bottom };
+  }
+
+  // Scroll so this step's line (and, if they fit, its inputs) are in view. Resolves when scrolling stops.
+  function bring() {
+    var s = STEPS[k];
+    var tg = S(s).concat(F(s).map(function (f) { return f[1]; }), A(s));
+    if (!tg.length) return Promise.resolve();
+    var src = F(s).map(function (f) { return f[0]; }).concat(U(s));
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    var dy = null;
+    [tg.concat(src), tg].some(function (ids) {
+      var r = span(ids); if (!r) return false;
+      if (r.b - r.t > bottomEdge - 24) return false;
+      dy = r.t < 12 ? r.t - 12 : (r.b > bottomEdge - 12 ? r.b - (bottomEdge - 12) : 0);
+      return true;
+    });
+    if (dy === null) { var r0 = span([tg[0]]); if (!r0) return Promise.resolve(); dy = r0.t - 16; }
+    if (Math.abs(dy) < 2) return Promise.resolve();
+    var smooth = !reduced();
+    window.scrollBy({ top: dy, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) return Promise.resolve();
+    return new Promise(function (res) {
+      var done = false;
+      var fin = function () { if (done) return; done = true; window.removeEventListener('scrollend', fin); res(); };
+      window.addEventListener('scrollend', fin);
+      setTimeout(fin, Math.min(950, 260 + Math.abs(dy) * 0.6));
+    });
+  }
+
+  // The box around a number: the text inside a table cell, or the element itself.
+  function box(el) {
+    if (el.tagName === 'TD') {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var b = r.getBoundingClientRect();
+      if (b.width) return b;
+    }
+    return el.getBoundingClientRect();
+  }
+
+  // One number moves from where it was found to its place.
+  function fly(from, to, my, dur) {
+    var src = $(from), dst = $(to);
+    if (!src || !dst) { reveal(to, 'land'); return; }
+    var a = box(src), b = dst.getBoundingClientRect();
+    var g = document.createElement('div');
+    g.className = 'ghost'; g.setAttribute('aria-hidden', 'true');
+    var gy = document.createElement('div');
+    var chip = document.createElement('span'); chip.className = 'gchip';
+    // the moving number takes the color of its place, or of where it starts when its place has none
+    var tone = function (el) { for (var ci = 0; ci < el.classList.length; ci++) if (el.classList[ci].indexOf('c-') === 0) return el.classList[ci]; return null; };
+    var c = tone(dst) || tone(src);
+    if (c) chip.classList.add(c);
+    chip.textContent = dst.textContent.trim();
+    gy.appendChild(chip); g.appendChild(gy); document.body.appendChild(g); ghosts.push(g);
+    var sx = window.scrollX || 0, sy = window.scrollY || 0;
+    var x0 = a.right - chip.offsetWidth + sx, x1 = b.right - chip.offsetWidth + sx;
+    var y0 = a.top + a.height / 2 - chip.offsetHeight / 2 + sy, y1 = b.top + b.height / 2 - chip.offsetHeight / 2 + sy;
+    g.style.transform = 'translateX(' + x0 + 'px)';
+    gy.style.transform = 'translateY(' + y0 + 'px)';
+    var ax = g.animate([{ transform: 'translateX(' + x0 + 'px)' }, { transform: 'translateX(' + x1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' });
+    gy.animate([{ transform: 'translateY(' + y0 + 'px)' }, { transform: 'translateY(' + y1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.5,0,.6,1)', fill: 'forwards' });
+    ax.onfinish = function () {
+      g.remove();
+      if (my !== tok) return;
+      reveal(to, 'land');
+    };
+  }
+
+  function play(my) {
+    var s = STEPS[k];
+    var lead = s.lead != null ? s.lead : (S(s).length ? 450 : 80), gap = 320, dur = 800;
+    F(s).forEach(function (f, i) {
+      later(function () { if (my === tok) fly(f[0], f[1], my, dur); }, lead + i * gap);
+    });
+    var landed = F(s).length ? lead + (F(s).length - 1) * gap + dur : lead;
+    H(s).forEach(function (id) {
+      later(function () { if (my !== tok) return; var el = $(id); if (el) el.classList.remove('shown'); }, landed);
+    });
+    A(s).forEach(function (id, i) {
+      later(function () { if (my === tok) reveal(id, 'write'); }, landed + 120 + i * 170);
+    });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+    var my = tok;
+    var p = bring();
+    if (animate && !reduced()) p.then(function () { if (my === tok) play(my); });
+  }
+
+  // Tabs: each year keeps its own place in its walkthrough; its column in the table takes the colors.
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab[data-part]'));
+  function markYear() {
+    document.body.setAttribute('data-yr', part);
+    PARTS.forEach(function (p) { var h = $('h-' + p); if (h) h.classList.toggle('cur', p === part); });
+  }
+  function setTab(p, focus, at) {
+    if (!TABS[p] || p === part) return;
+    stopMotion();
+    pos[part] = k;
+    part = p; TAB = TABS[p]; STEPS = TAB.steps; last = STEPS.length - 1; k = at != null ? at : pos[p];
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-part') === p;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      var pan = $(t.getAttribute('aria-controls'));
+      if (pan) pan.hidden = !on;
+      if (on && focus) t.focus();
+    });
+    markYear();
+    render(false);
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { setTab(t.getAttribute('data-part'), false); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); e.stopPropagation();
+      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      setTab(n.getAttribute('data-part'), true);
+    });
+  });
+
+  // keep the year tabs in view after Next or Back changes the year
+  function showTabs() {
+    var tl = document.querySelector('.tabs'), r = tl.getBoundingClientRect();
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    if (r.top < 8 || r.top > bottomEdge - 80) window.scrollBy({ top: r.top - 12, behavior: reduced() ? 'auto' : 'smooth' });
+  }
+  function forward() {
+    if (k < last) { go(k + 1, true); return; }
+    var nxt = PARTS[PARTS.indexOf(part) + 1];
+    if (nxt) { setTab(nxt, false, 0); showTabs(); }
+  }
+  function backward() {
+    if (k > 0) { go(k - 1, false); return; }
+    var prv = PARTS[PARTS.indexOf(part) - 1];
+    if (prv) { setTab(prv, false, TABS[prv].steps.length - 1); showTabs(); }
+  }
+  $('next').addEventListener('click', forward);
+  $('back').addEventListener('click', backward);
+  $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', function () { k = last; render(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('[role="tablist"]')) return;
+    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); forward(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); backward(); }
+  });
+
+  var setBar = function () {
+    document.documentElement.style.setProperty('--bar-h', (barFixed() ? bar.offsetHeight : 0) + 'px');
+  };
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(bar);
+  setBar();
+  markYear();
+  render(false);
+})();
+</script>
+<script>
+/* The two carry arrows, straight lines only, each drawn in the direction the solution works.
+   arr1 runs back: the given 20X2 beginning inventory fills the 20X1 ending inventory blank.
+   arr2 runs forward: the 20X2 ending inventory found in the equation fills the 20X3 beginning inventory blank. */
+(function () {
+  function el(id) { return document.getElementById(id); }
+  function cellOf(id) { var e = el(id); return e ? (e.closest('td') || e) : null; }
+  function boxOf(id) {
+    var e = el(id); if (!e) return null;
+    if (e.tagName === 'TD') { var r = document.createRange(); r.selectNodeContents(e); var b = r.getBoundingClientRect(); if (b.width) return b; }
+    return e.getBoundingClientRect();
+  }
+  function frame(svg) {
+    var w = svg.parentNode, wr = w.getBoundingClientRect();
+    return { w: w, ox: -wr.left + w.scrollLeft, oy: -wr.top + w.scrollTop, h: w.clientWidth < 450 ? 5 : 6 };
+  }
+  function set(svg, f, line, head) {
+    svg.setAttribute('width', f.w.scrollWidth); svg.setAttribute('height', f.w.scrollHeight);
+    svg.querySelector('.ln').setAttribute('d', line);
+    svg.querySelector('.hd').setAttribute('d', head);
+  }
+  // From a number one column right and one row up, back into the blank it fills; the head points left.
+  function back(svgId, fromId, toId) {
+    var svg = el(svgId), fc = cellOf(fromId), fb = boxOf(fromId), tc = cellOf(toId), tb = boxOf(toId);
+    if (!svg || !fc || !fb || !tc || !tb) return;
+    var f = frame(svg), h = f.h, L = h + 2;
+    var fr = fc.getBoundingClientRect(), tr = tc.getBoundingClientRect();
+    var x0 = fb.left + f.ox - 4, y0 = fr.top + fr.height / 2 + f.oy;
+    var tip = tb.right + f.ox + 3, y1 = tr.top + tr.height / 2 + f.oy;
+    var xv = Math.max(tip + L + 3, Math.min(fr.left + f.ox + 10, x0 - 5));
+    set(svg, f,
+      'M' + x0 + ' ' + y0 + ' H' + xv + ' V' + y1 + ' H' + (tip + L - 1),
+      'M' + tip + ' ' + y1 + ' L' + (tip + L) + ' ' + (y1 - h) + ' L' + (tip + L) + ' ' + (y1 + h) + ' Z');
+  }
+  // From a number forward into the blank one column right and one row up; the head points right, or up when tight.
+  function fwd(svgId, fromId, toId) {
+    var svg = el(svgId), fc = cellOf(fromId), fb = boxOf(fromId), tc = cellOf(toId), tb = boxOf(toId);
+    if (!svg || !fc || !fb || !tc || !tb) return;
+    var f = frame(svg), h = f.h, L = h + 2;
+    var fr = fc.getBoundingClientRect(), tr = tc.getBoundingClientRect();
+    var x0 = fb.right + f.ox + 4, y0 = fr.top + fr.height / 2 + f.oy;
+    var xv = tr.left + f.ox + 10, y1 = tr.top + tr.height / 2 + f.oy;
+    var xe = tb.left + f.ox - 4;
+    if (xe - xv >= L + 6) {
+      set(svg, f,
+        'M' + x0 + ' ' + y0 + ' H' + xv + ' V' + y1 + ' H' + (xe - L + 1),
+        'M' + xe + ' ' + y1 + ' L' + (xe - L) + ' ' + (y1 - h) + ' L' + (xe - L) + ' ' + (y1 + h) + ' Z');
+    } else {
+      var yt = tb.bottom + f.oy + 3;
+      set(svg, f,
+        'M' + x0 + ' ' + y0 + ' H' + xv + ' V' + (yt + L - 1),
+        'M' + xv + ' ' + yt + ' L' + (xv - h) + ' ' + (yt + L) + ' L' + (xv + h) + ' ' + (yt + L) + ' Z');
+    }
+  }
+  function all() { back('arr1', 't2-bi', 't1-ei-v'); fwd('arr2', 't2-ei-v', 't3-bi-v'); }
+  window.addEventListener('resize', all);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
+  if ('ResizeObserver' in window) new ResizeObserver(all).observe(document.querySelector('.dat'));
+  all();
+})();
+</script>
+</body>
+</html>

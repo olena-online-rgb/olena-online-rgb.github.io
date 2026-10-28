@@ -657,9 +657,13 @@ window.WALK_TABS.f = { pre: SETUP_LINES, tint: true, steps: [
     $('caption').textContent = s.caption;
     $('counter').textContent = 'Step ' + k + ' of ' + last;
     $('prog').style.width = (k / last) * 100 + '%';
-    $('back').disabled = k === 0;
+    // at the end of a part, Next goes on to the next part; at the start of a part, Back goes to the end of the one before
+    var pi = PARTS.indexOf(part), nextPart = PARTS[pi + 1], prevPart = PARTS[pi - 1];
+    $('back').disabled = k === 0 && !prevPart;
     $('restart').disabled = k === 0;
-    $('next').disabled = k === last;
+    $('next').disabled = k === last && !nextPart;
+    var nl = nextPart ? $('tab-' + nextPart).textContent.trim() : '';
+    $('next').textContent = k === last && nextPart ? 'Next: ' + ((nl.match(/^\([a-z]\)/) || [nl])[0]) : 'Next';
     $('all').disabled = k === last;
   }
 
@@ -802,11 +806,11 @@ window.WALK_TABS.f = { pre: SETUP_LINES, tint: true, steps: [
 
   // Tabs: each part keeps its own place in its walkthrough.
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab[data-part]'));
-  function setTab(p, focus) {
+  function setTab(p, focus, at) {
     if (!TABS[p] || p === part) return;
     stopMotion();
     pos[part] = k;
-    part = p; TAB = TABS[p]; STEPS = TAB.steps; last = STEPS.length - 1; k = pos[p];
+    part = p; TAB = TABS[p]; STEPS = TAB.steps; last = STEPS.length - 1; k = at != null ? at : pos[p];
     tabs.forEach(function (t) {
       var on = t.getAttribute('data-part') === p;
       t.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -829,15 +833,31 @@ window.WALK_TABS.f = { pre: SETUP_LINES, tint: true, steps: [
     });
   });
 
-  $('next').addEventListener('click', function () { go(k + 1, true); });
-  $('back').addEventListener('click', function () { go(k - 1, false); });
+  // keep the part tabs in view after Next or Back changes the part
+  function showTabs() {
+    var tl = document.querySelector('.tabs'), r = tl.getBoundingClientRect();
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    if (r.top < 8 || r.top > bottomEdge - 80) window.scrollBy({ top: r.top - 12, behavior: reduced() ? 'auto' : 'smooth' });
+  }
+  function forward() {
+    if (k < last) { go(k + 1, true); return; }
+    var nxt = PARTS[PARTS.indexOf(part) + 1];
+    if (nxt) { setTab(nxt, false, 0); showTabs(); }
+  }
+  function backward() {
+    if (k > 0) { go(k - 1, false); return; }
+    var prv = PARTS[PARTS.indexOf(part) - 1];
+    if (prv) { setTab(prv, false, TABS[prv].steps.length - 1); showTabs(); }
+  }
+  $('next').addEventListener('click', forward);
+  $('back').addEventListener('click', backward);
   $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
   $('all').addEventListener('click', function () { k = last; render(false); });
   document.addEventListener('keydown', function (e) {
     if (e.target.closest && e.target.closest('[role="tablist"]')) return;
     if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
-    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); if (k < last) go(k + 1, true); }
-    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (k > 0) go(k - 1, false); }
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); forward(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); backward(); }
   });
 
   var setBar = function () {
