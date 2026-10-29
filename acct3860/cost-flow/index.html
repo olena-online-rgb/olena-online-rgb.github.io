@@ -479,7 +479,7 @@ button .sm { display: none; }
 var SETUP_LINES = ["w1", "w2", "w3", "w4", "w4-a", "w4-b", "w-uei"];
 window.WALK_TABS = {};
 window.WALK_TABS.a = { steps: [
- { caption: "Evening Star’s unit cost rose during 20X1: $20, then $25, then $30. First, the work setup: four numbers that every part of the problem uses. Click Next for a step-by-step walkthrough." },
+ { caption: "Evening Star’s unit cost rose during 20X1: $20, then $25, then $30. The work setup comes first. It finds four numbers that every part of the problem uses. Click Next for a step-by-step walkthrough." },
  { show: ["w1"], tint: true, use: ["t-q1", "t-c1", "t-q2", "t-c2", "t-q4", "t-c4"],
    caption: "Cost of goods available for sale: every unit on hand during the year at its own cost. 800 × $20 + 1,200 × $25 + 2,000 × $30 = $106,000. The sale prices ($40 and $45) are crossed out: selling prices are not used for cost of goods sold or ending inventory." },
  { show: ["w2"], use: ["t-q1", "t-q2", "t-q4"],
@@ -491,7 +491,7 @@ window.WALK_TABS.a = { steps: [
  { show: ["a1"], use: ["w-uei", "t-c4"],
    caption: "(a) Periodic FIFO. FIFO sells the oldest units first, so the units left at year-end are the newest ones, from the latest purchase (7/9) at $30. Ending inventory = 700 units × $30 = $21,000." },
  { show: ["a1-note"], use: ["w-uei", "t-q4"],
-   caption: "Why only $30: the 7/9 purchase was 2,000 units. 700 < 2,000, so all 700 units come from that one purchase, and no earlier layer is needed." },
+   caption: "The 7/9 purchase was 2,000 units. 700 < 2,000, so all 700 units come from that one purchase, and no earlier layer is needed." },
  { show: ["a2"], fly: [["w-cogas", "a2-g"], ["a-ei", "a2-e"]], after: ["a-cogs"], use: ["w-cogas", "a-ei"],
    caption: "Cost of goods sold = cost of goods available for sale − ending inventory = $106,000 − $21,000 = $85,000." }
 ] };
@@ -500,44 +500,44 @@ window.WALK_TABS.b = { pre: SETUP_LINES, tint: true, steps: [
  { show: ["b1"], use: ["t-q1", "t-c1", "t-q2", "t-c2", "t-c4"],
    caption: "(b) Perpetual FIFO. FIFO sells the oldest units first: all 800 units from 1/1 inventory, then all 1,200 units from the 3/5 purchase, then the rest from the 7/9 purchase. 800 × $20 + 1,200 × $25 + 1,300 × $30 = $85,000." },
  { show: ["b1-note"], fly: [["w-us", "b1-u"]], use: ["w-us", "t-q1", "t-q2"],
-   caption: "Where the 1,300 comes from: 3,300 units sold − 800 − 1,200 = 1,300 units, taken from the 7/9 purchase at $30." },
+   caption: "3,300 units sold − 800 − 1,200 = 1,300 units, taken from the 7/9 purchase at $30." },
  { show: ["b2"], fly: [["w-cogas", "b2-g"], ["b-cogs", "b2-c"]], after: ["b-ei"], use: ["w-cogas", "b-cogs"],
    caption: "Ending inventory = cost of goods available for sale − cost of goods sold = $106,000 − $85,000 = $21,000." },
  { show: ["b3"],
-   caption: "Same answers as periodic FIFO (a): $85,000 and $21,000. FIFO sends out the oldest units whether each sale is costed on its date or all at year-end. Periodic FIFO can be solved this way too." }
+   caption: "These are the same answers as periodic FIFO (a), $85,000 and $21,000. FIFO sends out the oldest units whether each sale is costed on its date or all at year-end. Periodic FIFO can be solved this way too." }
 ] };
 window.WALK_TABS.c = { pre: SETUP_LINES, tint: true, steps: [
  { caption: "(c) Periodic LIFO starts from the same work setup. In a periodic system, the dates of the sales do not matter: ending inventory is figured once, at year-end. Click Next for a step-by-step walkthrough." },
  { show: ["c1"], use: ["w-uei", "t-c1"],
    caption: "(c) Periodic LIFO. LIFO sells the newest units first, so the units left at year-end are the oldest ones, from beginning inventory (1/1) at $20. Ending inventory = 700 units × $20 = $14,000." },
  { show: ["c1-note"], use: ["w-uei", "t-q1"],
-   caption: "Why only $20: 1/1 inventory was 800 units. 700 < 800, so all 700 units left at year-end cost $20, and no later layer is needed." },
+   caption: "1/1 inventory was 800 units. 700 < 800, so all 700 units left at year-end cost $20, and no later layer is needed." },
  { show: ["c2"], fly: [["w-cogas", "c2-g"], ["c-ei", "c2-e"]], after: ["c-cogs"], use: ["w-cogas", "c-ei"],
    caption: "Cost of goods sold = cost of goods available for sale − ending inventory = $106,000 − $14,000 = $92,000." },
  { show: ["c3"], use: ["t-q4", "t-c4", "t-q2", "t-c2", "t-c1"],
    caption: "Or, cost of goods sold directly. LIFO sells the newest units first: all 2,000 units from the 7/9 purchase, then all 1,200 units from the 3/5 purchase, then the last 100 from 1/1 inventory. 2,000 × $30 + 1,200 × $25 + 100 × $20 = $92,000, the same answer." },
  { show: ["c3-note"], fly: [["w-us", "c3-u"]], use: ["w-us", "t-q4", "t-q2"],
-   caption: "Where the 100 comes from: 3,300 units sold − 2,000 − 1,200 = 100 units, taken from 1/1 inventory at $20." }
+   caption: "3,300 units sold − 2,000 − 1,200 = 100 units, taken from 1/1 inventory at $20." }
 ] };
 window.WALK_TABS.d = { pre: SETUP_LINES, tint: true, steps: [
  { caption: "(d) Perpetual LIFO starts from the same work setup. In a perpetual system, each sale is costed on its own date, using only the units on hand that day. Click Next for a step-by-step walkthrough." },
  { show: ["d1"], cut: ["r-418"], arrows: [["t-q3", "t-q2", 1], ["t-q3", "t-q1", 2]], use: ["t-q3", "t-q2", "t-c2", "t-c1"],
    caption: "(d) Perpetual LIFO, the 4/18 sale. LIFO sells the newest units on hand first: arrow 1, the 1,200 units bought on 3/5 at $25; then arrow 2, 300 units from 1/1 inventory at $20. 1,200 × $25 + 300 × $20 = $36,000." },
  { show: ["d1-note"], use: ["t-q4", "t-q2", "t-q3"],
-   caption: "Why not $30: the 7/9 purchase comes after the 4/18 sale, so those units are not on hand yet. 1,500 − 1,200 = 300 units come from 1/1 inventory." },
+   caption: "The 7/9 purchase comes after the 4/18 sale, so those units are not on hand yet. 1,500 − 1,200 = 300 units come from 1/1 inventory." },
  { show: ["d2"], cut: ["r-1022"], arrows: [["t-q5", "t-q4", 3]], use: ["t-q5", "t-q4", "t-c4"],
    caption: "The 10/22 sale. Arrow 3: the newest units on hand are the 2,000 bought on 7/9 at $30. 1,800 × $30 = $54,000." },
  { show: ["d2-note"], use: ["t-q5", "t-q4"],
-   caption: "Why only $30: 1,800 < 2,000, so all 1,800 units sold on 10/22 come from the 7/9 purchase, and no earlier layer is needed." },
+   caption: "1,800 < 2,000, so all 1,800 units sold on 10/22 come from the 7/9 purchase, and no earlier layer is needed." },
  { show: ["d3"], fly: [["d-s1", "d3-a"], ["d-s2", "d3-b"]], after: ["d-cogs"], use: ["d-s1", "d-s2"],
    caption: "Cost of goods sold = cost of the 4/18 sale + cost of the 10/22 sale = $36,000 + $54,000 = $90,000." },
  { show: ["d4"], fly: [["w-cogas", "d4-g"], ["d-cogs", "d4-c"]], after: ["d-ei"], use: ["w-cogas", "d-cogs"],
-   caption: "Ending inventory = cost of goods available for sale − cost of goods sold = $106,000 − $90,000 = $16,000. Periodic LIFO (c) gave $92,000: under LIFO, the sale dates matter." }
+   caption: "Ending inventory = cost of goods available for sale − cost of goods sold = $106,000 − $90,000 = $16,000. Periodic LIFO (c) gave $92,000, so under LIFO the dates of the sales change the answer." }
 ] };
 window.WALK_TABS.e = { pre: SETUP_LINES, tint: true, steps: [
  { caption: "(e) Periodic weighted average starts from the same work setup. One average cost for the whole year, figured once at year-end, so the dates of the sales do not matter. Click Next for a step-by-step walkthrough." },
  { show: ["e1"], fly: [["w-cogas", "e1-g"], ["w-uav", "e1-u"]], after: ["e-cpu"], use: ["w-cogas", "w-uav"],
-   caption: "Cost per unit = cost of goods available for sale ÷ units available for sale = $106,000 ÷ 4,000 units = $26.50. Every unit, sold or left, carries this one average cost." },
+   caption: "Cost per unit = cost of goods available for sale ÷ units available for sale = $106,000 ÷ 4,000 units = $26.50. Units sold and units left both cost $26.50 each." },
  { show: ["e2"], fly: [["w-us", "e2-u"], ["e-cpu", "e2-c"]], after: ["e-cogs"], use: ["w-us", "e-cpu"],
    caption: "Cost of goods sold = units sold × cost per unit = 3,300 units × $26.50 = $87,450." },
  { show: ["e3"], fly: [["w-uei", "e3-u"], ["e-cpu", "e3-c"]], after: ["e-ei-f"], use: ["w-uei", "e-cpu"],

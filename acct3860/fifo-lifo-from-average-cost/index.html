@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Causwell Company Walkthrough</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Do on your own, Example 8: work back from average cost to the 20X1 purchase cost, then cost of goods sold under FIFO and LIFO.">
+<!-- GoatCounter script line goes here -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Shared look for the Chapter 7 and 8 walkthroughs.
+   Layout: problem on the left (stays in view), solution on the right as written equations, steps at the bottom.
+   Color: a number keeps one color from the problem to the line where it is used; colors come in one step at a time. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #1E1A1B;
+  --use-tint: #ECE7E8;
+  --accent: #1E1A1B;
+  --on-accent: #FCFCFB;
+  --red: #C8102E;    --red-t: #FADCE0;   --red-x: #6E0A1A;
+  --gold: #F2B200;   --gold-t: #FFF0C7;  --gold-x: #6B4E00;
+  --green: #2F7D50;  --green-t: #DCEFE2; --green-x: #1B4D30;
+  --blue: #2463A8;   --blue-t: #DDE8F6;  --blue-x: #143D6B;
+  --orchid: #A0329C; --orchid-t: #F2D3F0; --orchid-x: #5E1A5B;
+  --orange: #D2601A; --orange-t: #FBD9C2; --orange-x: #7A3409;
+  --teal: #0E7C86;   --teal-t: #D3EEF0;  --teal-x: #084A50;
+  --gray: #8A8284;   --gray-t: #E4E0E1;  --gray-x: #3A3435;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 0px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+    --accent: #F2EEEF; --on-accent: #161314;
+    --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+    --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+    --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+    --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+    --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+    --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+    --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+    --gray: #B5ACAE; --gray-t: rgba(200, 190, 192, 0.22); --gray-x: #F2EEEF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+  --accent: #F2EEEF; --on-accent: #161314;
+  --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+  --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+  --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+  --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+  --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+  --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+  --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+  --gray: #B5ACAE; --gray-t: rgba(200, 190, 192, 0.22); --gray-x: #F2EEEF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px calc(var(--bar-h) + 24px);
+}
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 18px; }
+header { display: grid; gap: 4px; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(24px, 3vw, 32px); line-height: 1.15; margin: 0; text-wrap: balance; }
+
+/* two columns: problem left, solution right */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start; }
+.pin { display: grid; gap: 14px; min-width: 0; padding: 2px; }
+.solution { display: grid; gap: 20px; min-width: 0; }
+
+/* problem, word for word from the notes */
+.problem { display: grid; gap: 10px; font-family: var(--serif); font-size: 16.5px; border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; background: var(--bg); }
+.problem p { margin: 0; }
+.problem .pr { color: var(--red); font-weight: 700; }
+.req ol { margin: 4px 0 0; padding-left: 0; list-style: none; display: grid; gap: 4px; }
+.req li { color: var(--muted); }
+.req li.cur { color: var(--ink); }
+.req li .pr { color: var(--red); }
+/* givens in the problem take their color from the step that first uses them */
+.problem .tint { border-radius: 2px; transition: background-color 0.4s, color 0.4s, box-shadow 0.4s; }
+.problem .tint.lit { background: var(--ct); box-shadow: 0 0 0 2px var(--ct); color: var(--cx); font-weight: 700; }
+
+.key { font-size: 13.5px; color: var(--muted); margin: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 18px; height: 13px; border-radius: 3px; display: inline-block; background: var(--use-tint); outline: 2px solid var(--use); outline-offset: -2px; }
+
+/* chips: a number keeps its color from where it comes from to where it is used */
+.c-red { --ct: var(--red-t); --cx: var(--red-x); }
+.c-gold { --ct: var(--gold-t); --cx: var(--gold-x); }
+.c-green { --ct: var(--green-t); --cx: var(--green-x); }
+.c-blue { --ct: var(--blue-t); --cx: var(--blue-x); }
+.c-orchid { --ct: var(--orchid-t); --cx: var(--orchid-x); }
+.c-orange { --ct: var(--orange-t); --cx: var(--orange-x); }
+.c-teal { --ct: var(--teal-t); --cx: var(--teal-x); }
+.c-gray { --ct: var(--gray-t); --cx: var(--gray-x); }
+.amt {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--ct, transparent);
+  color: var(--cx, inherit);
+  font-weight: 700;
+}
+.final { border-bottom: 3px double var(--ink); padding-bottom: 1px; font-weight: 700; }
+/* fractions, written the way they are on paper */
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.35; margin: 2px 2px; }
+.frac > span { padding: 1px 4px; }
+.frac > span:first-child { border-bottom: 1.5px solid currentColor; }
+
+/* worked lines */
+.card { border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px 16px; display: grid; gap: 14px; min-width: 0; }
+.card h2 { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 0; line-height: 1.25; }
+.eq { display: grid; gap: 2px; padding: 6px 8px; border-radius: 6px; min-width: 0; }
+.eq .lbl { font-weight: 700; }
+.eq .m { padding-left: 22px; font-variant-numeric: tabular-nums; font-size: 16.5px; line-height: 1.6; }
+.eq .m.words { color: var(--muted); font-size: 15.5px; }
+.eq .m.chk { font-size: 15.5px; margin-top: 4px; }
+.eq + .eq { border-top: 1px solid var(--rule); border-top-left-radius: 0; border-top-right-radius: 0; }
+.eq .m .rv { display: inline-block; }
+.note { color: var(--red); }
+/* the unknowns in the one-equation solution */
+.xv { color: var(--red); font-weight: 700; font-family: var(--sans); }
+.alt .m { font-size: 16.5px; }
+/* the givens set up as a table, like the Evening Star problem */
+.gtbl { overflow-x: auto; padding: 3px; margin: 4px -3px 2px; }
+.gt { width: 100%; border-collapse: collapse; table-layout: fixed; font-family: var(--sans); }
+.gt col.d { width: 15%; } .gt col.t { width: 27%; } .gt col.q { width: 13%; } .gt col.p { width: 14%; } .gt col.v { width: 31%; }
+.gt th, .gt td { padding: 5px 6px; vertical-align: middle; text-align: left; border: 0; font-size: 15px; }
+.gt thead th { font-size: 13px; font-weight: 700; border-bottom: 1.5px solid var(--ink); line-height: 1.2; vertical-align: bottom; }
+.gt th.n, .gt td.n { text-align: right; }
+.gt td.n { font-variant-numeric: tabular-nums; }
+.gt tbody td { border-bottom: 1px solid var(--rule); height: 34px; }
+.gt tr.tot td { border-top: 1.5px solid var(--ink); font-weight: 700; }
+.gt td .amt { padding: 0 4px; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1.5px solid var(--ink); margin-bottom: -20px; }
+.tab {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1.5px solid var(--rule); border-bottom: 0;
+  border-radius: 6px 6px 0 0; padding: 7px 16px; cursor: pointer;
+}
+.tab:hover { border-color: var(--muted); }
+.tab[aria-selected="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); cursor: default; }
+.card.tabbed { border-top: 0; border-radius: 0 0 8px 8px; }
+[hidden] { display: none !important; }
+
+/* reveal states */
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.write { animation: write 0.5s ease-out both; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); opacity: 0.4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.land { animation: land 0.5s ease-out both; }
+@keyframes land { 0% { transform: scale(1.25); } 55% { transform: scale(0.95); } 100% { transform: scale(1); } }
+.ghost { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; will-change: transform; }
+.ghost > div { will-change: transform; }
+.gchip { display: inline-block; font-weight: 700; font-size: 16.5px; padding: 0 5px; border-radius: 4px; background: var(--ct, var(--surface)); color: var(--cx, var(--ink)); outline: 1.5px solid var(--ink); }
+.use-on { outline: 2px solid var(--use) !important; outline-offset: 2px; border-radius: 4px; background-color: var(--use-tint); }
+.amt.use-on, .tint.lit.use-on { background-color: var(--ct); }
+/* givens in the problem show by color only, no outline */
+.problem .tint.use-on { outline: none !important; }
+.gt td .rv { display: inline-block; }
+
+/* steps */
+.bar { background: var(--bg); display: grid; gap: 10px; }
+.caption { font-size: 15.5px; min-height: 3em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button.ctl {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button.ctl:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button.ctl:disabled { opacity: 0.45; cursor: default; }
+button.ctl.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.progrow { display: flex; align-items: center; gap: 12px; }
+.counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress { flex: 1; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+button .sm { display: none; }
+.bar > * { width: 100%; max-width: 860px; margin-inline: auto; }
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  border-top: 2px solid var(--ink);
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+
+.copyright { padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* wide screens: problem on the left, held in view; work setup and parts on the right */
+@media (min-width: 1060px) {
+  .wrap { max-width: 1240px; }
+  .layout { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 24px; }
+  .bar > * { max-width: 1240px; }
+}
+@media (min-width: 1060px) and (min-height: 640px) {
+  .pin { position: sticky; top: 12px; }
+}
+@media (max-width: 560px) {
+  .problem { font-size: 16px; padding: 12px; }
+  .card { padding: 12px 10px 14px; }
+  .eq .m { padding-left: 12px; font-size: 15.5px; }
+  .gt th, .gt td { padding: 4px 3px; font-size: 13px; }
+  .gt thead th { font-size: 11.5px; }
+  .gt col.d { width: 17%; } .gt col.t { width: 23%; } .gt col.q { width: 17%; } .gt col.p { width: 14%; } .gt col.v { width: 29%; }
+  .controls { flex-wrap: nowrap; gap: 6px; }
+  button.ctl { padding: 7px 10px; font-size: 14px; flex: 1 1 auto; }
+  button .lg { display: none; } button .sm { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write, .land { animation: none !important; }
+  .progress > div, .problem .tint { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Causwell Company: FIFO and LIFO from Average Cost</h1>
+  </header>
+
+  <div class="layout">
+    <aside class="pin" aria-label="Problem">
+      <section class="problem" aria-label="Problem">
+        <p><span class="pr">Example 8. DO ON YOUR OWN.</span> Causwell Company began 20X1 with <span class="tint c-gold" id="p-bi-u">10,000 units</span> of inventory on hand. The cost of each unit was <span class="tint c-gold" id="p-bi-c">$5.00</span>. During 20X1 an additional <span class="tint c-green" id="p-pu-u">30,000 units</span> were purchased at a single unit cost, and <span class="tint c-blue" id="p-ei-u">20,000 units</span> remained on hand at the end of 20X1 (<span class="tint c-gray" id="p-sold">20,000 units</span> therefore were sold during 20X1). Causwell uses a periodic inventory system. Cost of goods sold for 20X1, applying the average cost method, is <span class="tint c-orchid" id="p-cogs">$115,000</span>. The company is interested in determining what cost of goods sold would have been if the FIFO or LIFO methods were used.</p>
+        <div class="req">
+          <p><b>Required:</b></p>
+          <ol>
+            <li class="cur" id="req-1"><b>1.</b> Determine the cost of goods sold for 20X1 using the FIFO method. [<i>Hint:</i> Determine the cost per unit of 20X1 purchases.] <b class="pr">(Do not round intermediate calculations.)</b></li>
+            <li id="req-2"><b>2.</b> Determine the cost of goods sold for 20X1 using the LIFO method. <b class="pr">(Do not round intermediate calculations.)</b></li>
+          </ol>
+        </div>
+      </section>
+      <p class="key"><span>Matching colors show where a number comes from and where it is used.</span><span><i class="sw"></i>Used in this step</span></p>
+    </aside>
+
+    <main class="solution">
+      <section class="card" id="setup" aria-label="Work setup">
+        <h2>Work setup</h2>
+        <div class="eq rv" id="w1">
+          <div class="lbl">Units available for sale</div>
+          <div class="m words">= Units in beginning inventory + Units purchased</div>
+          <div class="m">= <span class="amt c-gold">10,000</span> + <span class="amt c-green">30,000</span> = <b id="w-uav">40,000 units</b></div>
+        </div>
+        <div class="eq rv" id="w2">
+          <div class="lbl">Average cost per unit</div>
+          <div class="m words">Cost of goods sold = Units sold × Average cost per unit</div>
+          <div class="m words rv" id="w2-2">Average cost per unit = Cost of goods sold ÷ Units sold</div>
+          <div class="m rv" id="w2-3">= <span class="frac"><span><span class="amt c-orchid">$115,000</span></span><span><span class="amt c-gray">20,000 units</span></span></span> = <span class="amt c-teal" id="w-avg">$5.75</span></div>
+        </div>
+        <div class="eq rv" id="w3">
+          <div class="lbl">Cost of goods available for sale</div>
+          <div class="m words">Average cost per unit = Cost of goods available for sale ÷ Units available for sale</div>
+          <div class="m words rv" id="w3-2">Cost of goods available for sale = Units available for sale × Average cost per unit</div>
+          <div class="m rv" id="w3-3">= <b class="rv" id="w3-u">40,000 units</b> × <span class="amt c-teal rv" id="w3-c">$5.75</span> = <span class="amt c-red rv" id="w-cogas">$230,000</span></div>
+        </div>
+        <div class="eq rv" id="w4">
+          <div class="lbl">Cost of 20X1 purchases</div>
+          <div class="m words">Cost of goods available for sale = Beginning inventory + Purchases</div>
+          <div class="m words rv" id="w4-2">Purchases = Cost of goods available for sale − Beginning inventory</div>
+          <div class="m rv" id="w4-3">= <span class="amt c-red rv" id="w4-g">$230,000</span> − <span class="amt c-gold">10,000 units × $5.00</span></div>
+          <div class="m rv" id="w4-3b">= <span class="amt c-red">$230,000</span> − <span class="amt c-gold">$50,000</span> = <span class="amt c-green" id="w-pur">$180,000</span></div>
+        </div>
+        <div class="eq rv" id="w5">
+          <div class="lbl">Cost per unit of 20X1 purchases</div>
+          <div class="m words">Purchases = Units purchased × Cost per unit</div>
+          <div class="m words rv" id="w5-2">Cost per unit = Purchases ÷ Units purchased</div>
+          <div class="m rv" id="w5-3">= <span class="frac"><span><span class="amt c-green rv" id="w5-p">$180,000</span></span><span><span class="amt c-green">30,000 units</span></span></span> = <span class="amt c-green" id="w-c6">$6.00</span></div>
+          <div class="m chk rv" id="w5-note"><b class="note">Note:</b> This is the hint in requirement 1. Each unit bought in 20X1 cost <span class="amt c-green">$6.00</span>; each unit in beginning inventory cost <span class="amt c-gold">$5.00</span>.</div>
+        </div>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="Parts of the problem">
+        <button class="tab" role="tab" id="tab-1" data-part="1" data-short="Solution" aria-selected="true" aria-controls="pan-1" type="button">Solution</button>
+        <button class="tab" role="tab" id="tab-2" data-part="2" data-short="Alternative FIFO" aria-selected="false" aria-controls="pan-2" tabindex="-1" type="button">Alternative FIFO</button>
+        <button class="tab" role="tab" id="tab-3" data-part="3" data-short="Alternative LIFO" aria-selected="false" aria-controls="pan-3" tabindex="-1" type="button">Alternative LIFO</button>
+      </div>
+
+      <section class="card tabbed" id="pan-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+        <div class="eq rv" id="f1">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">= Units sold, oldest layers first</div>
+          <div class="m">= <span class="amt c-gold">10,000 units × $5.00</span> + <span class="amt c-green">10,000 units × $6.00</span></div>
+          <div class="m">= <span class="amt c-gold">$50,000</span> + <span class="amt c-green">$60,000</span> = <span class="final" id="f-cogs">$110,000</span></div>
+          <div class="m chk rv" id="f1-note"><b class="note">Note:</b> FIFO sells all <span class="amt c-gold">10,000 units</span> of beginning inventory first. <span class="amt c-gray rv" id="f1n-u">20,000</span> − <span class="amt c-gold">10,000</span> = <span class="amt c-green">10,000 units</span> sold come from the 20X1 purchases.</div>
+        </div>
+        <div class="eq rv" id="f2">
+          <div class="lbl">Or, ending inventory first</div>
+          <div class="m words">Ending inventory = Units in ending inventory × Cost per unit of 20X1 purchases</div>
+          <div class="m">= <span class="amt c-blue">20,000 units</span> × <span class="amt c-green">$6.00</span> = <span class="amt c-orange" id="f-ei">$120,000</span></div>
+          <div class="m chk rv" id="f2-note"><b class="note">Note:</b> Since <span class="amt c-blue">20,000 units</span> &lt; <span class="amt c-green">30,000 units</span> purchased in 20X1, all 20,000 units left at year-end come from the 20X1 purchases.</div>
+          <div class="rv" id="f3">
+            <div class="m words">Cost of goods sold = Cost of goods available for sale − Ending inventory</div>
+            <div class="m">= <span class="amt c-red rv" id="f3-g">$230,000</span> − <span class="amt c-orange rv" id="f3-e">$120,000</span> = <span class="final rv" id="f3-c">$110,000</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card tabbed" id="pan-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+        <div class="eq rv" id="l1">
+          <div class="lbl">Cost of goods sold</div>
+          <div class="m words">= Units sold, newest layers first</div>
+          <div class="m">= <span class="amt c-green">20,000 units × $6.00</span> = <span class="final" id="l-cogs">$120,000</span></div>
+          <div class="m chk rv" id="l1-note"><b class="note">Note:</b> Since <span class="amt c-gray rv" id="l1n-u">20,000 units</span> sold &lt; <span class="amt c-green">30,000 units</span> purchased in 20X1, all 20,000 units sold come from the 20X1 purchases.</div>
+        </div>
+        <div class="eq rv" id="l2">
+          <div class="lbl">Or, ending inventory first</div>
+          <div class="m words">= Units in ending inventory, oldest layers first</div>
+          <div class="m">= <span class="amt c-gold">10,000 units × $5.00</span> + <span class="amt c-green">10,000 units × $6.00</span></div>
+          <div class="m">= <span class="amt c-gold">$50,000</span> + <span class="amt c-green">$60,000</span> = <span class="amt c-orange" id="l-ei">$110,000</span></div>
+          <div class="m chk rv" id="l2-note"><b class="note">Note:</b> LIFO leaves the oldest units: all <span class="amt c-gold">10,000 units</span> of beginning inventory, then <span class="amt c-blue">20,000</span> − <span class="amt c-gold">10,000</span> = <span class="amt c-green">10,000 units</span> from the 20X1 purchases.</div>
+          <div class="rv" id="l3">
+            <div class="m words">Cost of goods sold = Cost of goods available for sale − Ending inventory</div>
+            <div class="m">= <span class="amt c-red rv" id="l3-g">$230,000</span> − <span class="amt c-orange rv" id="l3-e">$110,000</span> = <span class="final rv" id="l3-c">$120,000</span></div>
+          </div>
+        </div>
+        <div class="eq rv" id="l4">
+          <div class="lbl">The three methods side by side</div>
+          <div class="m">FIFO $110,000 &lt; Average <span class="amt c-orchid">$115,000</span> &lt; LIFO $120,000</div>
+          <div class="m chk"><b class="note">Note:</b> The unit cost rose during 20X1, from <span class="amt c-gold">$5.00</span> to <span class="amt c-green">$6.00</span>. LIFO sends the newest, higher costs to cost of goods sold, so its cost of goods sold is the highest; FIFO sends the oldest, lower costs, so its cost of goods sold is the lowest.</div>
+        </div>
+      </section>
+
+
+      <section class="card tabbed alt" id="pan-1" role="tabpanel" aria-labelledby="tab-1">
+        <div class="eq rv" id="g0">
+          <div class="lbl">The givens in a table</div>
+          <div class="gtbl"><table class="gt" aria-label="Causwell Company inventory data for 20X1">
+            <colgroup><col class="d"><col class="t"><col class="q"><col class="p"><col class="v"></colgroup>
+            <thead><tr><th>Date</th><th>Transaction</th><th class="n">Quantity</th><th class="n">Cost</th><th class="n">Total</th></tr></thead>
+            <tbody>
+              <tr class="rv" id="g-bi"><td>1/1</td><td>Beginning inventory</td><td class="n"><span class="amt c-gold" id="g-bi-q">10,000</span></td><td class="n"><span class="amt c-gold" id="g-bi-p">$5.00</span></td><td class="n"><span class="amt c-gold" id="g-bi-t">$50,000</span></td></tr>
+              <tr class="rv" id="g-pu"><td>During 20X1</td><td>Purchase</td><td class="n"><span class="amt c-green" id="g-pu-q">30,000</span></td><td class="n"><b class="xv">X</b></td><td class="n"><span class="amt c-green">30,000</span> × <b class="xv">X</b></td></tr>
+              <tr class="rv tot" id="g-ga"><td></td><td>Goods available for sale</td><td class="n"><b id="g-ga-q">40,000</b></td><td class="n"></td><td class="n" id="g-ga-t"><span class="amt c-gold">$50,000</span> + <span class="amt c-green">30,000</span> × <b class="xv">X</b></td></tr>
+              <tr class="rv" id="g-sa"><td>During 20X1</td><td>Sales</td><td class="n"><span class="amt c-gray rv" id="g-sa-q">20,000</span></td><td class="n"></td><td class="n"></td></tr>
+              <tr class="rv" id="g-ei"><td>12/31</td><td>Ending inventory</td><td class="n"><span class="amt c-blue" id="g-ei-q">20,000</span></td><td class="n"></td><td class="n"></td></tr>
+            </tbody>
+          </table></div>
+          <div class="m chk rv" id="g-pu-note"><b class="note">Note:</b> <b class="xv">X</b> is the cost per unit of 20X1 purchases, the one unknown.</div>
+          <div class="m rv" id="g-cogs">Also given: cost of goods sold, average cost method = <span class="amt c-orchid" id="g-cogs-v">$115,000</span></div>
+        </div>
+        <div class="eq rv" id="a4">
+          <div class="lbl">Cost per unit, average cost method</div>
+          <div class="m words">= Cost of goods available for sale ÷ Units available for sale</div>
+          <div class="m">= <span class="frac"><span><span class="amt c-gold">50,000</span> + <span class="amt c-green">30,000</span> × <b class="xv">X</b></span><span>40,000</span></span></div>
+        </div>
+        <div class="eq rv" id="a5">
+          <div class="lbl">Cost of goods sold, average cost method</div>
+          <div class="m words">= Units sold × Cost per unit</div>
+          <div class="m"><span class="amt c-gray">20,000</span> × <span class="frac"><span><span class="amt c-gold">50,000</span> + <span class="amt c-green">30,000</span> × <b class="xv">X</b></span><span>40,000</span></span> = <span class="amt c-orchid">115,000</span></div>
+          <div class="rv" id="a6">
+            <div class="m chk"><b class="note">Note:</b> 20,000 ÷ 40,000 = ½, so the 20,000 and the 40,000 become a 2 under the line.</div>
+            <div class="m"><span class="frac"><span><span class="amt c-gold">50,000</span> + <span class="amt c-green">30,000</span> × <b class="xv">X</b></span><span>2</span></span> = <span class="amt c-orchid">115,000</span></div>
+          </div>
+        </div>
+        <div class="eq rv" id="a7">
+          <div class="lbl">Solve for <b class="xv">X</b></div>
+          <div class="m"><span class="amt c-gold">50,000</span> + <span class="amt c-green">30,000</span> × <b class="xv">X</b> = <span class="amt c-orchid">115,000</span> × 2</div>
+          <div class="m rv" id="a7-2"><span class="amt c-green">30,000</span> × <b class="xv">X</b> = 230,000 − <span class="amt c-gold">50,000</span></div>
+          <div class="m rv" id="a7-3"><b class="xv">X</b> = 180,000 ÷ <span class="amt c-green">30,000</span> = <span class="final"><span class="amt c-green" id="a-x">$6.00</span></span></div>
+        </div>
+        <div class="eq rv" id="a8">
+          <div class="lbl">Cost of 20X1 purchases</div>
+          <div class="m">= <span class="amt c-green">30,000 units</span> × <span class="amt c-green rv" id="a8-x">$6.00</span> = <span class="amt c-green rv" id="a8-y">$180,000</span></div>
+        </div>
+        <div class="eq rv" id="a9">
+          <div class="lbl">(1) FIFO cost of goods sold</div>
+          <div class="m">= <span class="amt c-gold">10,000 × $5.00</span> + <span class="amt c-green">10,000 × $6.00</span> = <span class="final">$110,000</span></div>
+        </div>
+        <div class="eq rv" id="a10">
+          <div class="lbl">(2) LIFO cost of goods sold</div>
+          <div class="m">= <span class="amt c-green">20,000 × $6.00</span> = <span class="final">$120,000</span></div>
+        </div>
+      </section>
+
+      <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+    </main>
+  </div>
+</div>
+
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="progrow"><div class="progress" aria-hidden="true"><div id="prog"></div></div><span class="counter" id="counter"></span></div>
+  <p class="caption" id="caption" aria-live="polite"></p>
+  <div class="controls">
+    <button class="ctl" id="restart" type="button"><span class="lg">Start over</span><span class="sm">Restart</span></button>
+    <button class="ctl" id="back" type="button">Back</button>
+    <button class="ctl primary" id="next" type="button">Next</button>
+    <button class="ctl" id="all" type="button"><span class="lg">Show solution</span><span class="sm">Solution</span></button>
+  </div>
+</div>
+
+<script>
+/* One walkthrough per part. "pre": lines already written when the tab opens; "litPre": givens already colored.
+   Step fields: show (written in place), fly ([from, to]: one number moves), after (written once it lands),
+   use (outlined inputs; a given in the problem takes its color from the first step that uses it), caption. */
+var SETUP_LINES = ["w1", "w2", "w2-2", "w2-3", "w3", "w3-2", "w3-3", "w3-u", "w3-c", "w-cogas", "w4", "w4-2", "w4-3", "w4-g", "w4-3b", "w5", "w5-2", "w5-3", "w5-p", "w5-note"];
+var SETUP_LIT = ["p-bi-u", "p-bi-c", "p-pu-u", "p-cogs"];
+window.WALK_TABS = {};
+window.WALK_TABS["2"] = { req: ["1"], steps: [
+ { caption: "Alternative FIFO solves the problem without an equation. The work setup comes first: the cost per unit of the 20X1 purchases, found from the average cost method one relationship at a time, as the hint says. Click Next for a step-by-step walkthrough." },
+ { show: ["w1"], use: ["p-bi-u", "p-pu-u"],
+   caption: "Units available for sale: units in beginning inventory plus units purchased. 10,000 + 30,000 = 40,000 units." },
+ { show: ["w2"], use: ["p-cogs", "p-sold"],
+   caption: "The average cost per unit comes from the cost of goods sold given. Start from the relationship: cost of goods sold = units sold × average cost per unit." },
+ { show: ["w2-2"], use: ["p-cogs", "p-sold"],
+   caption: "Rearrange it so that what you are finding is on the left: average cost per unit = cost of goods sold ÷ units sold." },
+ { show: ["w2-3"], use: ["p-cogs", "p-sold"],
+   caption: "The numbers go in the same order: $115,000 ÷ 20,000 units = $5.75. Under the average cost method, units sold and units left both cost $5.75 each." },
+ { show: ["w3"], use: ["w-uav", "w-avg"],
+   caption: "Now the cost of goods available for sale. Start from the relationship: average cost per unit = cost of goods available for sale ÷ units available for sale." },
+ { show: ["w3-2"], use: ["w-uav", "w-avg"],
+   caption: "Rearrange it so that cost of goods available for sale is on the left: cost of goods available for sale = units available for sale × average cost per unit." },
+ { show: ["w3-3"], fly: [["w-uav", "w3-u"], ["w-avg", "w3-c"]], after: ["w-cogas"], use: ["w-uav", "w-avg"],
+   caption: "The numbers go in the same order: 40,000 units × $5.75 = $230,000." },
+ { show: ["w4"], use: ["p-bi-u", "p-bi-c", "w-cogas"],
+   caption: "Next, the cost of the 20X1 purchases. Start from the relationship: cost of goods available for sale = beginning inventory + purchases." },
+ { show: ["w4-2"], use: ["p-bi-u", "p-bi-c", "w-cogas"],
+   caption: "Rearrange it so that purchases is on the left: purchases = cost of goods available for sale − beginning inventory." },
+ { show: ["w4-3"], fly: [["w-cogas", "w4-g"]], after: ["w4-3b"], use: ["w-cogas", "p-bi-u", "p-bi-c"],
+   caption: "The numbers go in the same order: $230,000 − 10,000 units × $5.00 = $230,000 − $50,000 = $180,000." },
+ { show: ["w5"], use: ["w-pur", "p-pu-u"],
+   caption: "Last, the cost per unit of the 20X1 purchases. Start from the relationship: purchases = units purchased × cost per unit." },
+ { show: ["w5-2"], use: ["w-pur", "p-pu-u"],
+   caption: "Rearrange it so that cost per unit is on the left: cost per unit = purchases ÷ units purchased." },
+ { show: ["w5-3"], fly: [["w-pur", "w5-p"]], use: ["w-pur", "p-pu-u"],
+   caption: "The numbers go in the same order: $180,000 ÷ 30,000 units = $6.00." },
+ { show: ["w5-note"], use: ["w-c6", "p-bi-c"],
+   caption: "Each unit bought in 20X1 cost $6.00, which is the cost per unit the hint asks for. Each unit in beginning inventory cost $5.00." },
+ { show: ["f1"], use: ["p-bi-u", "p-bi-c", "w-c6", "p-sold"],
+   caption: "(1) FIFO. FIFO sells the oldest units first: all 10,000 units of beginning inventory at $5.00, then the rest from the 20X1 purchases at $6.00. 10,000 × $5.00 + 10,000 × $6.00 = $110,000." },
+ { show: ["f1-note"], fly: [["p-sold", "f1n-u"]], use: ["p-sold", "p-bi-u"],
+   caption: "20,000 units sold − 10,000 units of beginning inventory = 10,000 units, taken from the 20X1 purchases at $6.00." },
+ { show: ["f2"], use: ["p-ei-u", "w-c6"],
+   caption: "Or, ending inventory first. FIFO leaves the newest units: 20,000 units × $6.00 = $120,000." },
+ { show: ["f2-note"], use: ["p-ei-u", "p-pu-u"],
+   caption: "The 20X1 purchases were 30,000 units. 20,000 < 30,000, so all 20,000 units left come from the 20X1 purchases." },
+ { show: ["f3"], fly: [["w-cogas", "f3-g"], ["f-ei", "f3-e"]], after: ["f3-c"], use: ["w-cogas", "f-ei"],
+   caption: "Then cost of goods sold = cost of goods available for sale − ending inventory = $230,000 − $120,000 = $110,000, the same answer." }
+] };
+window.WALK_TABS["3"] = { req: ["2"], pre: SETUP_LINES, litPre: SETUP_LIT, steps: [
+ { caption: "Alternative LIFO starts from the same work setup: beginning inventory at $5.00 a unit, the 20X1 purchases at $6.00 a unit, and $230,000 of goods available for sale. Click Next for a step-by-step walkthrough." },
+ { show: ["l1"], use: ["w-c6", "p-sold"],
+   caption: "(2) LIFO. LIFO sells the newest units first: the 20X1 purchases at $6.00. 20,000 units × $6.00 = $120,000." },
+ { show: ["l1-note"], fly: [["p-sold", "l1n-u"]], use: ["p-sold", "p-pu-u"],
+   caption: "The 20X1 purchases were 30,000 units. 20,000 < 30,000, so all 20,000 units sold come from the 20X1 purchases, and none come from beginning inventory." },
+ { show: ["l2"], use: ["p-ei-u", "p-bi-u", "p-bi-c", "w-c6"],
+   caption: "Or, ending inventory first. LIFO leaves the oldest units: 10,000 units × $5.00 + 10,000 units × $6.00 = $110,000." },
+ { show: ["l2-note"], use: ["p-ei-u", "p-bi-u"],
+   caption: "20,000 units in ending inventory − 10,000 units of beginning inventory = 10,000 units from the 20X1 purchases." },
+ { show: ["l3"], fly: [["w-cogas", "l3-g"], ["l-ei", "l3-e"]], after: ["l3-c"], use: ["w-cogas", "l-ei"],
+   caption: "Then cost of goods sold = cost of goods available for sale − ending inventory = $230,000 − $110,000 = $120,000, the same answer." },
+ { show: ["l4"], use: ["p-cogs", "f-cogs", "l-cogs"],
+   caption: "Cost of goods sold is $110,000 under FIFO, $115,000 under average cost and $120,000 under LIFO. The unit cost rose from $5.00 to $6.00, so LIFO's cost of goods sold is the highest and FIFO's is the lowest." }
+] };
+window.WALK_TABS["1"] = { noSetup: true, req: ["1", "2"], steps: [
+ { caption: "Click Next for a step-by-step walkthrough." },
+ { show: ["g0", "g-bi"], use: ["p-bi-u", "p-bi-c"],
+   caption: "Beginning inventory on 1/1: 10,000 units at $5.00 each. Total = 10,000 × $5.00 = $50,000." },
+ { show: ["g-pu", "g-pu-note"], use: ["p-pu-u"],
+   caption: "During 20X1, a purchase of 30,000 units at a single unit cost that the problem does not give. Call the cost per unit X, the one unknown. The total is 30,000 × X." },
+ { show: ["g-ga"], use: ["g-bi-q", "g-pu-q", "g-bi-t"],
+   caption: "Goods available for sale: 10,000 + 30,000 = 40,000 units, with a total cost of $50,000 + 30,000 × X." },
+ { show: ["g-sa", "g-ei"], use: ["p-ei-u"],
+   caption: "The problem gives the units left first: 20,000 units remained on hand at the end of 20X1, so ending inventory on 12/31 is 20,000 units. Its cost is not given." },
+ { fly: [["p-sold", "g-sa-q"]], use: ["p-sold"],
+   caption: "Then, in parentheses: 20,000 units therefore were sold during 20X1 (40,000 available − 20,000 left = 20,000 sold). That 20,000 moves into the sales row." },
+ { show: ["g-cogs"], use: ["p-cogs"],
+   caption: "The last given goes below the table: cost of goods sold under the average cost method is $115,000." },
+ { show: ["a4"], use: ["g-ga-q", "g-ga-t"],
+   caption: "Under the average cost method, cost per unit = cost of goods available for sale ÷ units available for sale, from the goods available row: (50,000 + 30,000 × X) ÷ 40,000." },
+ { show: ["a5"], use: ["g-sa-q", "g-cogs-v"],
+   caption: "Cost of goods sold = units sold × cost per unit, and the problem gives it: 20,000 × (50,000 + 30,000 × X) ÷ 40,000 = 115,000." },
+ { show: ["a6"], use: ["g-sa-q", "g-cogs-v"],
+   caption: "Simplify first: 20,000 ÷ 40,000 = ½, so (50,000 + 30,000 × X) ÷ 2 = 115,000." },
+ { show: ["a7"], use: ["g-cogs-v"],
+   caption: "Multiply both sides by 2: 50,000 + 30,000 × X = 115,000 × 2." },
+ { show: ["a7-2"],
+   caption: "Move the 50,000 to the other side: 30,000 × X = 230,000 − 50,000." },
+ { show: ["a7-3"], use: ["g-pu-q"],
+   caption: "Divide by 30,000: X = 180,000 ÷ 30,000 = $6.00, the cost per unit of the 20X1 purchases that the hint in requirement 1 asks for. In the table, X is not replaced." },
+ { show: ["a8"], fly: [["a-x", "a8-x"]], after: ["a8-y"], use: ["a-x", "g-pu-q"],
+   caption: "With X known, the purchase row's total: 30,000 units × $6.00 = $180,000." },
+ { show: ["a9"], use: ["g-bi-q", "g-bi-p", "a-x", "g-sa-q"],
+   caption: "(1) FIFO sells the oldest units first: 10,000 × $5.00 + 10,000 × $6.00 = $110,000." },
+ { show: ["a10"], use: ["a-x", "g-sa-q"],
+   caption: "(2) LIFO sells the newest units first: 20,000 × $6.00 = $120,000. The Alternative FIFO and Alternative LIFO tabs reach the same answers without an equation." }
+] };
+</script>
+<script>
+/* Walkthrough engine shared by the Chapter 7 and 8 pages, with tabs. */
+(function () {
+  'use strict';
+  var TABS = window.WALK_TABS;
+  var PARTS = Object.keys(TABS);
+  var $ = function (id) { return document.getElementById(id); };
+  var S = function (s) { return s.show || []; };
+  var U = function (s) { return s.use || []; };
+  var F = function (s) { return s.fly || []; };
+  var A = function (s) { return s.after || []; };
+  var REVEAL = [];
+  var addReveal = function (id) { if (REVEAL.indexOf(id) < 0) REVEAL.push(id); };
+  PARTS.forEach(function (p) {
+    (TABS[p].pre || []).forEach(addReveal);
+    TABS[p].steps.forEach(function (s) {
+      S(s).concat(F(s).map(function (f) { return f[1]; }), A(s)).forEach(addReveal);
+    });
+  });
+  var bar = document.querySelector('.bar');
+  var part = PARTS[0], pos = {};
+  PARTS.forEach(function (p) { pos[p] = 0; });
+  var TAB = TABS[part], STEPS = TAB.steps, last = STEPS.length - 1;
+  var k = 0, tok = 0, timers = [], ghosts = [];
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  (function check() {
+    var miss = [];
+    PARTS.forEach(function (p) {
+      var ids = (TABS[p].pre || []).concat(TABS[p].litPre || []);
+      TABS[p].steps.forEach(function (s) {
+        ids = ids.concat(S(s), U(s), A(s));
+        F(s).forEach(function (f) { ids = ids.concat(f); });
+      });
+      ids.forEach(function (id) { if (!$(id) && miss.indexOf(id) < 0) miss.push(id); });
+    });
+    if (miss.length && window.console) console.warn('Walkthrough: missing ids', miss);
+  })();
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function stopMotion() {
+    tok++;
+    timers.forEach(clearTimeout); timers = [];
+    ghosts.forEach(function (g) { g.remove(); }); ghosts = [];
+  }
+  function reveal(id, how) {
+    var el = $(id); if (!el) return;
+    el.classList.remove('write', 'land');
+    el.classList.add('shown');
+    if (how) { void el.offsetWidth; el.classList.add(how); }
+  }
+
+  function render(animate) {
+    stopMotion();
+    var s = STEPS[k];
+    var moving = animate && !reduced();
+    var shown = {};
+    (TAB.pre || []).forEach(function (id) { shown[id] = 1; });
+    for (var i = 1; i <= k; i++) {
+      S(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+      F(STEPS[i]).forEach(function (f) { shown[f[1]] = 1; });
+      A(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+    }
+    // givens in the problem take their color from the first step that uses them
+    var lit = {};
+    (TAB.litPre || []).forEach(function (id) { lit[id] = 1; });
+    for (var q = 1; q <= k; q++) U(STEPS[q]).forEach(function (id) { lit[id] = 1; });
+    document.querySelectorAll('.problem .tint').forEach(function (el) { el.classList.toggle('lit', !!lit[el.id] && /\bc-/.test(el.className)); });
+    var held = {};
+    if (moving) {
+      F(s).forEach(function (f) { held[f[1]] = 1; });
+      A(s).forEach(function (id) { held[id] = 1; });
+    }
+    REVEAL.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.remove('write', 'land');
+      el.classList.toggle('shown', !!shown[id] && !held[id]);
+    });
+    if (moving) {
+      S(s).forEach(function (id) { var el = $(id); if (!el) return; void el.offsetWidth; el.classList.add('write'); });
+    }
+    document.querySelectorAll('.use-on').forEach(function (el) { el.classList.remove('use-on'); });
+    U(s).forEach(function (id) { var el = $(id); if (el) el.classList.add('use-on'); });
+    $('caption').textContent = s.caption;
+    $('counter').textContent = 'Step ' + k + ' of ' + last;
+    $('prog').style.width = (k / last) * 100 + '%';
+    // at the end of a part, Next goes on to the next part; at the start of a part, Back goes to the end of the one before
+    var pi = PARTS.indexOf(part), nextPart = PARTS[pi + 1], prevPart = PARTS[pi - 1];
+    $('back').disabled = k === 0 && !prevPart;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last && !nextPart;
+    var nt = nextPart ? $('tab-' + nextPart) : null, nl = nt ? (nt.getAttribute('data-short') || nt.textContent.trim()) : '';
+    $('next').textContent = k === last && nextPart ? 'Next: ' + ((nl.match(/^\([a-z0-9]+\)/) || [nl])[0]) : 'Next';
+    $('all').disabled = k === last;
+  }
+
+  function barFixed() { return getComputedStyle(bar).position === 'fixed'; }
+  function span(ids) {
+    var top = Infinity, bottom = -Infinity;
+    ids.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    return top === Infinity ? null : { t: top, b: bottom };
+  }
+
+  // Scroll so this step's line (and, if they fit, its inputs) are in view. Resolves when scrolling stops.
+  function bring() {
+    var s = STEPS[k];
+    var tg = S(s).concat(F(s).map(function (f) { return f[1]; }), A(s));
+    if (!tg.length) return Promise.resolve();
+    var src = F(s).map(function (f) { return f[0]; }).concat(U(s));
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    var dy = null;
+    [tg.concat(src), tg].some(function (ids) {
+      var r = span(ids); if (!r) return false;
+      if (r.b - r.t > bottomEdge - 24) return false;
+      dy = r.t < 12 ? r.t - 12 : (r.b > bottomEdge - 12 ? r.b - (bottomEdge - 12) : 0);
+      return true;
+    });
+    if (dy === null) { var r0 = span([tg[0]]); if (!r0) return Promise.resolve(); dy = r0.t - 16; }
+    if (Math.abs(dy) < 2) return Promise.resolve();
+    var smooth = !reduced();
+    window.scrollBy({ top: dy, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) return Promise.resolve();
+    return new Promise(function (res) {
+      var done = false;
+      var fin = function () { if (done) return; done = true; window.removeEventListener('scrollend', fin); res(); };
+      window.addEventListener('scrollend', fin);
+      setTimeout(fin, Math.min(950, 260 + Math.abs(dy) * 0.6));
+    });
+  }
+
+  // A copy of the number drops from where it was found into its place in this line.
+  function fly(from, to, my, dur) {
+    var src = $(from), dst = $(to);
+    if (!src || !dst) { reveal(to, 'land'); return; }
+    var a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+    var g = document.createElement('div');
+    g.className = 'ghost'; g.setAttribute('aria-hidden', 'true');
+    var gy = document.createElement('div');
+    var chip = document.createElement('span'); chip.className = 'gchip';
+    var tone = function (el) { for (var ci = 0; ci < el.classList.length; ci++) if (el.classList[ci].indexOf('c-') === 0) return el.classList[ci]; return null; };
+    var c = tone(dst) || tone(src);
+    if (c) chip.classList.add(c);
+    chip.textContent = dst.textContent.trim();
+    gy.appendChild(chip); g.appendChild(gy); document.body.appendChild(g); ghosts.push(g);
+    var sx = window.scrollX || 0, sy = window.scrollY || 0;
+    var x0 = a.left + sx, x1 = b.left + sx;
+    var y0 = a.top + sy, y1 = b.top + sy;
+    g.style.transform = 'translateX(' + x0 + 'px)';
+    gy.style.transform = 'translateY(' + y0 + 'px)';
+    var ax = g.animate([{ transform: 'translateX(' + x0 + 'px)' }, { transform: 'translateX(' + x1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' });
+    gy.animate([{ transform: 'translateY(' + y0 + 'px)' }, { transform: 'translateY(' + y1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.5,0,.6,1)', fill: 'forwards' });
+    ax.onfinish = function () {
+      g.remove();
+      if (my !== tok) return;
+      reveal(to, 'land');
+    };
+  }
+
+  function play(my) {
+    var s = STEPS[k];
+    var lead = S(s).length ? 450 : 80, gap = 320, dur = 800;
+    F(s).forEach(function (f, i) {
+      later(function () { if (my === tok) fly(f[0], f[1], my, dur); }, lead + i * gap);
+    });
+    var done = F(s).length ? lead + (F(s).length - 1) * gap + dur + 120 : lead;
+    A(s).forEach(function (id, i) {
+      later(function () { if (my === tok) reveal(id, 'write'); }, done + i * 170);
+    });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+    var my = tok;
+    var p = bring();
+    if (animate && !reduced()) p.then(function () { if (my === tok) play(my); });
+  }
+
+  // Tabs: each part keeps its own place in its walkthrough.
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab[data-part]'));
+  function setTab(p, focus, at) {
+    if (!TABS[p] || p === part) return;
+    stopMotion();
+    pos[part] = k;
+    part = p; TAB = TABS[p]; STEPS = TAB.steps; last = STEPS.length - 1; k = at != null ? at : pos[p];
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-part') === p;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      var pan = $(t.getAttribute('aria-controls'));
+      if (pan) pan.hidden = !on;
+      if (on && focus) t.focus();
+    });
+    markPart();
+    render(false);
+  }
+  function markPart() {
+    var reqs = TAB.req || [part];
+    document.querySelectorAll('.req li[id^="req-"]').forEach(function (li) { li.classList.toggle('cur', reqs.indexOf(li.id.slice(4)) >= 0); });
+    var su = $('setup'); if (su) su.hidden = !!TAB.noSetup;
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { setTab(t.getAttribute('data-part'), false); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); e.stopPropagation();
+      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      setTab(n.getAttribute('data-part'), true);
+    });
+  });
+
+  // keep the part tabs in view after Next or Back changes the part
+  function showTabs() {
+    var tl = document.querySelector('.tabs'), r = tl.getBoundingClientRect();
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    if (r.top < 8 || r.top > bottomEdge - 80) window.scrollBy({ top: r.top - 12, behavior: reduced() ? 'auto' : 'smooth' });
+  }
+  function forward() {
+    if (k < last) { go(k + 1, true); return; }
+    var nxt = PARTS[PARTS.indexOf(part) + 1];
+    if (nxt) { setTab(nxt, false, 0); showTabs(); }
+  }
+  function backward() {
+    if (k > 0) { go(k - 1, false); return; }
+    var prv = PARTS[PARTS.indexOf(part) - 1];
+    if (prv) { setTab(prv, false, TABS[prv].steps.length - 1); showTabs(); }
+  }
+  $('next').addEventListener('click', forward);
+  $('back').addEventListener('click', backward);
+  $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', function () { k = last; render(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('[role="tablist"]')) return;
+    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); forward(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); backward(); }
+  });
+
+  var setBar = function () {
+    document.documentElement.style.setProperty('--bar-h', (barFixed() ? bar.offsetHeight : 0) + 'px');
+  };
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(bar);
+  setBar();
+  markPart();
+  render(false);
+})();
+</script>
+</body>
+</html>
