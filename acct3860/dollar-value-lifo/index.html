@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dollar-Value LIFO</title>
+<style>
+:root{--ink:#1d1d1f;--muted:#5b5b60;--line:#d9d6d2;--card:#fff;--bg:#faf8f5;--red:#C8102E;
+--red-t:#FADCE0;--red-x:#6E0A1A;--gold-t:#FFF0C7;--gold-x:#6B4E00;--green-t:#DCEFE2;--green-x:#1B4D30;
+--blue-t:#DDE8F6;--blue-x:#143D6B;--orchid-t:#F2D3F0;--orchid-x:#5E1A5B;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:0 16px 150px}
+h1{font-size:1.6rem;margin:22px 0 14px}
+.wrap{max-width:1180px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:18px;min-width:0}
+.lbl{font-weight:700;font-size:.95rem;margin-bottom:8px}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:bottom}
+th{font-size:.85rem;background:#f3f1ee;white-space:normal}
+td.n,th.n{text-align:right}
+td.n{white-space:nowrap}
+.cell{display:flex;justify-content:flex-end;gap:12px}
+.sg{margin-right:auto;font-weight:700}
+tr.write{animation:none}
+.g{overflow:hidden}
+.solgrid{display:grid;gap:24px}
+@media (min-width:760px){.solgrid{grid-template-columns:minmax(0,1fr) 250px;align-items:start}#barcol{position:sticky;top:14px}}
+#barcol.write{animation:none}
+.btot{font-weight:700;font-size:.9rem;margin-bottom:6px;font-variant-numeric:tabular-nums}
+.stack{display:flex;flex-direction:column;justify-content:flex-end;height:350px;position:relative}
+#ghost{position:absolute;left:0;right:0;bottom:264px;height:78px;border:2px dotted var(--ink);border-radius:5px;display:none;align-items:center;justify-content:center;z-index:2;pointer-events:none}
+#ghost.on{display:flex}
+#ghost b{opacity:0;transition:opacity .4s ease}
+#ghost.on b{opacity:1}
+.seg{height:0;overflow:hidden;margin-top:0;border-radius:5px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.8rem;line-height:1.25;transition:height .8s ease,margin-top .8s ease;font-variant-numeric:tabular-nums;position:relative}
+.seg.on{margin-top:3px}
+.seg.base{align-items:flex-end;padding-bottom:0}
+.seg.base .sl{padding-bottom:16px}
+.brk{position:absolute;left:-2px;right:-2px;top:22px;height:12px;background:var(--card);clip-path:polygon(0 35%,10% 0,20% 35%,30% 0,40% 35%,50% 0,60% 35%,70% 0,80% 35%,90% 0,100% 35%,100% 100%,90% 65%,80% 100%,70% 65%,60% 100%,50% 65%,40% 100%,30% 65%,20% 100%,10% 65%,0 100%)}
+.bcap{font-size:.8rem;color:var(--muted);margin-top:8px}
+#r0.write td{animation:padopen 1s ease-out both}
+#r0.write .g{animation:grow 1s ease-out both}
+@keyframes padopen{from{padding-top:0;padding-bottom:0}to{padding-top:6px;padding-bottom:6px}}
+@keyframes grow{from{max-height:0}to{max-height:3em}}
+.strike .cell span:last-child{position:relative}
+.strike .cell span:last-child::before,.strike .cell span:last-child::after{content:"";position:absolute;left:-25%;width:150%;top:50%;height:2px;margin-top:-1px;background:var(--red);transform-origin:center}
+.strike .cell span:last-child::before{animation:x1 .4s ease-out both}
+.strike .cell span:last-child::after{animation:x2 .4s ease-out .45s both}
+@keyframes x1{from{transform:rotate(35deg) scaleX(0)}to{transform:rotate(35deg) scaleX(1)}}
+@keyframes x2{from{transform:rotate(-35deg) scaleX(0)}to{transform:rotate(-35deg) scaleX(1)}}
+#p-base:not(.c-red){padding:0}
+.tw{overflow-x:auto}
+.eq{margin-top:16px}
+.eq:first-child{margin-top:0}
+.m{margin:4px 0;font-variant-numeric:tabular-nums}
+.note{color:var(--red)}
+.final{border-bottom:3px double var(--ink);font-weight:700}
+.tint{padding:1px 4px;border-radius:4px;white-space:nowrap}
+.c-red{background:var(--red-t)!important;color:var(--red-x)}
+.c-gold{background:var(--gold-t)!important;color:var(--gold-x)}
+.c-green{background:var(--green-t)!important;color:var(--green-x)}
+.c-blue{background:var(--blue-t)!important;color:var(--blue-x)}
+.c-orchid{background:var(--orchid-t)!important;color:var(--orchid-x)}
+.use{outline:2px solid var(--ink);outline-offset:-2px}
+span.use{outline-offset:1px}
+.off{display:none!important}
+.k2,.k3{display:none}
+table.s2 .k2,table.s3 .k3{display:table-cell}
+.write{animation:wr .6s ease-out both}
+@keyframes wr{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 14px rgba(0,0,0,.06)}
+.bar .in{max-width:1180px;margin:0 auto}
+.cap{min-height:3em;margin-bottom:8px}
+.btns{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button{font:inherit;padding:7px 14px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer}
+button.pri{background:var(--red);border-color:var(--red);color:#fff}
+button:disabled{opacity:.4;cursor:default}
+.cnt{color:var(--muted);font-size:.9rem;margin-left:auto}
+.foot{color:var(--muted);font-size:.85rem;margin-top:22px}
+</style></head><body><div class="wrap">
+<h1>Dollar-Value LIFO</h1>
+
+<section class="card">
+<div class="lbl">Problem</div>
+<p style="margin-top:0">On January 1, 20X1, Starlight Supply Company adopted the dollar-value LIFO method. The inventory value for its one inventory pool on this date was <span class="tint" id="p-base" data-c="red">$300,000</span>. Inventory data for 20X1 through 20X5 are as follows:</p>
+<div class="tw"><table id="gt">
+<thead><tr><th>Date</th><th class="n">Ending inventory at year-end costs</th><th class="n">Cost index</th><th class="n k2"><span id="h-b">Base-year dollars</span></th><th class="n k3"><span id="h-d">Change</span></th></tr></thead>
+<tbody>
+<tr id="r0"><td><div class="g"><span id="t0d">1/1/20X1</span></div></td><td class="n" id="t0c" data-c="red"><div class="g"><span id="t0cv">$300,000</span></div></td><td class="n" id="t0i" data-c="red"><div class="g"><span class="cell"><span class="sg" id="x0">÷</span><span id="t0iv">1.00</span></span></div></td><td class="n k2" id="b0c" data-c="red"><span class="cell" id="b0"><span class="sg">=</span><span>300,000</span></span></td><td class="n k3"></td></tr>
+<tr><td>12/31/20X1</td><td class="n">$343,200</td><td class="n" id="i1" data-c="gold"><span class="cell"><span class="sg" id="x1">÷</span><span>1.04</span></span></td><td class="n k2"><span class="cell" id="b1"><span class="sg">=</span><span>330,000</span></span></td><td class="n k3" id="d1c" data-c="gold"><span id="d1">+30,000</span></td></tr>
+<tr><td>12/31/20X2</td><td class="n">383,400</td><td class="n" id="i2" data-c="green"><span class="cell"><span class="sg" id="x2">÷</span><span>1.08</span></span></td><td class="n k2"><span class="cell" id="b2"><span class="sg">=</span><span>355,000</span></span></td><td class="n k3" id="d2c" data-c="green"><span id="d2">+25,000</span></td></tr>
+<tr><td>12/31/20X3</td><td class="n">407,000</td><td class="n" id="i3" data-c="blue"><span class="cell"><span class="sg" id="x3">÷</span><span>1.10</span></span></td><td class="n k2"><span class="cell" id="b3"><span class="sg">=</span><span>370,000</span></span></td><td class="n k3" id="d3c" data-c="blue"><span id="d3">+15,000</span></td></tr>
+<tr><td>12/31/20X4</td><td class="n">396,750</td><td class="n" id="i4"><span class="cell"><span class="sg" id="x4">÷</span><span>1.15</span></span></td><td class="n k2"><span class="cell" id="b4"><span class="sg">=</span><span>345,000</span></span></td><td class="n k3" id="d4c"><b id="d4">−25,000</b></td></tr>
+<tr><td>12/31/20X5</td><td class="n">432,000</td><td class="n" id="i5" data-c="orchid"><span class="cell"><span class="sg" id="x5">÷</span><span>1.20</span></span></td><td class="n k2"><span class="cell" id="b5"><span class="sg">=</span><span>360,000</span></span></td><td class="n k3" id="d5c" data-c="orchid"><span id="d5">+15,000</span></td></tr>
+</tbody></table></div>
+<p class="m" id="chnote"><b class="note">Note:</b> Change = base-year dollars this year − base-year dollars the year before.</p>
+<p class="m" id="dnote"><b class="note">Note:</b> 20X4 is a decrease, so its cost index of 1.15 is never used. A decrease takes base-year dollars out of earlier layers, at the index of the year each layer was added.</p>
+<p style="margin-bottom:0">Required: calculate Starlight’s ending inventory for 20X1, 20X2, 20X3, 20X4 and 20X5.</p>
+</section>
+
+<section class="card" id="sol">
+<div class="solgrid"><div class="lines">
+<div class="eq" id="l1">
+<div class="lbl">Ending inventory, 12/31/20X1</div>
+<div class="m">EI = <span class="tint c-red">300,000</span> + <span class="tint c-gold">30,000 × 1.04</span> = <span class="final">$331,200</span></div>
+</div>
+<div class="eq" id="l2">
+<div class="lbl">Ending inventory, 12/31/20X2</div>
+<div class="m">EI = <span class="tint c-red">300,000</span> + <span class="tint c-gold">30,000 × 1.04</span> + <span class="tint c-green">25,000 × 1.08</span> = <span class="final">$358,200</span></div>
+</div>
+<div class="eq" id="l3">
+<div class="lbl">Ending inventory, 12/31/20X3</div>
+<div class="m">EI = <span class="tint c-red">300,000</span> + <span class="tint c-gold">30,000 × 1.04</span> + <span class="tint c-green">25,000 × 1.08</span> + <span class="tint c-blue">15,000 × 1.10</span> = <span class="final">$374,700</span></div>
+</div>
+<div class="eq" id="l4">
+<div class="lbl">Ending inventory, 12/31/20X4</div>
+<div class="m">EI = <span class="tint c-red">300,000</span> + <span class="tint c-gold">30,000 × 1.04</span> + <span class="tint c-green">(25,000 − 10,000) × 1.08</span> + <span class="tint c-blue">(15,000 − 15,000) × 1.10</span> = <span class="final">$347,400</span></div>
+<div class="m"><b class="note">Note:</b> The decrease of 25,000 comes out of the newest layers first: 15,000 from the 20X3 layer, which leaves 0, then 10,000 from the 20X2 layer. 15,000 + 10,000 = 25,000. No layer is added for 20X4.</div>
+</div>
+<div class="eq" id="l5">
+<div class="lbl">Ending inventory, 12/31/20X5</div>
+<div class="m">EI = <span class="tint c-red">300,000</span> + <span class="tint c-gold">30,000 × 1.04</span> + <span class="tint c-green">(25,000 − 10,000) × 1.08</span> + <span class="tint c-blue">(15,000 − 15,000) × 1.10</span> + <span class="tint c-orchid">15,000 × 1.20</span> = <span class="final">$365,400</span></div>
+</div>
+</div>
+<div id="barcol">
+<div class="btot" id="btot"></div>
+<div class="stack">
+<div id="ghost"><b>−25,000</b></div>
+<div class="seg c-orchid" id="s5"><div class="sl"><b>20X5 layer</b><br>15,000 × 1.20</div></div>
+<div class="seg c-blue" id="s3"><div class="sl"><b>20X3 layer</b><br>15,000 × 1.10</div></div>
+<div class="seg c-green" id="s2"><div class="sl"><b>20X2 layer</b><br><span id="s2t">25,000 × 1.08</span></div></div>
+<div class="seg c-gold" id="s1"><div class="sl"><b>20X1 layer</b><br>30,000 × 1.04</div></div>
+<div class="seg c-red base" id="s0"><div class="brk"></div><div class="sl"><b>Base layer</b><br>300,000 × 1.00</div></div>
+</div>
+<div class="bcap">Layers in base-year dollars. The base layer is not drawn to scale.</div>
+</div></div>
+</section>
+<div class="foot">© 2026 O. Watanabe. All rights reserved.</div>
+</div>
+
+<div class="bar"><div class="in">
+<div class="cap" id="cap"></div>
+<div class="btns"><button id="restart">Restart</button><button id="back">Back</button><button id="next" class="pri">Next</button><span class="cnt" id="cnt"></span></div>
+</div></div>
+
+<script>
+const X=["x0","x1","x2","x3","x4","x5"],B=["b0","b1","b2","b3","b4","b5"],D=["d1","d2","d3","d4","d5"];
+function stag(ids,start){const d={};ids.forEach((id,k)=>{d[id]=start+k*500;});return d;}
+const STEPS=[
+ {caption:"The table from the problem. Click Next for a step-by-step walkthrough."},
+ {show:["r0","t0d","t0cv","t0iv"],delay:{t0d:1000,t0cv:1500,t0iv:2000},lit:["p-base","t0c","t0i"],use:["p-base","t0c","t0i"],
+  caption:"The 1/1/20X1 inventory of $300,000 is given in the problem text. It goes in a new row above 12/31/20X1. 20X1 is the base year, so its cost index is 1.00. This row is the base layer."},
+ {show:X,delay:stag(X,0),
+  caption:"Base-year dollars = ending inventory at year-end costs ÷ cost index. A ÷ goes in front of each cost index."},
+ {cols:"s2",show:["h-b"].concat(B),delay:stag(B,300),lit:["b0c"],
+  caption:"Ending inventory at year-end costs ÷ cost index = base-year dollars. For 12/31/20X1, $343,200 ÷ 1.04 = 330,000."},
+ {cols:"s3",show:["h-d","chnote"].concat(D),delay:stag(D,300),lit:["d1c","d2c","d3c","d5c"],
+  caption:"An increase in base-year dollars adds a new layer. A decrease takes base-year dollars out of the newest layers first."},
+ {show:["dnote"],strike:["i4"],use:["d4c","i4"],
+  caption:"1.15 is crossed out because 20X4 is a decrease. Multiplying 25,000 × 1.15 would be wrong."},
+ {show:["sol","l1","barcol"],lit:["i1"],use:["b0c","d1c","i1"],
+  caption:"Ending inventory on 12/31/20X1 is the base layer plus the 20X1 layer. Each layer is multiplied by the index of the year it was added, so the 20X1 layer is 30,000 × 1.04."},
+ {show:["l2"],lit:["i2"],use:["d2c","i2"],caption:"Ending inventory on 12/31/20X2 repeats the 20X1 line and adds the 20X2 layer, 25,000 × 1.08."},
+ {show:["l3"],lit:["i3"],use:["d3c","i3"],caption:"Ending inventory on 12/31/20X3 repeats the 20X2 line and adds the 20X3 layer, 15,000 × 1.10."},
+ {show:["l4"],use:["d4c","d3c","d2c"],caption:"Base-year dollars fell by 25,000 in 20X4. The 20X3 layer goes to 0 (15,000 − 15,000), and the remaining 10,000 comes out of the 20X2 layer (25,000 − 10,000). No layer is added."},
+ {show:["l5"],lit:["i5"],use:["d5c","i5"],caption:"Ending inventory on 12/31/20X5 repeats the 20X4 line and adds the 20X5 layer, 15,000 × 1.20."}
+];
+const first={};STEPS.forEach((s,k)=>(s.show||[]).forEach(id=>{if(!(id in first))first[id]=k;}));
+let cur=0;
+function bar(i,anim){
+ const H={s0:i>=6?120:0,s1:i>=6?90:0,s2:i>=7?(i>=9?45:75):0,s3:(i===8)?45:0,s5:i>=10?45:0};
+ for(const id in H){const el=document.getElementById(id);el.style.transitionDelay=(id==="s2"&&i===9&&anim)?"0.9s":"0s";el.style.height=H[id]+"px";el.classList.toggle("on",H[id]>0);}
+ const g=document.getElementById("ghost");g.classList.toggle("on",i===9);g.querySelector("b").style.transitionDelay=(i===9&&anim)?"1.8s":"0s";
+ document.getElementById("s2t").textContent=i>=9?"15,000 × 1.08":"25,000 × 1.08";
+ const T={6:"330,000",7:"355,000",8:"370,000",9:"345,000",10:"360,000"};
+ document.getElementById("btot").textContent=T[i]?"Total: "+T[i]+" base-year dollars":"";
+}
+function render(i,anim){
+ for(const id in first){const el=document.getElementById(id);const on=first[id]<=i;
+  el.classList.toggle("off",!on);el.classList.remove("write");el.style.animationDelay="";
+  if(on&&anim&&first[id]===i){void el.offsetWidth;el.classList.add("write");const d=(STEPS[i].delay||{})[id];if(d)el.style.animationDelay=d+"ms";}}
+ const lit=new Set();STEPS.slice(0,i+1).forEach(s=>(s.lit||[]).forEach(x=>lit.add(x)));
+ document.querySelectorAll("[data-c]").forEach(el=>{el.classList.toggle("c-"+el.dataset.c,lit.has(el.id));});
+ document.querySelectorAll(".use").forEach(el=>el.classList.remove("use"));
+ (STEPS[i].use||[]).forEach(id=>document.getElementById(id).classList.add("use"));
+ const st=new Set();STEPS.slice(0,i+1).forEach(s=>(s.strike||[]).forEach(x=>st.add(x)));document.querySelectorAll("#i4").forEach(el=>el.classList.toggle("strike",st.has(el.id)));
+ const gt=document.getElementById("gt");["s2","s3"].forEach(c=>gt.classList.toggle(c,STEPS.slice(0,i+1).some(s=>s.cols===c)));
+ bar(i,anim);
+ document.getElementById("cap").textContent=STEPS[i].caption;
+ document.getElementById("cnt").textContent="Step "+(i+1)+" of "+STEPS.length;
+ document.getElementById("back").disabled=i===0;document.getElementById("next").disabled=i===STEPS.length-1;
+ if(anim&&STEPS[i].show){const t=document.getElementById(STEPS[i].show[STEPS[i].show.length-1]);if(t&&t.getBoundingClientRect().bottom>innerHeight-130)t.scrollIntoView({behavior:"smooth",block:"center"});}
+}
+document.getElementById("next").onclick=()=>{if(cur<STEPS.length-1){cur++;render(cur,true);}};
+document.getElementById("back").onclick=()=>{if(cur>0){cur--;render(cur,false);}};
+document.getElementById("restart").onclick=()=>{cur=0;render(0,false);scrollTo({top:0});};
+render(0,false);
+</script>
+</body></html>
