@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bunker Hill Variety Store: Retail Inventory Method</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Step-by-step walkthrough of the retail inventory method: ending inventory and cost of goods sold under the conventional and average cost retail methods.">
+<!-- GoatCounter script line goes here -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Shared look for the Chapter 7, 8 and 9 walkthroughs.
+   Layout: problem on the left (stays in view), solution on the right as written equations, steps at the bottom.
+   Color: a number keeps one color from the problem to the line where it is used; colors come in one step at a time. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #1E1A1B;
+  --use-tint: #ECE7E8;
+  --accent: #1E1A1B;
+  --on-accent: #FCFCFB;
+  --red: #C8102E;    --red-t: #FADCE0;   --red-x: #6E0A1A;
+  --gold: #F2B200;   --gold-t: #FFF0C7;  --gold-x: #6B4E00;
+  --green: #2F7D50;  --green-t: #DCEFE2; --green-x: #1B4D30;
+  --blue: #2463A8;   --blue-t: #DDE8F6;  --blue-x: #143D6B;
+  --orchid: #A0329C; --orchid-t: #F2D3F0; --orchid-x: #5E1A5B;
+  --orange: #D2601A; --orange-t: #FBD9C2; --orange-x: #7A3409;
+  --teal: #0E7C86;   --teal-t: #D3EEF0;  --teal-x: #084A50;
+  --gray: #8A8284;   --gray-t: #E4E0E1;  --gray-x: #3A3435;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 0px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+    --accent: #F2EEEF; --on-accent: #161314;
+    --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+    --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+    --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+    --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+    --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+    --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+    --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+    --gray: #B5ACAE; --gray-t: rgba(200, 190, 192, 0.22); --gray-x: #F2EEEF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+  --accent: #F2EEEF; --on-accent: #161314;
+  --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+  --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+  --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+  --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+  --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+  --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+  --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+  --gray: #B5ACAE; --gray-t: rgba(200, 190, 192, 0.22); --gray-x: #F2EEEF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px calc(var(--bar-h) + 24px);
+}
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 18px; }
+header { display: grid; gap: 4px; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(24px, 3vw, 32px); line-height: 1.15; margin: 0; text-wrap: balance; }
+
+/* two columns: problem left, solution right */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start; }
+.pin { display: grid; gap: 14px; min-width: 0; padding: 2px; }
+.solution { display: grid; gap: 20px; min-width: 0; }
+
+/* problem */
+.problem { display: grid; gap: 10px; font-family: var(--serif); font-size: 16.5px; border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; background: var(--bg); }
+.problem p { margin: 0; }
+.problem .pr { color: var(--red); font-weight: 700; }
+.req ol { margin: 4px 0 0; padding-left: 0; list-style: none; display: grid; gap: 4px; }
+.req li { color: var(--muted); }
+.req li.cur { color: var(--ink); }
+/* givens in the problem take their color from the step that first uses them */
+.problem .tint { border-radius: 2px; transition: background-color 0.4s, color 0.4s, box-shadow 0.4s; }
+.problem .tint.lit { background: var(--ct); box-shadow: 0 0 0 2px var(--ct); color: var(--cx); font-weight: 700; }
+
+.key { font-size: 13.5px; color: var(--muted); margin: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* chips: a number keeps its color from where it comes from to where it is used */
+.c-red { --ct: var(--red-t); --cx: var(--red-x); }
+.c-gold { --ct: var(--gold-t); --cx: var(--gold-x); }
+.c-green { --ct: var(--green-t); --cx: var(--green-x); }
+.c-blue { --ct: var(--blue-t); --cx: var(--blue-x); }
+.c-orchid { --ct: var(--orchid-t); --cx: var(--orchid-x); }
+.c-orange { --ct: var(--orange-t); --cx: var(--orange-x); }
+.c-teal { --ct: var(--teal-t); --cx: var(--teal-x); }
+.c-gray { --ct: var(--gray-t); --cx: var(--gray-x); }
+.amt {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--ct, transparent);
+  color: var(--cx, inherit);
+  font-weight: 700;
+}
+/* numbers in the lines: plain, colored only while their step is worked */
+.nw { white-space: nowrap; }
+.dn { display: inline-block; white-space: nowrap; padding: 0 4px; border-radius: 4px; transition: background-color 0.4s, color 0.4s; }
+.dn.on { background: var(--ct); color: var(--cx); font-weight: 700; }
+b.dn, .final.dn { font-weight: 700; }
+.final { border-bottom: 3px double var(--ink); padding-bottom: 1px; font-weight: 700; }
+/* fractions, written the way they are on paper */
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.35; margin: 2px 2px; }
+.frac > span { padding: 1px 4px; }
+.frac > span:first-child { border-bottom: 1.5px solid currentColor; }
+
+/* worked lines */
+.card { border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px 16px; display: grid; gap: 14px; min-width: 0; }
+.card h2 { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 0; line-height: 1.25; }
+.eq { display: grid; gap: 2px; padding: 6px 8px; border-radius: 6px; min-width: 0; }
+.eq .lbl { font-weight: 700; }
+.eq .m { padding-left: 22px; font-variant-numeric: tabular-nums; font-size: 16.5px; line-height: 1.6; }
+.eq .m.words { color: var(--muted); font-size: 15.5px; }
+.eq .m.chk { font-size: 15.5px; margin-top: 4px; }
+.eq + .eq { border-top: 1px solid var(--rule); border-top-left-radius: 0; border-top-right-radius: 0; }
+.eq .m .rv { display: inline-block; }
+.note { color: var(--red); }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1.5px solid var(--ink); margin-bottom: -20px; }
+.tab {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1.5px solid var(--rule); border-bottom: 0;
+  border-radius: 6px 6px 0 0; padding: 7px 16px; cursor: pointer;
+}
+.tab:hover { border-color: var(--muted); }
+.tab[aria-selected="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); cursor: default; }
+.card.tabbed { border-top: 0; border-radius: 0 0 8px 8px; }
+[hidden] { display: none !important; }
+
+/* reveal states */
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.write { animation: write 0.5s ease-out both; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); opacity: 0.4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.land { animation: land 0.5s ease-out both; }
+@keyframes land { 0% { transform: scale(1.25); } 55% { transform: scale(0.95); } 100% { transform: scale(1); } }
+.ghost { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; will-change: transform; }
+.ghost > div { will-change: transform; }
+.gchip { display: inline-block; font-weight: 700; font-size: 16.5px; padding: 0 5px; border-radius: 4px; background: var(--ct, var(--surface)); color: var(--cx, var(--ink)); outline: 1.5px solid var(--ink); }
+.use-on { outline: 2px solid var(--use) !important; outline-offset: 2px; border-radius: 4px; background-color: var(--use-tint); }
+.amt.use-on, .tint.lit.use-on { background-color: var(--ct); }
+/* givens in the problem show by color only, no outline */
+.problem .tint.use-on { outline: none !important; }
+
+/* steps */
+.bar { background: var(--bg); display: grid; gap: 10px; }
+.caption { font-size: 15.5px; min-height: 3em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button.ctl {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button.ctl:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button.ctl:disabled { opacity: 0.45; cursor: default; }
+button.ctl.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.progrow { display: flex; align-items: center; gap: 12px; }
+.counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress { flex: 1; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+button .sm { display: none; }
+.bar > * { width: 100%; max-width: 860px; margin-inline: auto; }
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  border-top: 2px solid var(--ink);
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+
+.copyright { padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* wide screens: problem on the left, held in view; work setup and parts on the right */
+@media (min-width: 1060px) {
+  .wrap { max-width: 1240px; }
+  .layout { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 24px; }
+  .bar > * { max-width: 1240px; }
+}
+@media (min-width: 1060px) and (min-height: 640px) {
+  .pin { position: sticky; top: 12px; max-height: calc(100vh - var(--bar-h) - 24px); overflow-y: auto; }
+}
+@media (max-width: 560px) {
+  .problem { font-size: 16px; padding: 12px; }
+  .card { padding: 12px 10px 14px; }
+  .eq .m { padding-left: 12px; font-size: 15.5px; }
+  .controls { flex-wrap: nowrap; gap: 6px; }
+  button.ctl { padding: 7px 10px; font-size: 14px; flex: 1 1 auto; }
+  button .lg { display: none; } button .sm { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write, .land { animation: none !important; }
+  .progress > div, .problem .tint { transition: none; }
+}
+
+/* the data table in the problem: cost and retail columns */
+.ptbl { overflow-x: auto; padding: 3px; margin: -3px; }
+.ptbl table { width: 100%; max-width: 520px; border-collapse: collapse; font-family: var(--sans); }
+.ptbl th, .ptbl td { padding: 3px 8px; font-size: 14.5px; border-bottom: 1px solid var(--rule); vertical-align: middle; text-align: left; }
+.ptbl thead th { font-size: 13.5px; font-weight: 700; border-bottom: 1.5px solid var(--ink); text-align: right; }
+.ptbl td.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ptbl td.dash { color: var(--muted); }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 560px) {
+  .ptbl th, .ptbl td { padding: 4px 4px; font-size: 13.5px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>Bunker Hill Variety Store: Retail Inventory Method</h1>
+  </header>
+
+  <div class="layout">
+    <aside class="pin" aria-label="Problem">
+      <section class="problem" aria-label="Problem">
+        <p><span class="pr">Example 6. DO ON YOUR OWN.</span> Bunker Hill Variety Store uses the retail inventory method to estimate ending inventory and cost of goods sold. Data for 20X1 are as follows:</p>
+        <div class="ptbl"><table aria-label="Bunker Hill Variety Store data">
+          <thead><tr><th scope="col"><span class="vh">Item</span></th><th scope="col">Cost</th><th scope="col">Retail</th></tr></thead>
+          <tbody>
+            <tr><td>Beginning inventory</td><td class="n"><span class="tint" id="p-bic">$12,000</span></td><td class="n"><span class="tint" id="p-bir">$20,000</span></td></tr>
+            <tr><td>Purchases</td><td class="n"><span class="tint" id="p-puc">102,600</span></td><td class="n"><span class="tint" id="p-pur">165,000</span></td></tr>
+            <tr><td>Freight-in</td><td class="n"><span class="tint" id="p-fr">3,480</span></td><td class="n dash">–</td></tr>
+            <tr><td>Purchase returns</td><td class="n"><span class="tint" id="p-prc">4,000</span></td><td class="n"><span class="tint" id="p-prr">7,000</span></td></tr>
+            <tr><td>Net markups</td><td class="n dash">–</td><td class="n"><span class="tint" id="p-mu">6,000</span></td></tr>
+            <tr><td>Net markdowns</td><td class="n dash">–</td><td class="n"><span class="tint" id="p-md">3,000</span></td></tr>
+            <tr><td>Normal spoilage</td><td class="n dash">–</td><td class="n"><span class="tint" id="p-sp">4,200</span></td></tr>
+            <tr><td>Net sales</td><td class="n dash">–</td><td class="n"><span class="tint" id="p-ns">152,000</span></td></tr>
+          </tbody>
+        </table></div>
+        <div class="req">
+          <p><b>Required:</b> Estimate the ending inventory and cost of goods sold for 20X1, applying the conventional retail method using the information provided.</p>
+        </div>
+      </section>
+      <p class="key"><span>In each step, matching colors show where a number comes from and where it is used.</span></p>
+    </aside>
+
+    <main class="solution">
+      <section class="card" id="pan-1" aria-label="Solution">
+        <div class="eq rv" id="a1">
+          <div class="lbl">1. Cost of goods available for sale at cost</div>
+          <div class="m words">= Beginning inventory + Purchases − Purchase returns + Freight-in</div>
+          <div class="m rv" id="a1-2">= <span class="dn rv" id="a1-bi">$12,000</span> + <span class="dn rv" id="a1-pu">$102,600</span> − <span class="dn rv" id="a1-pr">$4,000</span> + <span class="dn rv" id="a1-fr">$3,480</span></div>
+          <div class="m rv" id="a1-3">= <b class="dn" id="r1">$114,080</b></div>
+          <div class="m chk rv" id="a1-note"><b class="note">Note 1:</b> Freight-in changes only the cost of the goods, so it has no retail amount.</div>
+        </div>
+        <div class="eq rv" id="a2">
+          <div class="lbl">2. Cost of goods available for sale at retail</div>
+          <div class="m words">= Beginning inventory + Purchases − Purchase returns + Net markups</div>
+          <div class="m rv" id="a2-2">= <span class="dn rv" id="a2-bi">$20,000</span> + <span class="dn rv" id="a2-pu">$165,000</span> − <span class="dn rv" id="a2-pr">$7,000</span> + <span class="dn rv" id="a2-mu">$6,000</span></div>
+          <div class="m rv" id="a2-3">= <b class="dn" id="r2">$184,000</b></div>
+          <div class="m chk rv" id="a2-note"><b class="note">Note 2:</b> The conventional retail method adds net markups but not net markdowns here, so the cost-to-retail ratio is computed after net markups and before net markdowns.</div>
+        </div>
+        <div class="eq rv" id="a3">
+          <div class="lbl">3. Cost-to-retail ratio</div>
+          <div class="m words">= <span class="frac"><span>Cost of goods available for sale at cost</span><span>Cost of goods available for sale at retail</span></span></div>
+          <div class="m rv" id="a3-2">= <span class="frac"><span><span class="dn rv" id="a3-n">$114,080</span></span><span><span class="dn rv" id="a3-d">$184,000</span></span></span></div>
+          <div class="m rv" id="a3-3">= <b class="dn" id="r3">0.62</b></div>
+        </div>
+        <div class="eq rv" id="a4">
+          <div class="lbl">4. Ending inventory at retail</div>
+          <div class="m words">= Cost of goods available for sale at retail − Net markdowns − Net sales − Normal spoilage</div>
+          <div class="m rv" id="a4-2">= <span class="dn rv" id="a4-cr">$184,000</span> − <span class="dn rv" id="a4-md">$3,000</span> − <span class="dn rv" id="a4-ns">$152,000</span> − <span class="dn rv" id="a4-sp">$4,200</span></div>
+          <div class="m rv" id="a4-3">= <b class="dn" id="r4">$24,800</b></div>
+          <div class="m chk rv" id="a4-note"><b class="note">Note 3:</b> Normal spoilage is treated like sales: the goods are gone, so they are deducted from retail.</div>
+        </div>
+        <div class="eq rv" id="a5">
+          <div class="lbl">5. Ending inventory at cost</div>
+          <div class="m words">= Ending inventory at retail × Cost-to-retail ratio</div>
+          <div class="m rv" id="a5-2">= <span class="dn rv" id="a5-ei">$24,800</span> × <span class="dn rv" id="a5-rt">0.62</span></div>
+          <div class="m rv" id="a5-3">= <span class="final dn" id="r5">$15,376</span></div>
+        </div>
+        <div class="eq rv" id="a6">
+          <div class="lbl">6. Cost of goods sold</div>
+          <div class="m words">= Cost of goods available for sale at cost − Ending inventory at cost</div>
+          <div class="m rv" id="a6-2">= <span class="dn rv" id="a6-g">$114,080</span> − <span class="dn rv" id="a6-e">$15,376</span></div>
+          <div class="m rv" id="a6-3">= <span class="final">$98,704</span></div>
+        </div>
+      </section>
+
+      <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+    </main>
+  </div>
+</div>
+
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="progrow"><div class="progress" aria-hidden="true"><div id="prog"></div></div><span class="counter" id="counter"></span></div>
+  <p class="caption" id="caption" aria-live="polite"></p>
+  <div class="controls">
+    <button class="ctl" id="restart" type="button"><span class="lg">Start over</span><span class="sm">Restart</span></button>
+    <button class="ctl" id="back" type="button">Back</button>
+    <button class="ctl primary" id="next" type="button">Next</button>
+    <button class="ctl" id="all" type="button"><span class="lg">Show solution</span><span class="sm">Solution</span></button>
+  </div>
+</div>
+
+<script>
+/* One walkthrough in six numbered steps.
+   Step fields: show (written in place), fly ([from, to]: one number moves), col (the numbers this step uses and their colors,
+   in the table and in the lines; every other number is plain), caption. Colors belong to one numbered step only. */
+function grp(col, clicks) { return clicks.map(function (c) { c.col = col; return c; }); }
+var S1 = { "p-bic": "red", "a1-bi": "red", "p-puc": "gold", "a1-pu": "gold", "p-prc": "green", "a1-pr": "green", "p-fr": "blue", "a1-fr": "blue" };
+var S2 = { "p-bir": "red", "a2-bi": "red", "p-pur": "gold", "a2-pu": "gold", "p-prr": "green", "a2-pr": "green", "p-mu": "blue", "a2-mu": "blue" };
+var S3 = { "r1": "orange", "a3-n": "orange", "r2": "orange", "a3-d": "orange", "r3": "teal" };
+var S4 = { "r2": "red", "a4-cr": "red", "p-md": "gold", "a4-md": "gold", "p-ns": "green", "a4-ns": "green", "p-sp": "blue", "a4-sp": "blue" };
+var S5 = { "r4": "red", "a5-ei": "red", "r3": "teal", "a5-rt": "teal" };
+var S6 = { "r1": "red", "a6-g": "red", "r5": "gold", "a6-e": "gold" };
+window.WALK_TABS = {};
+window.WALK_TABS["1"] = { steps: [
+ { caption: "Six steps: steps 1 to 5 find the cost of ending inventory, and step 6 finds cost of goods sold. Click Next for a step-by-step walkthrough." }
+].concat(grp(S1, [
+ { show: ["a1"], caption: "1. Cost of goods available for sale at cost = beginning inventory + purchases − purchase returns + freight-in. All four amounts are in the cost column." },
+ { show: ["a1-2"], fly: [["p-bic", "a1-bi"], ["p-puc", "a1-pu"], ["p-prc", "a1-pr"], ["p-fr", "a1-fr"]], caption: "The numbers go in the same order: $12,000 + $102,600 − $4,000 + $3,480." },
+ { show: ["a1-3"], caption: "Cost of goods available for sale at cost = $114,080." },
+ { show: ["a1-note"], caption: "Freight-in changes only the cost of the goods, so it has no retail amount." }
+]), grp(S2, [
+ { show: ["a2"], caption: "2. Cost of goods available for sale at retail = beginning inventory + purchases − purchase returns + net markups. All four amounts are in the retail column." },
+ { show: ["a2-2"], fly: [["p-bir", "a2-bi"], ["p-pur", "a2-pu"], ["p-prr", "a2-pr"], ["p-mu", "a2-mu"]], caption: "The numbers go in the same order: $20,000 + $165,000 − $7,000 + $6,000." },
+ { show: ["a2-3"], caption: "Cost of goods available for sale at retail = $184,000." },
+ { show: ["a2-note"], caption: "Under the conventional retail method, net markups are added here and net markdowns are not. Net markdowns are deducted in step 4, after the cost-to-retail ratio." }
+]), grp(S3, [
+ { show: ["a3"], caption: "3. Cost-to-retail ratio = cost of goods available for sale at cost ÷ cost of goods available for sale at retail, from steps 1 and 2." },
+ { show: ["a3-2"], fly: [["r1", "a3-n"], ["r2", "a3-d"]], caption: "$114,080 from step 1 over $184,000 from step 2." },
+ { show: ["a3-3"], caption: "Cost-to-retail ratio = $114,080 ÷ $184,000 = 0.62." }
+]), grp(S4, [
+ { show: ["a4"], caption: "4. Ending inventory at retail = cost of goods available for sale at retail − net markdowns − net sales − normal spoilage." },
+ { show: ["a4-2"], fly: [["r2", "a4-cr"], ["p-md", "a4-md"], ["p-ns", "a4-ns"], ["p-sp", "a4-sp"]], caption: "$184,000 comes from step 2. The other numbers come from the retail column, in the same order." },
+ { show: ["a4-3"], caption: "Ending inventory at retail = $184,000 − $3,000 − $152,000 − $4,200 = $24,800." },
+ { show: ["a4-note"], caption: "Normal spoilage is treated like sales: the goods are gone, so they are deducted from retail." }
+]), grp(S5, [
+ { show: ["a5"], caption: "5. Ending inventory at cost = ending inventory at retail × cost-to-retail ratio, from steps 4 and 3." },
+ { show: ["a5-2"], fly: [["r4", "a5-ei"], ["r3", "a5-rt"]], caption: "$24,800 from step 4 × 0.62 from step 3." },
+ { show: ["a5-3"], caption: "Ending inventory at cost = $24,800 × 0.62 = $15,376." }
+]), grp(S6, [
+ { show: ["a6"], caption: "6. Cost of goods sold = cost of goods available for sale at cost − ending inventory at cost, from steps 1 and 5." },
+ { show: ["a6-2"], fly: [["r1", "a6-g"], ["r5", "a6-e"]], caption: "$114,080 from step 1 − $15,376 from step 5." },
+ { show: ["a6-3"], caption: "Cost of goods sold = $114,080 − $15,376 = $98,704." }
+])) };
+</script>
+<script>
+/* Walkthrough engine shared by the Chapter 7, 8 and 9 pages, with tabs; colors here belong to one numbered step at a time. */
+(function () {
+  'use strict';
+  var TABS = window.WALK_TABS;
+  var PARTS = Object.keys(TABS);
+  var $ = function (id) { return document.getElementById(id); };
+  var S = function (s) { return s.show || []; };
+  var U = function (s) { return s.use || []; };
+  var F = function (s) { return s.fly || []; };
+  var A = function (s) { return s.after || []; };
+  var REVEAL = [];
+  var addReveal = function (id) { if (REVEAL.indexOf(id) < 0) REVEAL.push(id); };
+  PARTS.forEach(function (p) {
+    (TABS[p].pre || []).forEach(addReveal);
+    TABS[p].steps.forEach(function (s) {
+      S(s).concat(F(s).map(function (f) { return f[1]; }), A(s)).forEach(addReveal);
+    });
+  });
+  var bar = document.querySelector('.bar');
+  var part = PARTS[0], pos = {};
+  PARTS.forEach(function (p) { pos[p] = 0; });
+  var TAB = TABS[part], STEPS = TAB.steps, last = STEPS.length - 1;
+  var k = 0, tok = 0, timers = [], ghosts = [];
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  (function check() {
+    var miss = [];
+    PARTS.forEach(function (p) {
+      var ids = (TABS[p].pre || []).concat(TABS[p].litPre || []);
+      TABS[p].steps.forEach(function (s) {
+        ids = ids.concat(S(s), U(s), A(s), Object.keys(s.col || {}));
+        F(s).forEach(function (f) { ids = ids.concat(f); });
+      });
+      ids.forEach(function (id) { if (!$(id) && miss.indexOf(id) < 0) miss.push(id); });
+    });
+    if (miss.length && window.console) console.warn('Walkthrough: missing ids', miss);
+  })();
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function stopMotion() {
+    tok++;
+    timers.forEach(clearTimeout); timers = [];
+    ghosts.forEach(function (g) { g.remove(); }); ghosts = [];
+  }
+  function reveal(id, how) {
+    var el = $(id); if (!el) return;
+    el.classList.remove('write', 'land');
+    el.classList.add('shown');
+    if (how) { void el.offsetWidth; el.classList.add(how); }
+  }
+
+  function render(animate) {
+    stopMotion();
+    var s = STEPS[k];
+    var moving = animate && !reduced();
+    var shown = {};
+    (TAB.pre || []).forEach(function (id) { shown[id] = 1; });
+    for (var i = 1; i <= k; i++) {
+      S(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+      F(STEPS[i]).forEach(function (f) { shown[f[1]] = 1; });
+      A(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+    }
+    // colors belong to the step being worked: only its numbers are colored, in the table and in the lines
+    var COLS = ['red', 'gold', 'green', 'blue', 'orchid', 'orange', 'teal'];
+    document.querySelectorAll('.problem .tint, .dn').forEach(function (el) {
+      el.classList.remove('lit', 'on');
+      COLS.forEach(function (c) { el.classList.remove('c-' + c); });
+    });
+    var cm = s.col || {};
+    Object.keys(cm).forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.add('c-' + cm[id], el.classList.contains('tint') ? 'lit' : 'on');
+    });
+    var held = {};
+    if (moving) {
+      F(s).forEach(function (f) { held[f[1]] = 1; });
+      A(s).forEach(function (id) { held[id] = 1; });
+    }
+    REVEAL.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.remove('write', 'land');
+      el.classList.toggle('shown', !!shown[id] && !held[id]);
+    });
+    if (moving) {
+      S(s).forEach(function (id) { var el = $(id); if (!el) return; void el.offsetWidth; el.classList.add('write'); });
+    }
+    document.querySelectorAll('.use-on').forEach(function (el) { el.classList.remove('use-on'); });
+    U(s).forEach(function (id) { var el = $(id); if (el) el.classList.add('use-on'); });
+    $('caption').textContent = s.caption;
+    $('counter').textContent = 'Step ' + k + ' of ' + last;
+    $('prog').style.width = (k / last) * 100 + '%';
+    // at the end of a part, Next goes on to the next part; at the start of a part, Back goes to the end of the one before
+    var pi = PARTS.indexOf(part), nextPart = PARTS[pi + 1], prevPart = PARTS[pi - 1];
+    $('back').disabled = k === 0 && !prevPart;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last && !nextPart;
+    var nt = nextPart ? $('tab-' + nextPart) : null, nl = nt ? (nt.getAttribute('data-short') || nt.textContent.trim()) : '';
+    $('next').textContent = k === last && nextPart ? 'Next: ' + ((nl.match(/^\([a-z0-9]+\)/) || [nl])[0]) : 'Next';
+    $('all').disabled = k === last;
+  }
+
+  function barFixed() { return getComputedStyle(bar).position === 'fixed'; }
+  function span(ids) {
+    var top = Infinity, bottom = -Infinity;
+    ids.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    return top === Infinity ? null : { t: top, b: bottom };
+  }
+
+  // Scroll so this step's line (and, if they fit, its inputs) are in view. Resolves when scrolling stops.
+  function bring() {
+    var s = STEPS[k];
+    var tg = S(s).concat(F(s).map(function (f) { return f[1]; }), A(s));
+    if (!tg.length) return Promise.resolve();
+    var src = F(s).map(function (f) { return f[0]; }).concat(U(s));
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    var dy = null;
+    [tg.concat(src), tg].some(function (ids) {
+      var r = span(ids); if (!r) return false;
+      if (r.b - r.t > bottomEdge - 24) return false;
+      dy = r.t < 12 ? r.t - 12 : (r.b > bottomEdge - 12 ? r.b - (bottomEdge - 12) : 0);
+      return true;
+    });
+    if (dy === null) { var r0 = span([tg[0]]); if (!r0) return Promise.resolve(); dy = r0.t - 16; }
+    if (Math.abs(dy) < 2) return Promise.resolve();
+    var smooth = !reduced();
+    window.scrollBy({ top: dy, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) return Promise.resolve();
+    return new Promise(function (res) {
+      var done = false;
+      var fin = function () { if (done) return; done = true; window.removeEventListener('scrollend', fin); res(); };
+      window.addEventListener('scrollend', fin);
+      setTimeout(fin, Math.min(950, 260 + Math.abs(dy) * 0.6));
+    });
+  }
+
+  // A copy of the number drops from where it was found into its place in this line.
+  function fly(from, to, my, dur) {
+    var src = $(from), dst = $(to);
+    if (!src || !dst) { reveal(to, 'land'); return; }
+    var a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+    var g = document.createElement('div');
+    g.className = 'ghost'; g.setAttribute('aria-hidden', 'true');
+    var gy = document.createElement('div');
+    var chip = document.createElement('span'); chip.className = 'gchip';
+    var tone = function (el) { for (var ci = 0; ci < el.classList.length; ci++) if (el.classList[ci].indexOf('c-') === 0) return el.classList[ci]; return null; };
+    var c = tone(dst) || tone(src);
+    if (c) chip.classList.add(c);
+    chip.textContent = dst.textContent.trim();
+    gy.appendChild(chip); g.appendChild(gy); document.body.appendChild(g); ghosts.push(g);
+    var sx = window.scrollX || 0, sy = window.scrollY || 0;
+    var x0 = a.left + sx, x1 = b.left + sx;
+    var y0 = a.top + sy, y1 = b.top + sy;
+    g.style.transform = 'translateX(' + x0 + 'px)';
+    gy.style.transform = 'translateY(' + y0 + 'px)';
+    var ax = g.animate([{ transform: 'translateX(' + x0 + 'px)' }, { transform: 'translateX(' + x1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' });
+    gy.animate([{ transform: 'translateY(' + y0 + 'px)' }, { transform: 'translateY(' + y1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.5,0,.6,1)', fill: 'forwards' });
+    ax.onfinish = function () {
+      g.remove();
+      if (my !== tok) return;
+      reveal(to, 'land');
+    };
+  }
+
+  function play(my) {
+    var s = STEPS[k];
+    var lead = S(s).length ? 450 : 80, gap = 320, dur = 800;
+    F(s).forEach(function (f, i) {
+      later(function () { if (my === tok) fly(f[0], f[1], my, dur); }, lead + i * gap);
+    });
+    var done = F(s).length ? lead + (F(s).length - 1) * gap + dur + 120 : lead;
+    A(s).forEach(function (id, i) {
+      later(function () { if (my === tok) reveal(id, 'write'); }, done + i * 170);
+    });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+    var my = tok;
+    var p = bring();
+    if (animate && !reduced()) p.then(function () { if (my === tok) play(my); });
+  }
+
+  // Tabs: each part keeps its own place in its walkthrough.
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab[data-part]'));
+  function setTab(p, focus, at) {
+    if (!TABS[p] || p === part) return;
+    stopMotion();
+    pos[part] = k;
+    part = p; TAB = TABS[p]; STEPS = TAB.steps; last = STEPS.length - 1; k = at != null ? at : pos[p];
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-part') === p;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      var pan = $(t.getAttribute('aria-controls'));
+      if (pan) pan.hidden = !on;
+      if (on && focus) t.focus();
+    });
+    markPart();
+    render(false);
+  }
+  function markPart() {
+    var reqs = TAB.req || [part];
+    document.querySelectorAll('.req li[id^="req-"]').forEach(function (li) { li.classList.toggle('cur', reqs.indexOf(li.id.slice(4)) >= 0); });
+    var su = $('setup'); if (su) su.hidden = !!TAB.noSetup;
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { setTab(t.getAttribute('data-part'), false); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); e.stopPropagation();
+      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      setTab(n.getAttribute('data-part'), true);
+    });
+  });
+
+  // keep the part tabs in view after Next or Back changes the part
+  function showTabs() {
+    var tl = document.querySelector('.tabs'), r = tl.getBoundingClientRect();
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    if (r.top < 8 || r.top > bottomEdge - 80) window.scrollBy({ top: r.top - 12, behavior: reduced() ? 'auto' : 'smooth' });
+  }
+  function forward() {
+    if (k < last) { go(k + 1, true); return; }
+    var nxt = PARTS[PARTS.indexOf(part) + 1];
+    if (nxt) { setTab(nxt, false, 0); showTabs(); }
+  }
+  function backward() {
+    if (k > 0) { go(k - 1, false); return; }
+    var prv = PARTS[PARTS.indexOf(part) - 1];
+    if (prv) { setTab(prv, false, TABS[prv].steps.length - 1); showTabs(); }
+  }
+  $('next').addEventListener('click', forward);
+  $('back').addEventListener('click', backward);
+  $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', function () { k = last; render(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('[role="tablist"]')) return;
+    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); forward(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); backward(); }
+  });
+
+  var setBar = function () {
+    document.documentElement.style.setProperty('--bar-h', (barFixed() ? bar.offsetHeight : 0) + 'px');
+  };
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(bar);
+  setBar();
+  markPart();
+  render(false);
+})();
+</script>
+</body>
+</html>
