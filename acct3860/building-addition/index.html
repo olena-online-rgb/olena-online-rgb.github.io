@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sammy Enterprises: Depreciation of a Building Addition</title>
+<meta name="description" content="Step-by-step walkthrough of straight-line depreciation for a building and a building addition: the addition is depreciated separately over the remaining useful life of the building, for 20X3 and 20X4.">
+<!-- GoatCounter script line goes here -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Shared look for the walkthroughs.
+   Layout: problem on the left (stays in view), solution on the right as written equations, steps at the bottom.
+   Color: a number keeps one color from the problem to the line where it is used; colors come in one step at a time. */
+:root {
+  --bg: #FCFCFB;
+  --ink: #1E1A1B;
+  --muted: #6A6264;
+  --rule: #E2DCDD;
+  --surface: #F4F1F1;
+  --use: #1E1A1B;
+  --use-tint: #ECE7E8;
+  --accent: #1E1A1B;
+  --on-accent: #FCFCFB;
+  --red: #C8102E;    --red-t: #FADCE0;   --red-x: #6E0A1A;
+  --gold: #F2B200;   --gold-t: #FFF0C7;  --gold-x: #6B4E00;
+  --green: #2F7D50;  --green-t: #DCEFE2; --green-x: #1B4D30;
+  --blue: #2463A8;   --blue-t: #DDE8F6;  --blue-x: #143D6B;
+  --orchid: #A0329C; --orchid-t: #F2D3F0; --orchid-x: #5E1A5B;
+  --orange: #D2601A; --orange-t: #FBD9C2; --orange-x: #7A3409;
+  --teal: #0E7C86;   --teal-t: #D3EEF0;  --teal-x: #084A50;
+  --gray: #8A8284;   --gray-t: #E4E0E1;  --gray-x: #3A3435;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, "Courier New", monospace;
+  --bar-h: 0px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+    --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+    --accent: #F2EEEF; --on-accent: #161314;
+    --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+    --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+    --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+    --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+    --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+    --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+    --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+    --gray: #B5ACAE; --gray-t: rgba(200, 190, 192, 0.22); --gray-x: #F2EEEF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161314; --ink: #F2EEEF; --muted: #A99FA2; --rule: #3A3234; --surface: #221D1F;
+  --use: #F2EEEF; --use-tint: rgba(242, 238, 239, 0.12);
+  --accent: #F2EEEF; --on-accent: #161314;
+  --red: #F2788A;   --red-t: rgba(242, 120, 138, 0.24); --red-x: #F2EEEF;
+  --gold: #F5C842;  --gold-t: rgba(245, 200, 66, 0.22); --gold-x: #F2EEEF;
+  --green: #62C48E; --green-t: rgba(98, 196, 142, 0.20); --green-x: #F2EEEF;
+  --blue: #83B2EF;  --blue-t: rgba(131, 178, 239, 0.22); --blue-x: #F2EEEF;
+  --orchid: #D77FD2; --orchid-t: rgba(215, 127, 210, 0.26); --orchid-x: #F2EEEF;
+  --orange: #F09A5E; --orange-t: rgba(240, 154, 94, 0.26); --orange-x: #F2EEEF;
+  --teal: #4FC3CC; --teal-t: rgba(79, 195, 204, 0.22); --teal-x: #F2EEEF;
+  --gray: #B5ACAE; --gray-t: rgba(200, 190, 192, 0.22); --gray-x: #F2EEEF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px calc(var(--bar-h) + 24px);
+}
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 18px; }
+header { display: grid; gap: 4px; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(24px, 3vw, 32px); line-height: 1.15; margin: 0; text-wrap: balance; }
+
+/* two columns: problem left, solution right */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start; }
+.pin { display: grid; gap: 14px; min-width: 0; padding: 2px; }
+.solution { display: grid; gap: 20px; min-width: 0; }
+
+/* problem, word for word from the notes */
+.problem { display: grid; gap: 10px; font-family: var(--serif); font-size: 16.5px; border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; background: var(--bg); }
+.problem p { margin: 0; }
+.problem .pr { color: var(--red); font-weight: 700; }
+.req ol { margin: 4px 0 0; padding-left: 0; list-style: none; display: grid; gap: 4px; }
+.req li { color: var(--muted); }
+.req li.cur { color: var(--ink); }
+.req li .pr { color: var(--red); }
+/* givens in the problem take their color from the step that first uses them */
+.problem .tint { border-radius: 2px; transition: background-color 0.4s, color 0.4s, box-shadow 0.4s; }
+.problem .tint.lit { background: var(--ct); box-shadow: 0 0 0 2px var(--ct); color: var(--cx); font-weight: 700; }
+
+.key { font-size: 13.5px; color: var(--muted); margin: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* chips: a number keeps its color from where it comes from to where it is used */
+.c-red { --ct: var(--red-t); --cx: var(--red-x); }
+.c-gold { --ct: var(--gold-t); --cx: var(--gold-x); }
+.c-green { --ct: var(--green-t); --cx: var(--green-x); }
+.c-blue { --ct: var(--blue-t); --cx: var(--blue-x); }
+.c-orchid { --ct: var(--orchid-t); --cx: var(--orchid-x); }
+.c-orange { --ct: var(--orange-t); --cx: var(--orange-x); }
+.c-teal { --ct: var(--teal-t); --cx: var(--teal-x); }
+.c-gray { --ct: var(--gray-t); --cx: var(--gray-x); }
+.amt {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--ct, transparent);
+  color: var(--cx, inherit);
+  font-weight: 700;
+}
+.final { border-bottom: 3px double var(--ink); padding-bottom: 1px; font-weight: 700; }
+/* fractions, written the way they are on paper */
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.35; margin: 2px 2px; }
+.frac > span { padding: 1px 4px; }
+.frac > span:first-child { border-bottom: 1.5px solid currentColor; }
+.eq .m .frac .amt { margin: 1px 0; }
+
+/* worked lines */
+.card { border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px 16px; display: grid; gap: 14px; min-width: 0; }
+.eq { display: grid; gap: 2px; padding: 6px 8px; border-radius: 6px; min-width: 0; }
+.eq .lbl { font-weight: 700; }
+.eq .m { padding-left: 22px; font-variant-numeric: tabular-nums; font-size: 16.5px; line-height: 1.6; }
+.eq .m.words { color: var(--muted); font-size: 15.5px; }
+.eq .m.chk { font-size: 15.5px; margin-top: 4px; }
+.eq + .eq { border-top: 1px solid var(--rule); border-top-left-radius: 0; border-top-right-radius: 0; }
+.eq .m .rv { display: inline-block; }
+.note { color: var(--red); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* the timeline, drawn the way it is drawn by hand: the line and its ticks, the dates, the years between them */
+.tlw { overflow-x: auto; padding: 4px 3px 2px; margin: 0 -3px; }
+.tl { display: grid; grid-template-columns: 2fr 2fr 1.4fr 1.4fr; grid-template-rows: auto 20px auto auto; min-width: 380px; margin: 0 14px; font-family: var(--sans); font-variant-numeric: tabular-nums; }
+.tl .y { grid-row: 1; text-align: center; padding-bottom: 4px; font-size: 15.5px; }
+.tl .seg { grid-row: 2; position: relative; }
+.tl .seg::before { content: ""; position: absolute; left: 0; right: 0; top: 9px; border-top: 2px solid var(--ink); }
+.tl .seg::after { content: ""; position: absolute; left: -1px; top: 0; height: 20px; border-left: 2px solid var(--ink); }
+.tl .seg .tk-end { position: absolute; right: -1px; top: 0; height: 20px; border-left: 2px solid var(--ink); }
+.tl .seg .band { position: absolute; left: 1px; right: 1px; top: 3px; height: 14px; background: var(--blue-t); border-radius: 2px; }
+.tl .d { grid-row: 3; font-size: 13px; line-height: 1.3; padding-top: 5px; margin-left: -6px; }
+.tl .d.end { grid-row: 4; text-align: right; margin-left: 0; margin-right: -6px; }
+.tl .d .amt { font-size: 13.5px; padding: 0 4px; }
+.tl .d .w { display: block; color: var(--muted); }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1.5px solid var(--ink); margin-bottom: -20px; }
+.tab {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1.5px solid var(--rule); border-bottom: 0;
+  border-radius: 6px 6px 0 0; padding: 7px 16px; cursor: pointer;
+}
+.tab:hover { border-color: var(--muted); }
+.tab[aria-selected="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); cursor: default; }
+.card.tabbed { border-top: 0; border-radius: 0 0 8px 8px; }
+
+/* reveal states */
+.rv { visibility: hidden; }
+.rv.shown { visibility: visible; }
+.write { animation: write 0.5s ease-out both; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); opacity: 0.4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.land { animation: land 0.5s ease-out both; }
+@keyframes land { 0% { transform: scale(1.25); } 55% { transform: scale(0.95); } 100% { transform: scale(1); } }
+.ghost { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; will-change: transform; }
+.ghost > div { will-change: transform; }
+.gchip { display: inline-block; font-weight: 700; font-size: 16.5px; padding: 0 5px; border-radius: 4px; background: var(--ct, var(--surface)); color: var(--cx, var(--ink)); outline: 1.5px solid var(--ink); }
+.use-on { outline: 2px solid var(--use) !important; outline-offset: 2px; border-radius: 4px; background-color: var(--use-tint); }
+.amt.use-on, .tint.lit.use-on { background-color: var(--ct); }
+/* givens in the problem show by color only, no outline */
+.problem .tint.use-on { outline: none !important; }
+
+/* steps */
+.bar { background: var(--bg); display: grid; gap: 10px; }
+.caption { font-size: 15.5px; min-height: 3em; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button.ctl {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 7px 14px; cursor: pointer;
+}
+button.ctl:hover { border-color: var(--muted); }
+button:focus-visible { outline: 3px solid var(--use); outline-offset: 2px; }
+button.ctl:disabled { opacity: 0.45; cursor: default; }
+button.ctl.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.progrow { display: flex; align-items: center; gap: 12px; }
+.counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress { flex: 1; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--ink); width: 0; transition: width 0.3s; }
+button .sm { display: none; }
+.bar > * { width: 100%; max-width: 860px; margin-inline: auto; }
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  border-top: 2px solid var(--ink);
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+
+.copyright { padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); text-align: center; }
+
+/* wide screens: problem on the left, held in view; the solution on the right */
+@media (min-width: 1060px) {
+  .wrap { max-width: 1240px; }
+  .layout { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 24px; }
+  .bar > * { max-width: 1240px; }
+}
+@media (min-width: 1060px) and (min-height: 640px) {
+  .pin { position: sticky; top: 12px; }
+}
+@media (max-width: 560px) {
+  .problem { font-size: 16px; padding: 12px; }
+  .card { padding: 12px 10px 14px; }
+  .eq .m { padding-left: 12px; font-size: 15.5px; }
+  .eq .m .frac { font-size: 14.5px; }
+  .eq .m.rv:not(.chk) { white-space: nowrap; }
+  .eq .m.words { font-size: 14px; }
+  .eq .m.words .frac { font-size: 13px; }
+  .card { overflow-x: auto; }
+  .tl { margin: 0 8px; min-width: 0; }
+  .tl .d { font-size: 11.5px; }
+  .tl .d .amt { font-size: 12px; padding: 0 3px; }
+  .controls { flex-wrap: nowrap; gap: 6px; }
+  button.ctl { padding: 7px 10px; font-size: 14px; flex: 1 1 auto; }
+  button .lg { display: none; } button .sm { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .write, .land { animation: none !important; }
+  .progress > div, .problem .tint { transition: none; }
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Sammy Enterprises: Depreciation of a Building Addition</h1>
+  </header>
+
+  <div class="layout">
+    <aside class="pin" aria-label="Problem">
+      <section class="problem" aria-label="Problem">
+        <p>Sammy Enterprises purchased a five-story office building on <span class="tint c-blue" id="p-d1">January 1, 20X1</span>, at a cost of <span class="tint c-red" id="p-c1">$5,000,000</span>. The building has a residual value of <span class="tint c-gold" id="p-r1">$200,000</span> and a <span class="tint c-green" id="p-l1">30-year life</span>. The straight-line depreciation method is used. On <span class="tint c-blue" id="p-d2">June 30, 20X3</span>, construction of a sixth floor was completed at a cost of <span class="tint c-red" id="p-c2">$1,650,000</span>.</p>
+        <div class="req">
+          <p><b>Required:</b><br>Calculate the depreciation on the building and building addition for 20X3 and 20X4 assuming that the addition did not change the life or residual value of the building. <span class="pr">(Hint: Calculate depreciation for the building and addition separately. Assume the addition has <span class="tint c-gold" id="p-r2">no residual value</span> and <span class="tint c-green" id="p-l2">an estimated life equal to the remaining useful life of the building</span>.)</span></p>
+        </div>
+      </section>
+      <p class="key"><span>Matching colors show where a number comes from and where it is used.</span></p>
+    </aside>
+
+    <main class="solution">
+      <div class="tabs" role="tablist" aria-label="Parts of the solution">
+        <button class="tab" role="tab" id="tab-1" data-part="1" aria-selected="true" aria-controls="pan-1" type="button">Building</button>
+        <button class="tab" role="tab" id="tab-2" data-part="2" aria-selected="false" aria-controls="pan-2" tabindex="-1" type="button">Addition</button>
+      </div>
+
+      <section class="card tabbed" id="pan-1" role="tabpanel" aria-labelledby="tab-1">
+        <div class="eq rv" id="b1">
+          <div class="lbl">20X3 depreciation expense, building</div>
+          <div class="m words">= <span class="frac"><span>Cost − Residual value</span><span>Useful life</span></span></div>
+          <div class="m rv" id="b1-2">= <span class="frac"><span><span class="amt c-red rv" id="b1-c">$5,000,000</span> − <span class="amt c-gold rv" id="b1-r">$200,000</span></span><span><span class="amt c-green rv" id="b1-l">30</span></span></span></div>
+          <div class="m rv" id="b1-3">= <span class="frac"><span>$4,800,000</span><span>30</span></span></div>
+          <div class="m rv" id="b1-4">= <span class="final amt c-orchid" id="b1-res">$160,000</span></div>
+          <div class="m chk rv" id="b1-n"><b class="note">Note 1:</b> The addition did not change the building’s useful life or residual value, so the building is depreciated as if there were no addition. 20X3 is a full year for the building.</div>
+        </div>
+        <div class="eq rv" id="b2">
+          <div class="lbl">20X4 depreciation expense, building</div>
+          <div class="m rv" id="b2-2">= <span class="final amt c-orchid rv" id="b2-v">$160,000</span></div>
+          <div class="m chk rv" id="b2-n"><b class="note">Note 2:</b> Straight-line depreciation is the same amount in every full year, and 20X4 is a full year.</div>
+        </div>
+      </section>
+
+      <section class="card tabbed" id="pan-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+        <div class="eq rv" id="t0">
+          <div class="lbl">Time line</div>
+          <div class="tlw">
+            <div class="tl" role="img" aria-label="Time line from the 1/1/20X1 purchase of the building to 12/31/20X3: 1 year from 1/1/20X1 to 1/1/20X2, 1 year from 1/1/20X2 to 1/1/20X3, 1/2 year from 1/1/20X3 to the 6/30/20X3 completion of the addition, and 1/2 year from 7/1/20X3 to 12/31/20X3 with the addition in use.">
+              <div class="y" style="grid-column:1"><span class="amt c-blue rv" id="tl-y1">1</span></div>
+              <div class="y" style="grid-column:2"><span class="amt c-blue rv" id="tl-y2">1</span></div>
+              <div class="y" style="grid-column:3"><span class="amt c-blue rv" id="tl-y3">1/2</span></div>
+              <div class="y" style="grid-column:4"><span class="amt c-blue rv" id="tl-y4">1/2</span></div>
+              <div class="seg" style="grid-column:1"></div>
+              <div class="seg" style="grid-column:2"></div>
+              <div class="seg" style="grid-column:3"></div>
+              <div class="seg" style="grid-column:4"><span class="band rv" id="tl-band"></span><span class="tk-end"></span></div>
+              <div class="d" style="grid-column:1"><span class="amt c-blue rv" id="tl-d1">1/1/20X1</span><span class="w rv" id="tl-d1t">building purchased</span></div>
+              <div class="d" style="grid-column:2">1/1/20X2</div>
+              <div class="d" style="grid-column:3">1/1/20X3</div>
+              <div class="d" style="grid-column:4"><span class="amt c-blue rv" id="tl-d2">6/30/20X3</span><span class="w rv" id="tl-d2t">addition completed</span></div>
+              <div class="d end" style="grid-column:3 / span 2"><span class="rv" id="tl-e">12/31/20X3</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="eq rv" id="y0">
+          <div class="lbl">Years the building was in use before the addition</div>
+          <div class="m words">= Years in 20X1 + Years in 20X2 + Part of 20X3 before the addition</div>
+          <div class="m rv" id="y0-2">= <span class="amt c-blue rv" id="y0-a">1</span> + <span class="amt c-blue rv" id="y0-b">1</span> + <span class="amt c-blue rv" id="y0-c">1/2</span></div>
+          <div class="m rv" id="y0-3">= <span class="amt c-blue" id="y0-res">2.5</span> years</div>
+        </div>
+        <div class="eq rv" id="a0">
+          <div class="lbl">Useful life of the addition</div>
+          <div class="m words">= Useful life of the building − Years the building was in use before the addition</div>
+          <div class="m rv" id="a0-2">= <span class="amt c-green rv" id="a0-l">30</span> − <span class="amt c-blue rv" id="a0-y">2.5</span></div>
+          <div class="m rv" id="a0-3">= <span class="amt c-green" id="a0-res">27.5</span> years</div>
+          <div class="m chk rv" id="a0-n"><b class="note">Note 1:</b> The hint sets the useful life of the addition equal to the remaining useful life of the building and sets its residual value at zero, so the full cost of the addition is depreciated.</div>
+        </div>
+        <div class="eq rv" id="a1">
+          <div class="lbl">20X3 depreciation expense, addition</div>
+          <div class="m words">= <span class="frac"><span>Cost</span><span>Useful life</span></span> × Part of 20X3 in use</div>
+          <div class="m rv" id="a1-2">= <span class="frac"><span><span class="amt c-red rv" id="a1-c">$1,650,000</span></span><span><span class="amt c-green rv" id="a1-l">27.5</span></span></span> × <span class="amt c-blue rv" id="a1-f">1/2</span></div>
+          <div class="m rv" id="a1-3">= $60,000 × 1/2</div>
+          <div class="m rv" id="a1-4">= <span class="final">$30,000</span></div>
+          <div class="m chk rv" id="a1-n"><b class="note">Note 2:</b> The addition was completed on 6/30/20X3, so in 20X3 it is depreciated from 7/1/20X3 to 12/31/20X3, which is half of the year.</div>
+        </div>
+        <div class="eq rv" id="a2">
+          <div class="lbl">20X4 depreciation expense, addition</div>
+          <div class="m words">= <span class="frac"><span>Cost</span><span>Useful life</span></span></div>
+          <div class="m rv" id="a2-2">= <span class="frac"><span><span class="amt c-red rv" id="a2-c">$1,650,000</span></span><span><span class="amt c-green rv" id="a2-l">27.5</span></span></span></div>
+          <div class="m rv" id="a2-3">= <span class="final">$60,000</span></div>
+          <div class="m chk rv" id="a2-n"><b class="note">Note 3:</b> 20X4 is a full year, so no fraction of the year is applied.</div>
+        </div>
+      </section>
+
+      <footer class="copyright">© 2026 O. Watanabe. All rights reserved.</footer>
+    </main>
+  </div>
+</div>
+
+<div class="bar" role="region" aria-label="Walkthrough controls">
+  <div class="progrow"><div class="progress" aria-hidden="true"><div id="prog"></div></div><span class="counter" id="counter"></span></div>
+  <p class="caption" id="caption" aria-live="polite"></p>
+  <div class="controls">
+    <button class="ctl" id="restart" type="button"><span class="lg">Start over</span><span class="sm">Restart</span></button>
+    <button class="ctl" id="back" type="button">Back</button>
+    <button class="ctl primary" id="next" type="button">Next</button>
+    <button class="ctl" id="all" type="button"><span class="lg">Show solution</span><span class="sm">Solution</span></button>
+  </div>
+</div>
+<script>
+/* One part per tab. Step fields: show (written in place), fly ([from, to]: one number moves),
+   after (written once it lands), use (a given in the problem takes its color from the first step that uses it), caption.
+   pre: shown when the tab opens; litPre: givens already colored when the tab opens. */
+window.WALK_TABS = {};
+window.WALK_TABS["1"] = { req: ["r"], steps: [
+ { caption: "Depreciation for 20X3 and 20X4 is computed separately for the building and for the addition, both by the straight-line method. Click Next for a step-by-step walkthrough." },
+ { show: ["b1"], caption: "20X3 depreciation expense for the building = (cost − residual value) ÷ useful life." },
+ { show: ["b1-2"], fly: [["p-c1", "b1-c"], ["p-r1", "b1-r"], ["p-l1", "b1-l"]], use: ["p-c1", "p-r1", "p-l1"],
+   caption: "The building cost is $5,000,000, its residual value is $200,000, and its useful life is 30 years." },
+ { show: ["b1-3"], caption: "Depreciable base of the building = $5,000,000 − $200,000 = $4,800,000." },
+ { show: ["b1-4"], caption: "20X3 depreciation expense for the building = $4,800,000 ÷ 30 = $160,000." },
+ { show: ["b1-n"], caption: "The addition did not change the building’s useful life or residual value, so the building is depreciated as if there were no addition. 20X3 is a full year for the building." },
+ { show: ["b2"], caption: "20X4 depreciation expense for the building is one full year of straight-line depreciation." },
+ { show: ["b2-2"], fly: [["b1-res", "b2-v"]], caption: "20X4 depreciation expense for the building = $160,000, the same amount as in 20X3." },
+ { show: ["b2-n"], caption: "Straight-line depreciation is the same amount in every full year, and 20X4 is a full year." }
+] };
+window.WALK_TABS["2"] = { req: ["r"], litPre: ["p-c1", "p-r1", "p-l1"], steps: [
+ { caption: "The addition is depreciated separately from the building. Its useful life equals the remaining useful life of the building, so the time the building was in use before the addition is found first." },
+ { show: ["t0"], fly: [["p-d1", "tl-d1"], ["p-d2", "tl-d2"]], after: ["tl-d1t", "tl-d2t"], use: ["p-d1", "p-d2"],
+   caption: "The building was purchased on 1/1/20X1, and the addition was completed on 6/30/20X3." },
+ { show: ["tl-y1", "tl-y2", "tl-y3"],
+   caption: "Before the addition, the building was in use for 1 year in 20X1, 1 year in 20X2, and 1/2 year in 20X3, from 1/1/20X3 to 6/30/20X3." },
+ { show: ["tl-band", "tl-y4", "tl-e"],
+   caption: "The addition is in use from 7/1/20X3 to 12/31/20X3, which is 1/2 year in 20X3." },
+ { show: ["y0"], caption: "Years the building was in use before the addition = years in 20X1 + years in 20X2 + part of 20X3 before the addition." },
+ { show: ["y0-2"], fly: [["tl-y1", "y0-a"], ["tl-y2", "y0-b"], ["tl-y3", "y0-c"]],
+   caption: "Years the building was in use before the addition = 1 + 1 + 1/2." },
+ { show: ["y0-3"], caption: "Years the building was in use before the addition = 2.5 years." },
+ { show: ["a0"], caption: "Useful life of the addition = useful life of the building − years the building was in use before the addition." },
+ { show: ["a0-2"], fly: [["p-l1", "a0-l"], ["y0-res", "a0-y"]], use: ["p-l2"],
+   caption: "The useful life of the building is 30 years, and the building was in use for 2.5 years before the addition." },
+ { show: ["a0-3"], caption: "Useful life of the addition = 30 − 2.5 = 27.5 years." },
+ { show: ["a0-n"], use: ["p-r2"], caption: "The hint sets the useful life of the addition equal to the remaining useful life of the building and sets its residual value at zero, so the full cost of the addition is depreciated." },
+ { show: ["a1"], caption: "20X3 depreciation expense for the addition = cost ÷ useful life × part of 20X3 in use." },
+ { show: ["a1-2"], fly: [["p-c2", "a1-c"], ["a0-res", "a1-l"], ["tl-y4", "a1-f"]], use: ["p-c2"],
+   caption: "The addition cost $1,650,000, its useful life is 27.5 years, and it is in use for 1/2 of 20X3." },
+ { show: ["a1-3"], caption: "Full-year depreciation of the addition = $1,650,000 ÷ 27.5 = $60,000." },
+ { show: ["a1-4"], caption: "20X3 depreciation expense for the addition = $60,000 × 1/2 = $30,000." },
+ { show: ["a1-n"], caption: "The addition was completed on 6/30/20X3, so in 20X3 it is depreciated from 7/1/20X3 to 12/31/20X3, which is half of the year." },
+ { show: ["a2"], caption: "20X4 depreciation expense for the addition = cost ÷ useful life." },
+ { show: ["a2-2"], fly: [["p-c2", "a2-c"], ["a0-res", "a2-l"]],
+   caption: "The addition cost $1,650,000, and its useful life is 27.5 years." },
+ { show: ["a2-3"], caption: "20X4 depreciation expense for the addition = $1,650,000 ÷ 27.5 = $60,000." },
+ { show: ["a2-n"], caption: "20X4 is a full year, so no fraction of the year is applied." }
+] };
+
+</script>
+<script>
+/* Walkthrough engine shared by the walkthrough pages, with tabs. */
+(function () {
+  'use strict';
+  var TABS = window.WALK_TABS;
+  var PARTS = Object.keys(TABS);
+  var $ = function (id) { return document.getElementById(id); };
+  var S = function (s) { return s.show || []; };
+  var U = function (s) { return s.use || []; };
+  var F = function (s) { return s.fly || []; };
+  var A = function (s) { return s.after || []; };
+  var REVEAL = [];
+  var addReveal = function (id) { if (REVEAL.indexOf(id) < 0) REVEAL.push(id); };
+  PARTS.forEach(function (p) {
+    (TABS[p].pre || []).forEach(addReveal);
+    TABS[p].steps.forEach(function (s) {
+      S(s).concat(F(s).map(function (f) { return f[1]; }), A(s)).forEach(addReveal);
+    });
+  });
+  var bar = document.querySelector('.bar');
+  var part = PARTS[0], pos = {};
+  PARTS.forEach(function (p) { pos[p] = 0; });
+  var TAB = TABS[part], STEPS = TAB.steps, last = STEPS.length - 1;
+  var k = 0, tok = 0, timers = [], ghosts = [];
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  (function check() {
+    var miss = [];
+    PARTS.forEach(function (p) {
+      var ids = (TABS[p].pre || []).concat(TABS[p].litPre || []);
+      TABS[p].steps.forEach(function (s) {
+        ids = ids.concat(S(s), U(s), A(s));
+        F(s).forEach(function (f) { ids = ids.concat(f); });
+      });
+      ids.forEach(function (id) { if (!$(id) && miss.indexOf(id) < 0) miss.push(id); });
+    });
+    if (miss.length && window.console) console.warn('Walkthrough: missing ids', miss);
+  })();
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function stopMotion() {
+    tok++;
+    timers.forEach(clearTimeout); timers = [];
+    ghosts.forEach(function (g) { g.remove(); }); ghosts = [];
+  }
+  function reveal(id, how) {
+    var el = $(id); if (!el) return;
+    el.classList.remove('write', 'land');
+    el.classList.add('shown');
+    if (how) { void el.offsetWidth; el.classList.add(how); }
+  }
+
+  function render(animate) {
+    stopMotion();
+    var s = STEPS[k];
+    var moving = animate && !reduced();
+    var shown = {};
+    (TAB.pre || []).forEach(function (id) { shown[id] = 1; });
+    for (var i = 1; i <= k; i++) {
+      S(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+      F(STEPS[i]).forEach(function (f) { shown[f[1]] = 1; });
+      A(STEPS[i]).forEach(function (id) { shown[id] = 1; });
+    }
+    // givens in the problem take their color from the first step that uses them
+    var lit = {};
+    (TAB.litPre || []).forEach(function (id) { lit[id] = 1; });
+    for (var q = 1; q <= k; q++) U(STEPS[q]).forEach(function (id) { lit[id] = 1; });
+    document.querySelectorAll('.problem .tint').forEach(function (el) { el.classList.toggle('lit', !!lit[el.id] && /\bc-/.test(el.className)); });
+    var held = {};
+    if (moving) {
+      F(s).forEach(function (f) { held[f[1]] = 1; });
+      A(s).forEach(function (id) { held[id] = 1; });
+    }
+    REVEAL.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      el.classList.remove('write', 'land');
+      el.classList.toggle('shown', !!shown[id] && !held[id]);
+    });
+    if (moving) {
+      S(s).forEach(function (id) { var el = $(id); if (!el) return; void el.offsetWidth; el.classList.add('write'); });
+    }
+    document.querySelectorAll('.use-on').forEach(function (el) { el.classList.remove('use-on'); });
+    U(s).forEach(function (id) { var el = $(id); if (el) el.classList.add('use-on'); });
+    $('caption').textContent = s.caption;
+    $('counter').textContent = 'Step ' + k + ' of ' + last;
+    $('prog').style.width = (k / last) * 100 + '%';
+    // at the end of a part, Next goes on to the next part; at the start of a part, Back goes to the end of the one before
+    var pi = PARTS.indexOf(part), nextPart = PARTS[pi + 1], prevPart = PARTS[pi - 1];
+    $('back').disabled = k === 0 && !prevPart;
+    $('restart').disabled = k === 0;
+    $('next').disabled = k === last && !nextPart;
+    var nt = nextPart ? $('tab-' + nextPart) : null, nl = nt ? (nt.getAttribute('data-short') || nt.textContent.trim()) : '';
+    $('next').textContent = k === last && nextPart ? 'Next: ' + ((nl.match(/^\([a-z0-9]+\)/) || [nl])[0]) : 'Next';
+    $('all').disabled = k === last;
+    // the requirement being worked is the one named by the latest step that names one
+    var rq = TAB.req || [part];
+    for (var ri = k; ri >= 0; ri--) if (STEPS[ri].req) { rq = STEPS[ri].req; break; }
+    document.querySelectorAll('.req li[id^="req-"]').forEach(function (li) { li.classList.toggle('cur', rq.indexOf(li.id.slice(4)) >= 0); });
+  }
+
+  function barFixed() { return getComputedStyle(bar).position === 'fixed'; }
+  function span(ids) {
+    var top = Infinity, bottom = -Infinity;
+    ids.forEach(function (id) {
+      var el = $(id); if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    return top === Infinity ? null : { t: top, b: bottom };
+  }
+
+  // Scroll so this step's line (and, if they fit, its inputs) are in view. Resolves when scrolling stops.
+  function bring() {
+    var s = STEPS[k];
+    var tg = S(s).concat(F(s).map(function (f) { return f[1]; }), A(s));
+    if (!tg.length) return Promise.resolve();
+    var src = F(s).map(function (f) { return f[0]; }).concat(U(s));
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    var dy = null;
+    [tg.concat(src), tg].some(function (ids) {
+      var r = span(ids); if (!r) return false;
+      if (r.b - r.t > bottomEdge - 24) return false;
+      dy = r.t < 12 ? r.t - 12 : (r.b > bottomEdge - 12 ? r.b - (bottomEdge - 12) : 0);
+      return true;
+    });
+    if (dy === null) { var r0 = span([tg[0]]); if (!r0) return Promise.resolve(); dy = r0.t - 16; }
+    if (Math.abs(dy) < 2) return Promise.resolve();
+    var smooth = !reduced();
+    window.scrollBy({ top: dy, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) return Promise.resolve();
+    return new Promise(function (res) {
+      var done = false;
+      var fin = function () { if (done) return; done = true; window.removeEventListener('scrollend', fin); res(); };
+      window.addEventListener('scrollend', fin);
+      setTimeout(fin, Math.min(950, 260 + Math.abs(dy) * 0.6));
+    });
+  }
+
+  // A copy of the number drops from where it was found into its place in this line.
+  // A number carried over from another tab is not on screen; it lands in place.
+  function fly(from, to, my, dur) {
+    var src = $(from), dst = $(to);
+    if (!src || !dst) { reveal(to, 'land'); return; }
+    var a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+    if (!a.width && !a.height) { reveal(to, 'land'); return; }
+    var g = document.createElement('div');
+    g.className = 'ghost'; g.setAttribute('aria-hidden', 'true');
+    var gy = document.createElement('div');
+    var chip = document.createElement('span'); chip.className = 'gchip';
+    var tone = function (el) { for (var ci = 0; ci < el.classList.length; ci++) if (el.classList[ci].indexOf('c-') === 0) return el.classList[ci]; return null; };
+    var c = tone(dst) || tone(src);
+    if (c) chip.classList.add(c);
+    chip.textContent = dst.textContent.trim();
+    gy.appendChild(chip); g.appendChild(gy); document.body.appendChild(g); ghosts.push(g);
+    var sx = window.scrollX || 0, sy = window.scrollY || 0;
+    var x0 = a.left + sx, x1 = b.left + sx;
+    var y0 = a.top + sy, y1 = b.top + sy;
+    g.style.transform = 'translateX(' + x0 + 'px)';
+    gy.style.transform = 'translateY(' + y0 + 'px)';
+    var ax = g.animate([{ transform: 'translateX(' + x0 + 'px)' }, { transform: 'translateX(' + x1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' });
+    gy.animate([{ transform: 'translateY(' + y0 + 'px)' }, { transform: 'translateY(' + y1 + 'px)' }],
+      { duration: dur, easing: 'cubic-bezier(.5,0,.6,1)', fill: 'forwards' });
+    ax.onfinish = function () {
+      g.remove();
+      if (my !== tok) return;
+      reveal(to, 'land');
+    };
+  }
+
+  function play(my) {
+    var s = STEPS[k];
+    var lead = S(s).length ? 450 : 80, gap = 320, dur = 800;
+    F(s).forEach(function (f, i) {
+      later(function () { if (my === tok) fly(f[0], f[1], my, dur); }, lead + i * gap);
+    });
+    var done = F(s).length ? lead + (F(s).length - 1) * gap + dur + 120 : lead;
+    A(s).forEach(function (id, i) {
+      later(function () { if (my === tok) reveal(id, 'write'); }, done + i * 170);
+    });
+  }
+
+  function go(n, animate) {
+    k = Math.max(0, Math.min(last, n));
+    render(animate);
+    var my = tok;
+    var p = bring();
+    if (animate && !reduced()) p.then(function () { if (my === tok) play(my); });
+  }
+
+  // Tabs: each part keeps its own place in its walkthrough.
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab[data-part]'));
+  function setTab(p, focus, at) {
+    if (!TABS[p] || p === part) return;
+    stopMotion();
+    pos[part] = k;
+    part = p; TAB = TABS[p]; STEPS = TAB.steps; last = STEPS.length - 1; k = at != null ? at : pos[p];
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-part') === p;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      var pan = $(t.getAttribute('aria-controls'));
+      if (pan) pan.hidden = !on;
+      if (on && focus) t.focus();
+    });
+    markPart();
+    render(false);
+  }
+  function markPart() {
+    var reqs = TAB.req || [part];
+    document.querySelectorAll('.req li[id^="req-"]').forEach(function (li) { li.classList.toggle('cur', reqs.indexOf(li.id.slice(4)) >= 0); });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { setTab(t.getAttribute('data-part'), false); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); e.stopPropagation();
+      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      setTab(n.getAttribute('data-part'), true);
+    });
+  });
+
+  // keep the part tabs in view after Next or Back changes the part
+  function showTabs() {
+    var tl = document.querySelector('.tabs'), r = tl.getBoundingClientRect();
+    var bottomEdge = window.innerHeight - (barFixed() ? bar.offsetHeight : 0);
+    if (r.top < 8 || r.top > bottomEdge - 80) window.scrollBy({ top: r.top - 12, behavior: reduced() ? 'auto' : 'smooth' });
+  }
+  function forward() {
+    if (k < last) { go(k + 1, true); return; }
+    var nxt = PARTS[PARTS.indexOf(part) + 1];
+    if (nxt) { setTab(nxt, false, 0); showTabs(); }
+  }
+  function backward() {
+    if (k > 0) { go(k - 1, false); return; }
+    var prv = PARTS[PARTS.indexOf(part) - 1];
+    if (prv) { setTab(prv, false, TABS[prv].steps.length - 1); showTabs(); }
+  }
+  $('next').addEventListener('click', forward);
+  $('back').addEventListener('click', backward);
+  $('restart').addEventListener('click', function () { k = 0; render(false); window.scrollTo({ top: 0 }); });
+  $('all').addEventListener('click', function () { k = last; render(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('[role="tablist"]')) return;
+    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); forward(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); backward(); }
+  });
+
+  var setBar = function () {
+    document.documentElement.style.setProperty('--bar-h', (barFixed() ? bar.offsetHeight : 0) + 'px');
+  };
+  window.addEventListener('resize', setBar);
+  if ('ResizeObserver' in window) new ResizeObserver(setBar).observe(bar);
+  setBar();
+  markPart();
+  render(false);
+})();
+</script>
+</body>
+</html>
